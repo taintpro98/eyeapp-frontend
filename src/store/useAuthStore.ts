@@ -7,6 +7,7 @@ type AuthState = {
   login: (username: string, password: string) => boolean
   logout: () => void
   signUp: (username: string, password: string, displayName: string) => boolean
+  loginWithSocial: (provider: 'google' | 'facebook', data: { email: string; name: string }) => void
 }
 
 const MOCK_USERS: Record<string, { password: string; displayName: string }> = {
@@ -44,6 +45,14 @@ export const useAuthStore = create<AuthState>()(
           return true
         }
         return false
+      },
+
+      loginWithSocial: (provider, data) => {
+        const username = data.email?.split('@')[0] || data.name?.replace(/\s/g, '').toLowerCase() || provider
+        set({
+          user: { username, displayName: data.name || data.email || username },
+          isAuthenticated: true,
+        })
       },
     }),
     {

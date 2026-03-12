@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { SocialLoginButtons } from '@/components/SocialLoginButtons'
 import { useAuthStore } from '@/store/useAuthStore'
 
 export function SignInPage() {
@@ -60,6 +61,17 @@ export function SignInPage() {
             Sign in
           </Button>
         </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-surface-border" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-surface-bg px-2 text-text-secondary">Or continue with</span>
+          </div>
+        </div>
+
+        <SocialLoginButtons />
 
         <p className="text-center text-sm text-text-secondary">
           Don't have an account?{' '}
