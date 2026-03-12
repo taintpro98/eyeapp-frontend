@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-primary: #6F2C91;
+    --brand-dark: #4B1F63;
+    --brand-light: #8B5FBF;
+    --surface-bg: #F4F0EA;
+    --surface-warm: #F7F4EF;
+    --surface-card: #FFFFFF;
+    --surface-border: #E7DFD6;
+    --text-primary: #2E2630;
+    --text-secondary: #6E6470;
+  }
+
+  body {
+    @apply bg-surface-bg text-text-primary font-sans antialiased;
+  }
+}

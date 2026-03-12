@@ -1,0 +1,29 @@
+import { create } from 'zustand'
+
+type UpgradeModalContext = {
+  feature?: string
+  market?: string
+  reason?: string
+}
+
+type AppState = {
+  selectedMarket: string
+  sidebarCollapsed: boolean
+  upgradeModalOpen: boolean
+  upgradeModalContext: UpgradeModalContext | null
+  setSelectedMarket: (market: string) => void
+  setSidebarCollapsed: (collapsed: boolean) => void
+  openUpgradeModal: (context?: UpgradeModalContext) => void
+  closeUpgradeModal: () => void
+}
+
+export const useAppStore = create<AppState>((set) => ({
+  selectedMarket: 'crypto',
+  sidebarCollapsed: false,
+  upgradeModalOpen: false,
+  upgradeModalContext: null,
+  setSelectedMarket: (market) => set({ selectedMarket: market }),
+  setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+  openUpgradeModal: (context) => set({ upgradeModalOpen: true, upgradeModalContext: context ?? null }),
+  closeUpgradeModal: () => set({ upgradeModalOpen: false, upgradeModalContext: null }),
+}))
