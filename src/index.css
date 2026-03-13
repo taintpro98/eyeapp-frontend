@@ -4,15 +4,31 @@
 
 @layer base {
   :root {
+    /* Brand colors — same in light and dark */
     --brand-primary: #6F2C91;
     --brand-dark: #4B1F63;
     --brand-light: #8B5FBF;
+    /* Light theme */
     --surface-bg: #F4F0EA;
     --surface-warm: #F7F4EF;
     --surface-card: #FFFFFF;
     --surface-border: #E7DFD6;
     --text-primary: #2E2630;
     --text-secondary: #6E6470;
+  }
+
+  .dark {
+    /* Brand colors unchanged */
+    --brand-primary: #6F2C91;
+    --brand-dark: #4B1F63;
+    --brand-light: #8B5FBF;
+    /* Dark theme surfaces */
+    --surface-bg: #18181b;
+    --surface-warm: #1e1e21;
+    --surface-card: #27272a;
+    --surface-border: #3f3f46;
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
   }
 
   body {

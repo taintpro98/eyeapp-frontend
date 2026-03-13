@@ -4,11 +4,13 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PlanBadge } from '@/components/PlanBadge'
 import { useNavigate } from 'react-router-dom'
+import { useThemeStore } from '@/store/useThemeStore'
 import { useQuery } from '@tanstack/react-query'
 import { fetchBootstrap } from '@/api/bootstrap'
 
 export function SettingsPage() {
   const navigate = useNavigate()
+  const { theme, setTheme } = useThemeStore()
   const { data: bootstrap } = useQuery({ queryKey: ['bootstrap'], queryFn: fetchBootstrap })
 
   return (
@@ -17,6 +19,31 @@ export function SettingsPage() {
         title="Settings"
         subtitle="Manage your account and preferences"
       />
+
+      <SectionCard title="Appearance" subtitle="Theme preference">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium text-text-primary">Theme</p>
+            <p className="text-sm text-text-secondary">Switch between light and dark mode</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={theme === 'light' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTheme('light')}
+            >
+              Light
+            </Button>
+            <Button
+              variant={theme === 'dark' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTheme('dark')}
+            >
+              Dark
+            </Button>
+          </div>
+        </div>
+      </SectionCard>
 
       <SectionCard title="Profile" subtitle="Your account information">
         <div className="space-y-4 max-w-md">

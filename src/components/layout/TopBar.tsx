@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Search, Bell, ChevronDown } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { Input } from '@/components/ui/input'
 import { MarketToggle } from './MarketToggle'
 import {
@@ -58,6 +59,7 @@ export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, user
             readOnly
           />
         </div>
+        <ThemeToggle />
         <Button variant="ghost" size="icon">
           <Bell className="h-5 w-5" />
         </Button>

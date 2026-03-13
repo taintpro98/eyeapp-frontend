@@ -9,19 +9,19 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: "#6F2C91",
-          dark: "#4B1F63",
-          light: "#8B5FBF",
+          primary: "var(--brand-primary)",
+          dark: "var(--brand-dark)",
+          light: "var(--brand-light)",
         },
         surface: {
-          bg: "#F4F0EA",
-          warm: "#F7F4EF",
-          card: "#FFFFFF",
-          border: "#E7DFD6",
+          bg: "var(--surface-bg)",
+          warm: "var(--surface-warm)",
+          card: "var(--surface-card)",
+          border: "var(--surface-border)",
         },
         text: {
-          primary: "#2E2630",
-          secondary: "#6E6470",
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
         },
       },
       fontFamily: {

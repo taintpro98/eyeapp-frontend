@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import { AppShell } from '@/components/layout/AppShell'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AuthGuard } from '@/components/AuthGuard'
@@ -15,7 +16,8 @@ import { SettingsPage } from '@/pages/Settings'
 
 function App() {
   return (
-    <Routes>
+    <ThemeProvider>
+      <Routes>
       <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
       <Route
         path="/sign-in"
@@ -52,6 +54,7 @@ function App() {
       </Route>
       <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
     </Routes>
+    </ThemeProvider>
   )
 }
 

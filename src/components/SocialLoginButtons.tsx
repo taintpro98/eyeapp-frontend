@@ -20,7 +20,7 @@ export function SocialLoginButtons() {
       <button
         type="button"
         onClick={handleGoogleClick}
-        className="flex w-full items-center justify-center gap-3 rounded-lg border border-surface-border bg-white px-4 py-2.5 text-sm font-medium text-text-primary shadow-card transition-colors hover:bg-surface-warm/50"
+        className="flex w-full items-center justify-center gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-2.5 text-sm font-medium text-text-primary shadow-card transition-colors hover:bg-surface-warm/50"
       >
         <svg className="h-5 w-5" viewBox="0 0 24 24">
           <path

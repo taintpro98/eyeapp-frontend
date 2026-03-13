@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SocialLoginButtons } from '@/components/SocialLoginButtons'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuthStore } from '@/store/useAuthStore'
 
 export function SignInPage() {
@@ -23,7 +24,10 @@ export function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-surface-bg px-4">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-surface-bg px-4">
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center">
           <img src="/logo.png" alt="ALumiEye" className="h-14 w-14 rounded-full object-cover" />
