@@ -85,8 +85,8 @@ export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, user
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => {
-                logout()
+              onClick={async () => {
+                await logout()
                 navigate('/sign-in')
               }}
             >

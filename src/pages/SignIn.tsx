@@ -9,17 +9,18 @@ import { useAuthStore } from '@/store/useAuthStore'
 export function SignInPage() {
   const navigate = useNavigate()
   const login = useAuthStore((s) => s.login)
-  const [username, setUsername] = useState('')
+  const error = useAuthStore((s) => s.error)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const clearError = useAuthStore((s) => s.clearError)
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    if (login(username, password)) {
+    clearError()
+    const success = await login(email, password)
+    if (success) {
       navigate('/app/dashboard')
-    } else {
-      setError('Invalid username or password')
     }
   }
 
@@ -37,14 +38,14 @@ export function SignInPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-text-secondary">Username</label>
+            <label className="text-sm font-medium text-text-secondary">Email</label>
             <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="alex"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
               className="mt-1"
-              autoComplete="username"
+              autoComplete="email"
               required
             />
           </div>
@@ -61,8 +62,8 @@ export function SignInPage() {
             />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" className="w-full">
-            Sign in
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>
 

@@ -8,29 +8,36 @@ import { useAuthStore } from '@/store/useAuthStore'
 export function SignUpPage() {
   const navigate = useNavigate()
   const signUp = useAuthStore((s) => s.signUp)
-  const [username, setUsername] = useState('')
+  const error = useAuthStore((s) => s.error)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const clearError = useAuthStore((s) => s.clearError)
+  const [email, setEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [localError, setLocalError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    setLocalError('')
+    clearError()
+
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setLocalError('Passwords do not match')
       return
     }
-    if (password.length < 3) {
-      setError('Password must be at least 3 characters')
+    if (password.length < 8) {
+      setLocalError('Password must be at least 8 characters')
       return
     }
-    if (signUp(username, password, displayName || username)) {
+
+    const success = await signUp(email, password, displayName || email.split('@')[0])
+    if (success) {
       navigate('/app/dashboard')
-    } else {
-      setError('Username already taken')
     }
   }
+
+  const displayError = localError || error
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-surface-bg px-4 py-12">
@@ -46,14 +53,14 @@ export function SignUpPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-text-secondary">Username</label>
+            <label className="text-sm font-medium text-text-secondary">Email</label>
             <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="username"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
               className="mt-1"
-              autoComplete="username"
+              autoComplete="email"
               required
             />
           </div>
@@ -92,9 +99,9 @@ export function SignUpPage() {
               required
             />
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" className="w-full">
-            Sign up
+          {displayError && <p className="text-sm text-red-600">{displayError}</p>}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Sign up'}
           </Button>
         </form>
 

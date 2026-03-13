@@ -49,7 +49,7 @@ export function AppShell() {
           marketToggleItems={marketItems}
           selectedMarket={selectedMarket}
           onMarketSelect={setSelectedMarket}
-          userDisplayName={authUser?.displayName ?? bootstrap.user.displayName}
+          userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
         />
         <main className="flex-1 overflow-auto p-6">
           <Outlet />

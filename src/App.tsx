@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { AuthInit } from '@/components/AuthInit'
 import { AppShell } from '@/components/layout/AppShell'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AuthGuard } from '@/components/AuthGuard'
@@ -17,6 +18,7 @@ import { SettingsPage } from '@/pages/Settings'
 function App() {
   return (
     <ThemeProvider>
+      <AuthInit />
       <Routes>
       <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
       <Route
