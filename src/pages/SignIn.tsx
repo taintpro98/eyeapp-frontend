@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SocialLoginButtons } from '@/components/SocialLoginButtons'
@@ -8,7 +8,9 @@ import { useAuthStore } from '@/store/useAuthStore'
 
 export function SignInPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const login = useAuthStore((s) => s.login)
+  const successMessage = (location.state as { message?: string })?.message
   const error = useAuthStore((s) => s.error)
   const isLoading = useAuthStore((s) => s.isLoading)
   const clearError = useAuthStore((s) => s.clearError)
@@ -61,6 +63,7 @@ export function SignInPage() {
               required
             />
           </div>
+          {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
           {error && <p className="text-sm text-red-600">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign in'}

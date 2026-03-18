@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AuthGuard } from '@/components/AuthGuard'
 import { SignInPage } from '@/pages/SignIn'
 import { SignUpPage } from '@/pages/SignUp'
+import { VerifyEmailPage } from '@/pages/VerifyEmail'
 import { DashboardPage } from '@/pages/Dashboard'
 import { MarketPage } from '@/pages/Market'
 import { SignalsPage } from '@/pages/Signals'
@@ -37,6 +38,7 @@ function App() {
           </AuthGuard>
         }
       />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route
         path="/app"
         element={

@@ -33,7 +33,7 @@ export function SignUpPage() {
 
     const success = await signUp(email, password, displayName || email.split('@')[0])
     if (success) {
-      navigate('/app/dashboard')
+      navigate('/sign-in', { state: { message: 'Registration successful. Please check your email to verify your account.' }, replace: true })
     }
   }
 

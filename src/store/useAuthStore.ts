@@ -71,15 +71,8 @@ export const useAuthStore = create<AuthState>()(
       signUp: async (email: string, password: string, displayName: string) => {
         set({ isLoading: true, error: null })
         try {
-          const res = await authApi.register({ email, password, display_name: displayName })
-          set({
-            user: res.user,
-            accessToken: res.tokens.access_token,
-            refreshToken: res.tokens.refresh_token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          })
+          await authApi.register({ email, password, display_name: displayName })
+          set({ isLoading: false, error: null })
           return true
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : 'Registration failed'
