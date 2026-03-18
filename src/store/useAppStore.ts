@@ -18,7 +18,7 @@ type AppState = {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  selectedMarket: 'crypto',
+  selectedMarket: 'stocks',
   sidebarCollapsed: false,
   upgradeModalOpen: false,
   upgradeModalContext: null,

@@ -103,7 +103,7 @@ export function DashboardPage() {
 
       <SectionCard
         title="Unlock Premium Features"
-        subtitle="Get AI Insights, Portfolio tracking, and Stocks market access"
+        subtitle="Get AI Insights, Portfolio tracking, and Crypto market access"
         className="border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent"
       >
         <div className="flex items-center justify-between">

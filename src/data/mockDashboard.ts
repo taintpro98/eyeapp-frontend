@@ -1,7 +1,9 @@
 export const mockSignals = [
-  { id: '1', symbol: 'BTC/USD', type: 'Buy', strength: 'Strong', time: '2 min ago', market: 'crypto' },
-  { id: '2', symbol: 'ETH/USD', type: 'Sell', strength: 'Medium', time: '5 min ago', market: 'crypto' },
-  { id: '3', symbol: 'EUR/USD', type: 'Buy', strength: 'Weak', time: '12 min ago', market: 'forex' },
+  { id: '1', symbol: 'AAPL', type: 'Buy', strength: 'Strong', time: '2 min ago', market: 'stocks' },
+  { id: '2', symbol: 'MSFT', type: 'Sell', strength: 'Medium', time: '5 min ago', market: 'stocks' },
+  { id: '3', symbol: 'GOOGL', type: 'Buy', strength: 'Weak', time: '12 min ago', market: 'stocks' },
+  { id: '4', symbol: 'BTC/USD', type: 'Buy', strength: 'Strong', time: '2 min ago', market: 'crypto' },
+  { id: '5', symbol: 'ETH/USD', type: 'Sell', strength: 'Medium', time: '5 min ago', market: 'crypto' },
 ]
 
 export const mockKpis = [
