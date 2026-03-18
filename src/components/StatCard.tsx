@@ -18,20 +18,20 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, className 
         className
       )}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-text-secondary">{title}</p>
-          <p className="mt-1 text-2xl font-semibold text-text-primary">{value}</p>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-text-secondary sm:text-sm">{title}</p>
+          <p className="mt-0.5 truncate text-lg font-semibold text-text-primary sm:mt-1 sm:text-2xl">{value}</p>
           {subtitle && <p className="mt-0.5 text-xs text-text-secondary">{subtitle}</p>}
         </div>
         {Icon && (
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-            <Icon className="h-5 w-5 text-brand-primary" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-primary/10 sm:h-10 sm:w-10">
+            <Icon className="h-4 w-4 text-brand-primary sm:h-5 sm:w-5" />
           </div>
         )}
       </div>
       {trend && (
-        <p className={cn('mt-2 text-sm', trend.value >= 0 ? 'text-green-600' : 'text-red-600')}>
+        <p className={cn('mt-1 text-xs sm:mt-2 sm:text-sm', trend.value >= 0 ? 'text-green-600' : 'text-red-600')}>
           {trend.value >= 0 ? '+' : ''}{trend.value}% {trend.label}
         </p>
       )}
