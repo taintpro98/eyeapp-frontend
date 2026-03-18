@@ -51,7 +51,7 @@ export function AppShell() {
           onMarketSelect={setSelectedMarket}
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
         />
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4 sm:p-6">
           <Outlet />
         </main>
       </div>

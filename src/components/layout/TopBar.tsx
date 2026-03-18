@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/useAuthStore'
-import { Search, Bell, ChevronDown } from 'lucide-react'
+import { useAppStore } from '@/store/useAppStore'
+import { Search, Bell, ChevronDown, Menu, Lock } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { Input } from '@/components/ui/input'
 import { MarketToggle } from './MarketToggle'
@@ -37,25 +38,58 @@ export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, user
   const location = useLocation()
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
+  const setSidebarOpen = useAppStore((s) => s.setSidebarOpen)
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal)
   const route = location.pathname.split('/').pop() ?? 'dashboard'
   const pageTitle = routeLabels[route] ?? 'Dashboard'
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-surface-border bg-surface-card/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-surface-card/80">
-      <div className="flex flex-1 items-center gap-6">
-        <h2 className="text-lg font-semibold text-text-primary">{pageTitle}</h2>
-        <MarketToggle
-          items={marketToggleItems}
-          selectedMarket={selectedMarket}
-          onSelect={onMarketSelect}
-        />
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-2 border-b border-surface-border bg-surface-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-surface-card/80 sm:gap-4 sm:px-6">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden shrink-0"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open menu"
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+      <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden sm:gap-6">
+        <h2 className="truncate text-base font-semibold text-text-primary sm:text-lg">{pageTitle}</h2>
+        <div className="hidden min-w-0 shrink sm:block">
+          <MarketToggle
+            items={marketToggleItems}
+            selectedMarket={selectedMarket}
+            onSelect={onMarketSelect}
+          />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="sm:hidden shrink-0">
+              {marketToggleItems.find((m) => m.code === selectedMarket)?.label ?? 'Market'}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {marketToggleItems.map((item) => (
+              <DropdownMenuItem
+                key={item.code}
+                onClick={() =>
+                  item.accessible ? onMarketSelect(item.code) : openUpgradeModal({ market: item.label, reason: item.reason ?? undefined })
+                }
+              >
+                {item.label}
+                {!item.accessible && <Lock className="ml-auto h-3.5 w-3.5 text-text-secondary" />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <div className="flex items-center gap-3">
-        <div className="relative">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="relative hidden sm:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
           <Input
             placeholder="Search (⌘K)"
-            className="w-64 pl-9"
+            className="w-40 pl-9 lg:w-64"
             readOnly
           />
         </div>

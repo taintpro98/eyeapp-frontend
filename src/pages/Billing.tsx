@@ -15,7 +15,7 @@ export function BillingPage() {
       />
 
       <SectionCard title="Current Plan">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <PlanBadge label="Free" variant="default" />
             <div>

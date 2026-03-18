@@ -6,6 +6,9 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: 5173,
+        watch: {
+            usePolling: true, // required for reliable file watching inside Docker
+        },
     },
     resolve: {
         alias: {

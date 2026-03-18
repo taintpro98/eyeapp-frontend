@@ -21,7 +21,7 @@ export function SettingsPage() {
       />
 
       <SectionCard title="Appearance" subtitle="Theme preference">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-medium text-text-primary">Theme</p>
             <p className="text-sm text-text-secondary">Switch between light and dark mode</p>
@@ -81,7 +81,7 @@ export function SettingsPage() {
       </SectionCard>
 
       <SectionCard title="Plan & Entitlements" subtitle="Your subscription summary">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
           <PlanBadge
             label={bootstrap?.subscription.planCode ?? 'free'}
             variant={

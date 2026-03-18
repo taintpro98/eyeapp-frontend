@@ -41,7 +41,7 @@ export function DashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <SectionCard title="Plan Summary" className="lg:col-span-2">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary/10">
                 <span className="text-xl font-bold text-brand-primary">{plan.charAt(0).toUpperCase()}</span>
@@ -106,7 +106,7 @@ export function DashboardPage() {
         subtitle="Get AI Insights, Portfolio tracking, and Crypto market access"
         className="border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-text-secondary">
             Upgrade to Pro or Premium for advanced analytics and more markets.
           </p>

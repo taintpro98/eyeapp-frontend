@@ -19,6 +19,7 @@ export function WatchlistPage() {
         children={
           <Button
             variant="outline"
+            className="w-full sm:w-auto"
             onClick={() => atLimit && openUpgradeModal({ feature: 'Watchlist', reason: 'Free plan limited to 3 items' })}
           >
             <Plus className="mr-2 h-4 w-4" />

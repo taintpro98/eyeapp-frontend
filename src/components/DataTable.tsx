@@ -15,7 +15,7 @@ type DataTableProps<T> = {
 export function DataTable<T extends Record<string, unknown>>({ columns, data, className }: DataTableProps<T>) {
   return (
     <div className={cn('overflow-x-auto rounded-card border border-surface-border', className)}>
-      <table className="w-full text-sm">
+      <table className="min-w-[400px] w-full text-sm">
         <thead>
           <tr className="border-b border-surface-border bg-surface-warm/50">
             {columns.map((col) => (

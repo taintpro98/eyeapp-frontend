@@ -17,7 +17,7 @@ export function LockedCard({ title, description, badge, children, className }: L
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-6 shadow-card',
+        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6',
         'ring-1 ring-brand-primary/5',
         className
       )}

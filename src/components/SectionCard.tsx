@@ -11,7 +11,7 @@ export function SectionCard({ title, subtitle, children, className }: SectionCar
   return (
     <div
       className={cn(
-        'rounded-card border border-surface-border bg-surface-card p-6 shadow-card',
+        'rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6',
         className
       )}
     >

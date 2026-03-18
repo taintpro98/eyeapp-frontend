@@ -16,8 +16,8 @@ export function SignalsPage() {
         title="Signals"
         subtitle="Trading signals and alerts"
         children={
-          <div className="flex gap-2">
-            <Input placeholder="Filter by symbol..." className="w-48" />
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <Input placeholder="Filter by symbol..." className="w-full sm:w-48" />
             <Button variant="outline">Filters</Button>
           </div>
         }

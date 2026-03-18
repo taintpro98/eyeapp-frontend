@@ -34,4 +34,13 @@
   body {
     @apply bg-surface-bg text-text-primary font-sans antialiased;
   }
+
+  /* Hide scrollbar for horizontal scroll areas (e.g. MarketToggle) */
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }

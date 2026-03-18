@@ -16,7 +16,7 @@ export function PremiumPreviewCard({ title, description, children, className }: 
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-6 shadow-card',
+        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6',
         'ring-1 ring-brand-light/20',
         className
       )}

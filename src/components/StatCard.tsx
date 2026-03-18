@@ -14,7 +14,7 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, className 
   return (
     <div
       className={cn(
-        'rounded-card border border-surface-border bg-surface-card p-5 shadow-card transition-shadow hover:shadow-soft',
+        'rounded-card border border-surface-border bg-surface-card p-4 shadow-card transition-shadow hover:shadow-soft sm:p-5',
         className
       )}
     >
