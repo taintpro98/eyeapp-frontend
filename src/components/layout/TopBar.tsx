@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useAppStore } from '@/store/useAppStore'
+import { accountMenuItems } from '@/config/navigation'
+import { getIcon } from '@/lib/icons'
 import { Search, Bell, ChevronDown, Menu, Lock } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { Input } from '@/components/ui/input'
@@ -23,7 +25,7 @@ const routeLabels: Record<string, string> = {
   watchlist: 'Watchlist',
   portfolio: 'Portfolio',
   'ai-insights': 'AI Insights',
-  billing: 'Billing',
+  billing: 'Plan & Billing',
   settings: 'Settings',
 }
 
@@ -32,9 +34,10 @@ type TopBarProps = {
   selectedMarket: string
   onMarketSelect: (code: string) => void
   userDisplayName: string
+  planCode?: string
 }
 
-export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, userDisplayName }: TopBarProps) {
+export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, userDisplayName, planCode }: TopBarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
@@ -110,12 +113,25 @@ export function TopBar({ marketToggleItems, selectedMarket, onMarketSelect, user
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/app/settings')}>
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/app/billing')}>
-              Billing
-            </DropdownMenuItem>
+            {accountMenuItems.map((item) => {
+              if (item.type !== 'link') return null
+              const Icon = getIcon(item.icon)
+              const isPlanBilling = item.path === '/app/billing'
+              const planLabel = planCode ? planCode.charAt(0).toUpperCase() + planCode.slice(1) : null
+              return (
+                <DropdownMenuItem key={item.path} onClick={() => navigate(item.path)}>
+                  <div className="flex flex-col">
+                    <span className="flex items-center gap-2">
+                      <Icon className="h-4 w-4 shrink-0" />
+                      {item.label}
+                    </span>
+                    {isPlanBilling && planLabel && (
+                      <span className="ml-6 text-xs text-text-secondary">Current plan: {planLabel}</span>
+                    )}
+                  </div>
+                </DropdownMenuItem>
+              )
+            })}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"

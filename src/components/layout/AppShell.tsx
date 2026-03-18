@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { fetchBootstrap } from '@/api/bootstrap'
+import { getSidebarNavItems } from '@/config/navigation'
 import { useAppStore } from '@/store/useAppStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Sidebar } from './Sidebar'
@@ -36,6 +37,7 @@ export function AppShell() {
   }
 
   const { sidebar, marketToggle } = bootstrap.navigation
+  const sidebarNavItems = getSidebarNavItems(sidebar)
   const marketItems = marketToggle.map((m) => ({
     ...m,
     selected: m.code === selectedMarket,
@@ -43,13 +45,14 @@ export function AppShell() {
 
   return (
     <div className="flex h-screen bg-surface-bg">
-      <Sidebar items={sidebar} />
+      <Sidebar items={sidebarNavItems} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <TopBar
           marketToggleItems={marketItems}
           selectedMarket={selectedMarket}
           onMarketSelect={setSelectedMarket}
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
+          planCode={bootstrap.subscription.planCode}
         />
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           <Outlet />
