@@ -24,7 +24,7 @@ export const mockBootstrap: BootstrapResponse = {
       { key: 'settings', label: 'Settings', path: '/app/settings', icon: 'Settings', visible: true, accessible: true, badge: null },
     ],
     marketToggle: [
-      { code: 'stocks', label: 'Stocks', accessible: true, selected: true, reason: null },
+      { code: 'stocks', label: 'Stock', accessible: true, selected: true, reason: null },
       { code: 'crypto', label: 'Crypto', accessible: false, selected: false, reason: 'Upgrade to Pro' },
     ],
   },

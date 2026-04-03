@@ -66,14 +66,12 @@ export function DashboardPage() {
 
         <SectionCard title="Current Market">
           <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-text-secondary">BTC</span>
-              <span className="font-medium">{mockMarketSummary.btcPrice}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-secondary">ETH</span>
-              <span className="font-medium">{mockMarketSummary.ethPrice}</span>
-            </div>
+            {(selectedMarket === 'crypto' ? mockMarketSummary.crypto : mockMarketSummary.stocks).rows.map((row) => (
+              <div key={row.label} className="flex justify-between">
+                <span className="text-text-secondary">{row.label}</span>
+                <span className="font-medium">{row.value}</span>
+              </div>
+            ))}
           </div>
         </SectionCard>
       </div>
@@ -103,7 +101,7 @@ export function DashboardPage() {
 
       <SectionCard
         title="Unlock Premium Features"
-        subtitle="Get AI Insights, Portfolio tracking, and Crypto market access"
+        subtitle="Get AI Insights, Portfolio tracking, and expanded market coverage"
         className="border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent"
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

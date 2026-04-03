@@ -11,7 +11,7 @@ export function PortfolioPage() {
 
       <LockedCard
         title="Portfolio Tracking"
-        description="Track your crypto, forex, and stock holdings in one place. Get performance analytics and rebalancing suggestions."
+        description="Track your stock and crypto holdings in one place. Get performance analytics and rebalancing suggestions."
         badge="Pro"
       >
         <div className="mt-6 grid gap-4 sm:grid-cols-2">

@@ -3,28 +3,46 @@ import { PageHeader } from '@/components/PageHeader'
 import { StatCard } from '@/components/StatCard'
 import { SectionCard } from '@/components/SectionCard'
 import { DataTable } from '@/components/DataTable'
-import { mockTopMovers, mockSentiment } from '@/data/mockMarket'
+import {
+  mockTopMoversStocks,
+  mockTopMoversCrypto,
+  mockSentiment,
+  mockMarketOverviewStats,
+} from '@/data/mockMarket'
+import { useAppStore } from '@/store/useAppStore'
+
+const statIcons = [TrendingUp, TrendingUp, BarChart3, BarChart3]
 
 export function MarketPage() {
+  const selectedMarket = useAppStore((s) => s.selectedMarket)
+  const isCrypto = selectedMarket === 'crypto'
+  const topMovers = isCrypto ? mockTopMoversCrypto : mockTopMoversStocks
+  const overviewStats = isCrypto ? mockMarketOverviewStats.crypto : mockMarketOverviewStats.stocks
+
   return (
     <div className="space-y-6 sm:space-y-8">
       <PageHeader
         title="Market Overview"
-        subtitle="Real-time market data and sentiment"
+        subtitle={isCrypto ? 'Cryptocurrency markets — real-time snapshot' : 'Vietnam (HOSE / HNX) — real-time snapshot'}
       />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="BTC Price" value="$67,420" trend={{ value: 1.2, label: '24h' }} icon={TrendingUp} />
-        <StatCard title="ETH Price" value="$3,890" trend={{ value: -0.4, label: '24h' }} icon={TrendingUp} />
-        <StatCard title="Market Cap" value="$2.4T" trend={{ value: 2.1, label: '24h' }} icon={BarChart3} />
-        <StatCard title="24h Volume" value="$98B" trend={{ value: -1.5, label: '24h' }} icon={BarChart3} />
+        {overviewStats.map((stat, i) => (
+          <StatCard
+            key={stat.title}
+            title={stat.title}
+            value={stat.value}
+            trend={stat.trend}
+            icon={statIcons[i] ?? TrendingUp}
+          />
+        ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <SectionCard title="Top Movers" subtitle="24h performance">
           {/* Mobile: card list */}
           <div className="space-y-3 md:hidden">
-            {mockTopMovers.map((row) => (
+            {topMovers.map((row) => (
               <div
                 key={row.symbol}
                 className="flex items-center justify-between rounded-lg border border-surface-border p-3"
@@ -60,7 +78,7 @@ export function MarketPage() {
               },
               { key: 'volume', header: 'Volume' },
             ]}
-            data={mockTopMovers}
+            data={topMovers}
           />
           </div>
         </SectionCard>
