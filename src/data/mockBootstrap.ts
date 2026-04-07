@@ -18,7 +18,7 @@ export const mockBootstrap: BootstrapResponse = {
       { key: 'market', label: 'Market', path: '/app/market', icon: 'TrendingUp', visible: true, accessible: true, badge: null },
       { key: 'signals', label: 'Signals', path: '/app/signals', icon: 'Zap', visible: true, accessible: true, badge: null },
       { key: 'watchlist', label: 'Watchlist', path: '/app/watchlist', icon: 'Star', visible: true, accessible: true, badge: null },
-      { key: 'portfolio', label: 'Portfolio', path: '/app/portfolio', icon: 'PieChart', visible: true, accessible: false, reason: 'Upgrade to Pro', badge: 'Pro' },
+      { key: 'portfolio', label: 'Portfolio', path: '/app/portfolio', icon: 'PieChart', visible: true, accessible: true, badge: null },
       { key: 'ai-insights', label: 'AI Insights', path: '/app/ai-insights', icon: 'Brain', visible: true, accessible: false, reason: 'Upgrade to Premium', badge: 'Premium' },
       { key: 'billing', label: 'Billing', path: '/app/billing', icon: 'CreditCard', visible: true, accessible: true, badge: null },
       { key: 'settings', label: 'Settings', path: '/app/settings', icon: 'Settings', visible: true, accessible: true, badge: null },
