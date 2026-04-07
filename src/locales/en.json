@@ -1,0 +1,337 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "trader": "Trader",
+    "active": "Active",
+    "current": "Current",
+    "pro": "Pro",
+    "market": "Market",
+    "searchCmdK": "Search (⌘K)",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "notifications": "Notifications",
+    "sampleInsight": "Sample insight",
+    "aria": {
+      "allocationByWeight": "Allocation by weight"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "market": "Market",
+    "signals": "Signals",
+    "watchlist": "Watchlist",
+    "portfolio": "Portfolio",
+    "ai-insights": "AI Insights",
+    "billing": "Billing",
+    "settings": "Settings",
+    "badges": {
+      "pro": "Pro",
+      "premium": "Premium"
+    }
+  },
+  "account": {
+    "planBilling": "Plan & Billing",
+    "settings": "Settings",
+    "myAccount": "My Account",
+    "currentPlan": "Current plan: {{plan}}",
+    "signOut": "Sign out"
+  },
+  "marketToggle": {
+    "stocks": "Stock",
+    "crypto": "Crypto"
+  },
+  "appShell": {
+    "loading": "Loading..."
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "language": {
+    "label": "Language",
+    "description": "Choose app language",
+    "en": "English",
+    "vi": "Vietnamese"
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}",
+    "subtitle": "Here's your market overview for today",
+    "planSummary": "Plan Summary",
+    "planSuffix": "Plan",
+    "renews": "Renews {{date}}",
+    "managePlan": "Manage plan",
+    "currentMarket": "Current Market",
+    "recentSignals": "Recent Signals",
+    "recentSignalsSubtitle": "Latest trading signals for your market",
+    "viewAllSignals": "View all signals",
+    "unlockPremium": "Unlock Premium Features",
+    "unlockPremiumSubtitle": "Get AI Insights, Portfolio tracking, and expanded market coverage",
+    "unlockPremiumBody": "Upgrade to Pro or Premium for advanced analytics and more markets.",
+    "upgradeNow": "Upgrade now",
+    "kpiTitles": {
+      "vnIndex": "VN-Index",
+      "hoseValue": "HOSE value",
+      "netForeign": "Net foreign",
+      "vn30": "VN30"
+    },
+    "kpiSubtitles": {
+      "session": "Session"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Track your holdings and performance",
+    "allocation": "Allocation",
+    "assets": {
+      "CASH": "Cash"
+    },
+    "holdingBreakdown": "Holding breakdown",
+    "table": {
+      "asset": "Asset",
+      "weight": "Weight",
+      "entry": "Entry",
+      "current": "Current",
+      "return": "Return"
+    }
+  },
+  "signals": {
+    "title": "Signals",
+    "subtitle": "Trading signals and alerts",
+    "filterPlaceholder": "Filter by symbol...",
+    "filters": "Filters",
+    "activeSignals": "Active Signals",
+    "activeSignalsSubtitle": "Market-aware signals",
+    "columns": {
+      "symbol": "Symbol",
+      "type": "Type",
+      "strength": "Strength",
+      "confidence": "Confidence",
+      "time": "Time"
+    },
+    "mobile": {
+      "type": "Type",
+      "strength": "Strength",
+      "confidence": "Confidence",
+      "time": "Time"
+    },
+    "advancedAnalytics": "Advanced Signal Analytics",
+    "advancedAnalyticsSubtitle": "Premium feature — Unlock with Pro plan",
+    "advancedAnalyticsBlurb": "Correlation matrix, backtest results, and custom alerts...",
+    "unlockAdvancedAnalytics": "Unlock Advanced Analytics",
+    "time": {
+      "minutesAgo": "{{count}} min ago"
+    }
+  },
+  "market": {
+    "title": "Market Overview",
+    "subtitleStocks": "Vietnam (HOSE / HNX) — real-time snapshot",
+    "subtitleCrypto": "Cryptocurrency markets — real-time snapshot",
+    "topMovers": "Top Movers",
+    "topMoversSubtitle": "24h performance",
+    "sentiment": "Market Sentiment",
+    "columns": {
+      "symbol": "Symbol",
+      "name": "Name",
+      "price": "Price",
+      "change24h": "24h",
+      "volume": "Volume"
+    },
+    "overview": {
+      "stocks": {
+        "vnIndex": "VN-Index",
+        "vn30": "VN30",
+        "hoseValue": "HOSE value",
+        "netForeign": "Net foreign"
+      },
+      "crypto": {
+        "btcPrice": "BTC Price",
+        "ethPrice": "ETH Price",
+        "mktCap": "Crypto Mkt Cap",
+        "volume24h": "24h Volume"
+      }
+    },
+    "trend": {
+      "24h": "24h",
+      "session": "session"
+    },
+    "sentimentLabels": {
+      "bullish": "Bullish",
+      "neutral": "Neutral",
+      "bearish": "Bearish"
+    }
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "subtitle": "{{count}} of {{max}} slots used (Free plan)",
+    "addAsset": "Add asset",
+    "upgradeToAdd": "Upgrade to add more",
+    "trackedAssets": "Tracked Assets",
+    "limitBanner": "You've reached the free plan limit. Upgrade to add more assets to your watchlist.",
+    "upgradeToPro": "Upgrade to Pro",
+    "emptyTitle": "No assets in watchlist",
+    "emptyDescription": "Add assets to track their performance and get signals.",
+    "addFirst": "Add first asset"
+  },
+  "aiInsights": {
+    "title": "AI Insights",
+    "subtitle": "AI-powered market analysis and predictions",
+    "marketDirection": "Market Direction",
+    "marketDirectionDesc": "AI-predicted short-term direction with confidence score",
+    "sentimentAnalysis": "Sentiment Analysis",
+    "sentimentAnalysisDesc": "Aggregated sentiment from news and social",
+    "sampleBullish": "BTC: Bullish · 87% confidence",
+    "sampleGreed": "Overall: Greed (72)",
+    "upgradePremium": "Upgrade to Premium"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "appearance": "Appearance",
+    "appearanceSubtitle": "Theme preference",
+    "themeLabel": "Theme",
+    "themeHint": "Switch between light and dark mode",
+    "profile": "Profile",
+    "profileSubtitle": "Your account information",
+    "displayName": "Display name",
+    "email": "Email",
+    "saveChanges": "Save changes",
+    "security": "Security",
+    "securitySubtitle": "Password and authentication",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "updatePassword": "Update password",
+    "planEntitlements": "Plan & Entitlements",
+    "planEntitlementsSubtitle": "Your subscription summary",
+    "status": "Status: {{status}}",
+    "manageBilling": "Manage billing"
+  },
+  "billing": {
+    "title": "Billing",
+    "subtitle": "Manage your subscription and invoices",
+    "currentPlan": "Current Plan",
+    "freePlan": "Free Plan",
+    "nextBilling": "Next billing: —",
+    "upgradePlan": "Upgrade plan",
+    "comparePlans": "Compare Plans",
+    "comparePlansSubtitle": "Choose the plan that fits your needs",
+    "invoiceHistory": "Invoice History",
+    "invoicePaid": "Paid",
+    "columns": {
+      "invoice": "Invoice",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "features": [
+          "5 signals/day",
+          "Stocks market",
+          "Basic dashboard"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "features": [
+          "Unlimited signals",
+          "Crypto market",
+          "Portfolio tracking",
+          "Priority support"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "features": [
+          "Everything in Pro",
+          "AI Insights",
+          "Advanced analytics",
+          "API access"
+        ]
+      }
+    },
+    "cta": {
+      "current": "Current",
+      "upgrade": "Upgrade"
+    }
+  },
+  "auth": {
+    "signInSubtitle": "Sign in to your account",
+    "signUpSubtitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "displayName": "Display name",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signUp": "Sign up",
+    "creatingAccount": "Creating account...",
+    "orContinue": "Or continue with",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordShort": "Password must be at least 8 characters"
+    },
+    "registrationSuccess": "Registration successful. Please check your email to verify your account.",
+    "continueGoogle": "Continue with Google"
+  },
+  "signalsEnum": {
+    "type": {
+      "Buy": "Buy",
+      "Sell": "Sell",
+      "Hold": "Hold"
+    },
+    "strength": {
+      "Strong": "Strong",
+      "Medium": "Medium",
+      "Weak": "Weak"
+    }
+  },
+  "verify": {
+    "title": "Email verification",
+    "loading": "Verifying your email address...",
+    "success": "Your email has been verified successfully. You can now sign in to your account.",
+    "invalidLink": "Verification link is invalid or missing.",
+    "expired": "This verification link has expired. Please request a new one.",
+    "failed": "Verification failed. The link may be invalid or already used.",
+    "signIn": "Sign in",
+    "createAccount": "Create account"
+  },
+  "upgrade": {
+    "titleDefault": "Upgrade Your Plan",
+    "unlockMarket": "Unlock {{market}} market",
+    "unlockFeature": "Unlock {{feature}}",
+    "descriptionDefault": "This feature is available on our Pro or Premium plans. Upgrade now to unlock advanced market intelligence and trading insights.",
+    "maybeLater": "Maybe later",
+    "upgradeNow": "Upgrade now",
+    "upgradeToUnlock": "Upgrade to unlock",
+    "features": {
+      "premiumFeatures": {
+        "title": "Unlock Premium Features"
+      },
+      "watchlist": {
+        "title": "Unlock Watchlist"
+      },
+      "advancedAnalytics": {
+        "title": "Unlock Advanced Signal Analytics"
+      },
+      "marketDirection": {
+        "title": "Unlock Market Direction"
+      },
+      "sentimentAnalysis": {
+        "title": "Unlock Sentiment Analysis"
+      },
+      "aiInsights": {
+        "title": "Unlock AI Insights"
+      }
+    },
+    "reasons": {
+      "upgradeToPro": "Upgrade to Pro to unlock this market.",
+      "freeWatchlistLimit": "Free plan limited to 3 items. Upgrade to add more.",
+      "proPlan": "This feature is included in the Pro plan. Upgrade to continue."
+    }
+  }
+}

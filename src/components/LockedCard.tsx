@@ -1,25 +1,36 @@
-import { Lock } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { useAppStore } from '@/store/useAppStore'
+import { Lock } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useAppStore } from "@/store/useAppStore";
 
 type LockedCardProps = {
-  title: string
-  description?: string
-  badge?: string
-  children?: React.ReactNode
-  className?: string
-}
+  title: string;
+  description?: string;
+  badge?: string;
+  /** Key under `upgrade.features.*.title` */
+  upgradeFeatureKey?: string;
+  children?: React.ReactNode;
+  className?: string;
+};
 
-export function LockedCard({ title, description, badge, children, className }: LockedCardProps) {
-  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal)
+export function LockedCard({
+  title,
+  description,
+  badge,
+  upgradeFeatureKey,
+  children,
+  className,
+}: LockedCardProps) {
+  const { t } = useTranslation();
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
 
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6',
-        'ring-1 ring-brand-primary/5',
-        className
+        "relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6",
+        "ring-1 ring-brand-primary/5",
+        className,
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent" />
@@ -37,14 +48,21 @@ export function LockedCard({ title, description, badge, children, className }: L
                 </span>
               )}
             </div>
-            {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
+            {description && (
+              <p className="mt-1 text-sm text-text-secondary">{description}</p>
+            )}
           </div>
         </div>
         {children}
-        <Button className="mt-4" onClick={() => openUpgradeModal({ feature: title })}>
-          Upgrade to unlock
+        <Button
+          className="mt-4"
+          onClick={() =>
+            openUpgradeModal({ featureKey: upgradeFeatureKey, feature: title })
+          }
+        >
+          {t("upgrade.upgradeToUnlock")}
         </Button>
       </div>
     </div>
-  )
+  );
 }

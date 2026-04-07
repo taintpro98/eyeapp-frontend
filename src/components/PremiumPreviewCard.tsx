@@ -1,24 +1,34 @@
-import { Lock, Sparkles } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { useAppStore } from '@/store/useAppStore'
+import { Lock, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useAppStore } from "@/store/useAppStore";
 
 type PremiumPreviewCardProps = {
-  title: string
-  description?: string
-  children?: React.ReactNode
-  className?: string
-}
+  title: string;
+  description?: string;
+  /** Passed to upgrade modal (key under `upgrade.features.*.title`) */
+  upgradeFeatureKey?: string;
+  children?: React.ReactNode;
+  className?: string;
+};
 
-export function PremiumPreviewCard({ title, description, children, className }: PremiumPreviewCardProps) {
-  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal)
+export function PremiumPreviewCard({
+  title,
+  description,
+  upgradeFeatureKey,
+  children,
+  className,
+}: PremiumPreviewCardProps) {
+  const { t } = useTranslation();
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
 
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6',
-        'ring-1 ring-brand-light/20',
-        className
+        "relative overflow-hidden rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6",
+        "ring-1 ring-brand-light/20",
+        className,
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-brand-light/5 via-transparent to-brand-primary/5" />
@@ -29,15 +39,26 @@ export function PremiumPreviewCard({ title, description, children, className }: 
           </div>
           <div>
             <h3 className="font-semibold text-text-primary">{title}</h3>
-            {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
+            {description && (
+              <p className="mt-1 text-sm text-text-secondary">{description}</p>
+            )}
           </div>
         </div>
         {children && <div className="mt-4">{children}</div>}
-        <Button className="mt-4" variant="default" onClick={() => openUpgradeModal({ feature: title })}>
+        <Button
+          className="mt-4"
+          variant="default"
+          onClick={() =>
+            openUpgradeModal({
+              featureKey: upgradeFeatureKey,
+              feature: title,
+            })
+          }
+        >
           <Lock className="mr-2 h-4 w-4" />
-          Upgrade to Premium
+          {t("aiInsights.upgradePremium")}
         </Button>
       </div>
     </div>
-  )
+  );
 }

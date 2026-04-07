@@ -8,7 +8,7 @@ import {
   CreditCard,
   Settings,
   type LucideIcon,
-} from 'lucide-react'
+} from "lucide-react";
 
 const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -19,8 +19,8 @@ const iconMap: Record<string, LucideIcon> = {
   Brain,
   CreditCard,
   Settings,
-}
+};
 
 export function getIcon(name: string): LucideIcon {
-  return iconMap[name] ?? LayoutDashboard
+  return iconMap[name] ?? LayoutDashboard;
 }

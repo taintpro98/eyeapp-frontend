@@ -1,0 +1,337 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "trader": "Nhà giao dịch",
+    "active": "Đang hoạt động",
+    "current": "Hiện tại",
+    "pro": "Pro",
+    "market": "Thị trường",
+    "searchCmdK": "Tìm kiếm (⌘K)",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "notifications": "Thông báo",
+    "sampleInsight": "Ví dụ insight",
+    "aria": {
+      "allocationByWeight": "Phân bổ theo tỷ trọng"
+    }
+  },
+  "nav": {
+    "dashboard": "Bảng điều khiển",
+    "market": "Thị trường",
+    "signals": "Tín hiệu",
+    "watchlist": "Danh sách theo dõi",
+    "portfolio": "Danh mục",
+    "ai-insights": "Phân tích AI",
+    "billing": "Thanh toán",
+    "settings": "Cài đặt",
+    "badges": {
+      "pro": "Pro",
+      "premium": "Cao cấp"
+    }
+  },
+  "account": {
+    "planBilling": "Gói & Thanh toán",
+    "settings": "Cài đặt",
+    "myAccount": "Tài khoản của tôi",
+    "currentPlan": "Gói hiện tại: {{plan}}",
+    "signOut": "Đăng xuất"
+  },
+  "marketToggle": {
+    "stocks": "Cổ phiếu",
+    "crypto": "Crypto"
+  },
+  "appShell": {
+    "loading": "Đang tải..."
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối",
+    "switchToLight": "Chuyển sang chế độ sáng",
+    "switchToDark": "Chuyển sang chế độ tối"
+  },
+  "language": {
+    "label": "Ngôn ngữ",
+    "description": "Chọn ngôn ngữ ứng dụng",
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt"
+  },
+  "dashboard": {
+    "welcome": "Chào mừng trở lại, {{name}}",
+    "subtitle": "Tổng quan thị trường hôm nay của bạn",
+    "planSummary": "Tóm tắt gói",
+    "planSuffix": "Gói",
+    "renews": "Gia hạn {{date}}",
+    "managePlan": "Quản lý gói",
+    "currentMarket": "Thị trường hiện tại",
+    "recentSignals": "Tín hiệu gần đây",
+    "recentSignalsSubtitle": "Tín hiệu giao dịch mới nhất cho thị trường của bạn",
+    "viewAllSignals": "Xem tất cả tín hiệu",
+    "unlockPremium": "Mở khóa tính năng Premium",
+    "unlockPremiumSubtitle": "Phân tích AI, theo dõi danh mục và phạm vi thị trường mở rộng",
+    "unlockPremiumBody": "Nâng cấp Pro hoặc Premium để có phân tích nâng cao và nhiều thị trường hơn.",
+    "upgradeNow": "Nâng cấp ngay",
+    "kpiTitles": {
+      "vnIndex": "VN-Index",
+      "hoseValue": "Giá trị HOSE",
+      "netForeign": "Khối ngoại ròng",
+      "vn30": "VN30"
+    },
+    "kpiSubtitles": {
+      "session": "Phiên"
+    }
+  },
+  "portfolio": {
+    "title": "Danh mục",
+    "subtitle": "Theo dõi danh mục và hiệu suất",
+    "allocation": "Phân bổ",
+    "assets": {
+      "CASH": "Tiền mặt"
+    },
+    "holdingBreakdown": "Chi tiết danh mục",
+    "table": {
+      "asset": "Tài sản",
+      "weight": "Tỷ trọng",
+      "entry": "Vào",
+      "current": "Hiện tại",
+      "return": "Lợi nhuận"
+    }
+  },
+  "signals": {
+    "title": "Tín hiệu",
+    "subtitle": "Tín hiệu giao dịch và cảnh báo",
+    "filterPlaceholder": "Lọc theo mã...",
+    "filters": "Bộ lọc",
+    "activeSignals": "Tín hiệu đang hoạt động",
+    "activeSignalsSubtitle": "Tín hiệu theo thị trường",
+    "columns": {
+      "symbol": "Mã",
+      "type": "Loại",
+      "strength": "Độ mạnh",
+      "confidence": "Độ tin cậy",
+      "time": "Thời gian"
+    },
+    "mobile": {
+      "type": "Loại",
+      "strength": "Độ mạnh",
+      "confidence": "Độ tin cậy",
+      "time": "Thời gian"
+    },
+    "advancedAnalytics": "Phân tích tín hiệu nâng cao",
+    "advancedAnalyticsSubtitle": "Tính năng Premium — Mở khóa với gói Pro",
+    "advancedAnalyticsBlurb": "Ma trận tương quan, kết quả backtest và cảnh báo tùy chỉnh...",
+    "unlockAdvancedAnalytics": "Mở khóa phân tích nâng cao",
+    "time": {
+      "minutesAgo": "{{count}} phút trước"
+    }
+  },
+  "market": {
+    "title": "Tổng quan thị trường",
+    "subtitleStocks": "Việt Nam (HOSE / HNX) — ảnh chụp thời gian thực",
+    "subtitleCrypto": "Thị trường tiền mã hóa — ảnh chụp thời gian thực",
+    "topMovers": "Top biến động",
+    "topMoversSubtitle": "Hiệu suất 24h",
+    "sentiment": "Tâm lý thị trường",
+    "columns": {
+      "symbol": "Mã",
+      "name": "Tên",
+      "price": "Giá",
+      "change24h": "24h",
+      "volume": "Khối lượng"
+    },
+    "overview": {
+      "stocks": {
+        "vnIndex": "VN-Index",
+        "vn30": "VN30",
+        "hoseValue": "Giá trị HOSE",
+        "netForeign": "Khối ngoại ròng"
+      },
+      "crypto": {
+        "btcPrice": "Giá BTC",
+        "ethPrice": "Giá ETH",
+        "mktCap": "Vốn hóa crypto",
+        "volume24h": "Khối lượng 24h"
+      }
+    },
+    "trend": {
+      "24h": "24h",
+      "session": "phiên"
+    },
+    "sentimentLabels": {
+      "bullish": "Tích cực",
+      "neutral": "Trung lập",
+      "bearish": "Tiêu cực"
+    }
+  },
+  "watchlist": {
+    "title": "Danh sách theo dõi",
+    "subtitle": "Đã dùng {{count}}/{{max}} mục (gói miễn phí)",
+    "addAsset": "Thêm mã",
+    "upgradeToAdd": "Nâng cấp để thêm",
+    "trackedAssets": "Tài sản theo dõi",
+    "limitBanner": "Bạn đã đạt giới hạn gói miễn phí. Nâng cấp để thêm mã vào danh sách.",
+    "upgradeToPro": "Nâng cấp Pro",
+    "emptyTitle": "Chưa có mã trong danh sách",
+    "emptyDescription": "Thêm mã để theo dõi hiệu suất và nhận tín hiệu.",
+    "addFirst": "Thêm mã đầu tiên"
+  },
+  "aiInsights": {
+    "title": "Phân tích AI",
+    "subtitle": "Phân tích và dự báo thị trường bằng AI",
+    "marketDirection": "Xu hướng thị trường",
+    "marketDirectionDesc": "Hướng ngắn hạn dự đoán bởi AI kèm điểm tin cậy",
+    "sentimentAnalysis": "Phân tích tâm lý",
+    "sentimentAnalysisDesc": "Tâm lý tổng hợp từ tin tức và mạng xã hội",
+    "sampleBullish": "BTC: Tăng · 87% tin cậy",
+    "sampleGreed": "Tổng thể: Tham lam (72)",
+    "upgradePremium": "Nâng cấp Premium"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Quản lý tài khoản và tùy chọn",
+    "appearance": "Giao diện",
+    "appearanceSubtitle": "Chế độ sáng / tối",
+    "themeLabel": "Giao diện",
+    "themeHint": "Chuyển giữa chế độ sáng và tối",
+    "profile": "Hồ sơ",
+    "profileSubtitle": "Thông tin tài khoản",
+    "displayName": "Tên hiển thị",
+    "email": "Email",
+    "saveChanges": "Lưu thay đổi",
+    "security": "Bảo mật",
+    "securitySubtitle": "Mật khẩu và xác thực",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "updatePassword": "Cập nhật mật khẩu",
+    "planEntitlements": "Gói & Quyền lợi",
+    "planEntitlementsSubtitle": "Tóm tắt đăng ký",
+    "status": "Trạng thái: {{status}}",
+    "manageBilling": "Quản lý thanh toán"
+  },
+  "billing": {
+    "title": "Thanh toán",
+    "subtitle": "Quản lý gói đăng ký và hóa đơn",
+    "currentPlan": "Gói hiện tại",
+    "freePlan": "Gói miễn phí",
+    "nextBilling": "Thanh toán tiếp: —",
+    "upgradePlan": "Nâng cấp gói",
+    "comparePlans": "So sánh gói",
+    "comparePlansSubtitle": "Chọn gói phù hợp",
+    "invoiceHistory": "Lịch sử hóa đơn",
+    "invoicePaid": "Đã thanh toán",
+    "columns": {
+      "invoice": "Hóa đơn",
+      "date": "Ngày",
+      "amount": "Số tiền",
+      "status": "Trạng thái"
+    },
+    "plans": {
+      "free": {
+        "name": "Miễn phí",
+        "features": [
+          "5 tín hiệu/ngày",
+          "Thị trường cổ phiếu",
+          "Bảng điều khiển cơ bản"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "features": [
+          "Tín hiệu không giới hạn",
+          "Thị trường crypto",
+          "Theo dõi danh mục",
+          "Hỗ trợ ưu tiên"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "features": [
+          "Mọi tính năng Pro",
+          "Phân tích AI",
+          "Phân tích nâng cao",
+          "Truy cập API"
+        ]
+      }
+    },
+    "cta": {
+      "current": "Hiện tại",
+      "upgrade": "Nâng cấp"
+    }
+  },
+  "auth": {
+    "signInSubtitle": "Đăng nhập vào tài khoản",
+    "signUpSubtitle": "Tạo tài khoản",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "displayName": "Tên hiển thị",
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập...",
+    "signUp": "Đăng ký",
+    "creatingAccount": "Đang tạo tài khoản...",
+    "orContinue": "Hoặc tiếp tục với",
+    "noAccount": "Chưa có tài khoản?",
+    "haveAccount": "Đã có tài khoản?",
+    "errors": {
+      "passwordMismatch": "Mật khẩu không khớp",
+      "passwordShort": "Mật khẩu phải có ít nhất 8 ký tự"
+    },
+    "registrationSuccess": "Đăng ký thành công. Vui lòng kiểm tra email để xác minh tài khoản.",
+    "continueGoogle": "Tiếp tục với Google"
+  },
+  "signalsEnum": {
+    "type": {
+      "Buy": "Mua",
+      "Sell": "Bán",
+      "Hold": "Giữ"
+    },
+    "strength": {
+      "Strong": "Mạnh",
+      "Medium": "Trung bình",
+      "Weak": "Yếu"
+    }
+  },
+  "verify": {
+    "title": "Xác minh email",
+    "loading": "Đang xác minh địa chỉ email...",
+    "success": "Email đã được xác minh. Bạn có thể đăng nhập.",
+    "invalidLink": "Liên kết xác minh không hợp lệ hoặc thiếu.",
+    "expired": "Liên kết xác minh đã hết hạn. Vui lòng yêu cầu liên kết mới.",
+    "failed": "Xác minh thất bại. Liên kết có thể không hợp lệ hoặc đã dùng.",
+    "signIn": "Đăng nhập",
+    "createAccount": "Tạo tài khoản"
+  },
+  "upgrade": {
+    "titleDefault": "Nâng cấp gói",
+    "unlockMarket": "Mở khóa thị trường {{market}}",
+    "unlockFeature": "Mở khóa {{feature}}",
+    "descriptionDefault": "Tính năng này có trên gói Pro hoặc Premium. Nâng cấp ngay để mở khóa thông tin thị trường và insight giao dịch nâng cao.",
+    "maybeLater": "Để sau",
+    "upgradeNow": "Nâng cấp ngay",
+    "upgradeToUnlock": "Nâng cấp để mở khóa",
+    "features": {
+      "premiumFeatures": {
+        "title": "Mở khóa tính năng Premium"
+      },
+      "watchlist": {
+        "title": "Mở khóa danh sách theo dõi"
+      },
+      "advancedAnalytics": {
+        "title": "Mở khóa phân tích tín hiệu nâng cao"
+      },
+      "marketDirection": {
+        "title": "Mở khóa xu hướng thị trường"
+      },
+      "sentimentAnalysis": {
+        "title": "Mở khóa phân tích tâm lý"
+      },
+      "aiInsights": {
+        "title": "Mở khóa Phân tích AI"
+      }
+    },
+    "reasons": {
+      "upgradeToPro": "Nâng cấp Pro để mở khóa thị trường này.",
+      "freeWatchlistLimit": "Gói miễn phí giới hạn 3 mục. Nâng cấp để thêm.",
+      "proPlan": "Tính năng này nằm trong gói Pro. Nâng cấp để tiếp tục."
+    }
+  }
+}

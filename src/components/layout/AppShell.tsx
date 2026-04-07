@@ -1,47 +1,55 @@
-import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { fetchBootstrap } from '@/api/bootstrap'
-import { getSidebarNavItems } from '@/config/navigation'
-import { useAppStore } from '@/store/useAppStore'
-import { useAuthStore } from '@/store/useAuthStore'
-import { Sidebar } from './Sidebar'
-import { TopBar } from './TopBar'
-import { UpgradeModal } from '@/components/UpgradeModal'
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { fetchBootstrap } from "@/api/bootstrap";
+import { getSidebarNavItems } from "@/config/navigation";
+import { useAppStore } from "@/store/useAppStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Sidebar } from "./Sidebar";
+import { TopBar } from "./TopBar";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 export function AppShell() {
+  const { t } = useTranslation();
   const { data: bootstrap, isLoading } = useQuery({
-    queryKey: ['bootstrap'],
+    queryKey: ["bootstrap"],
     queryFn: fetchBootstrap,
-  })
+  });
 
-  const { selectedMarket, setSelectedMarket } = useAppStore()
-  const authUser = useAuthStore((s) => s.user)
+  const { selectedMarket, setSelectedMarket } = useAppStore();
+  const authUser = useAuthStore((s) => s.user);
 
   useEffect(() => {
     if (bootstrap) {
-      const selected = bootstrap.navigation.marketToggle.find((m) => m.selected)
-      if (selected) setSelectedMarket(selected.code)
+      const selected = bootstrap.navigation.marketToggle.find(
+        (m) => m.selected,
+      );
+      if (selected) setSelectedMarket(selected.code);
     }
-  }, [bootstrap, setSelectedMarket])
+  }, [bootstrap, setSelectedMarket]);
 
   if (isLoading || !bootstrap) {
     return (
       <div className="flex h-screen items-center justify-center bg-surface-bg">
         <div className="flex flex-col items-center gap-4">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
-          <p className="text-sm text-text-secondary">Loading...</p>
+          <p className="text-sm text-text-secondary">{t("appShell.loading")}</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const { sidebar, marketToggle } = bootstrap.navigation
-  const sidebarNavItems = getSidebarNavItems(sidebar)
+  const { sidebar, marketToggle } = bootstrap.navigation;
+  const sidebarNavItems = getSidebarNavItems(sidebar).map((item) => ({
+    ...item,
+    label: t(`nav.${item.key}`),
+  }));
   const marketItems = marketToggle.map((m) => ({
     ...m,
+    label: t(`marketToggle.${m.code}`),
     selected: m.code === selectedMarket,
-  }))
+  }));
 
   return (
     <div className="flex h-screen bg-surface-bg">
@@ -60,5 +68,5 @@ export function AppShell() {
       </div>
       <UpgradeModal />
     </div>
-  )
+  );
 }

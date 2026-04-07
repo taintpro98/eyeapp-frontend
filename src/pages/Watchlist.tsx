@@ -1,35 +1,46 @@
-import { Star, Plus } from 'lucide-react'
-import { PageHeader } from '@/components/PageHeader'
-import { SectionCard } from '@/components/SectionCard'
-import { Button } from '@/components/ui/button'
-import { EmptyState } from '@/components/EmptyState'
-import { useAppStore } from '@/store/useAppStore'
-import { mockWatchlistItems, WATCHLIST_FREE_LIMIT } from '@/data/mockWatchlist'
+import { useTranslation } from "react-i18next";
+import { Star, Plus } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
+import { SectionCard } from "@/components/SectionCard";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/EmptyState";
+import { useAppStore } from "@/store/useAppStore";
+import { mockWatchlistItems, WATCHLIST_FREE_LIMIT } from "@/data/mockWatchlist";
 
 export function WatchlistPage() {
-  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal)
-  const items = mockWatchlistItems
-  const atLimit = items.length >= WATCHLIST_FREE_LIMIT
+  const { t } = useTranslation();
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
+  const items = mockWatchlistItems;
+  const atLimit = items.length >= WATCHLIST_FREE_LIMIT;
 
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Watchlist"
-        subtitle={`${items.length} of ${WATCHLIST_FREE_LIMIT} slots used (Free plan)`}
+        title={t("watchlist.title")}
+        subtitle={t("watchlist.subtitle", {
+          count: items.length,
+          max: WATCHLIST_FREE_LIMIT,
+        })}
         children={
           <Button
             variant="outline"
             className="w-full sm:w-auto"
-            onClick={() => atLimit && openUpgradeModal({ feature: 'Watchlist', reason: 'Free plan limited to 3 items' })}
+            onClick={() =>
+              atLimit &&
+              openUpgradeModal({
+                featureKey: "watchlist",
+                reasonKey: "freeWatchlistLimit",
+              })
+            }
           >
             <Plus className="mr-2 h-4 w-4" />
-            {atLimit ? 'Upgrade to add more' : 'Add asset'}
+            {atLimit ? t("watchlist.upgradeToAdd") : t("watchlist.addAsset")}
           </Button>
         }
       />
 
       {items.length > 0 ? (
-        <SectionCard title="Tracked Assets">
+        <SectionCard title={t("watchlist.trackedAssets")}>
           <div className="space-y-3">
             {items.map((item) => (
               <div
@@ -47,8 +58,11 @@ export function WatchlistPage() {
                 </div>
                 <div className="text-right">
                   <p className="font-medium">{item.price}</p>
-                  <p className={`text-sm ${item.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {item.change24h >= 0 ? '+' : ''}{item.change24h}%
+                  <p
+                    className={`text-sm ${item.change24h >= 0 ? "text-green-600" : "text-red-600"}`}
+                  >
+                    {item.change24h >= 0 ? "+" : ""}
+                    {item.change24h}%
                   </p>
                 </div>
               </div>
@@ -57,10 +71,14 @@ export function WatchlistPage() {
           {atLimit && (
             <div className="mt-4 rounded-lg border border-brand-primary/20 bg-brand-primary/5 p-4">
               <p className="text-sm text-text-secondary">
-                You've reached the free plan limit. Upgrade to add more assets to your watchlist.
+                {t("watchlist.limitBanner")}
               </p>
-              <Button className="mt-2" size="sm" onClick={() => openUpgradeModal({ feature: 'Watchlist' })}>
-                Upgrade to Pro
+              <Button
+                className="mt-2"
+                size="sm"
+                onClick={() => openUpgradeModal({ featureKey: "watchlist" })}
+              >
+                {t("watchlist.upgradeToPro")}
               </Button>
             </div>
           )}
@@ -68,11 +86,11 @@ export function WatchlistPage() {
       ) : (
         <EmptyState
           icon={Star}
-          title="No assets in watchlist"
-          description="Add assets to track their performance and get signals."
-          action={<Button>Add first asset</Button>}
+          title={t("watchlist.emptyTitle")}
+          description={t("watchlist.emptyDescription")}
+          action={<Button>{t("watchlist.addFirst")}</Button>}
         />
       )}
     </div>
-  )
+  );
 }

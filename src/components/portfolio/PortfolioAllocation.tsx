@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { formatVnd } from "@/lib/formatVnd";
 import {
@@ -20,6 +21,10 @@ export function PortfolioAllocation({
   slices,
   className,
 }: PortfolioAllocationProps) {
+  const { t } = useTranslation();
+  const assetLabel = (s: PortfolioSlice) =>
+    t(`portfolio.assets.${s.key}`, { defaultValue: s.label });
+
   const orderedSlices = useMemo(() => orderSlicesForDisplay(slices), [slices]);
   const { gradient: donutBg } = useMemo(
     () => buildDonutGradient(slices),
@@ -77,7 +82,7 @@ export function PortfolioAllocation({
                 "md:min-w-0 md:max-w-none md:flex-1 md:gap-2 md:text-sm",
                 "lg:min-w-[13rem]",
               )}
-              aria-label="Allocation by weight"
+              aria-label={t("common.aria.allocationByWeight")}
             >
               {weightLegendSlices.map((s) => (
                 <li
@@ -92,7 +97,7 @@ export function PortfolioAllocation({
                     style={{ backgroundColor: s.color }}
                   />
                   <span className="min-w-0 flex-1 font-medium md:truncate">
-                    {s.label}
+                    {assetLabel(s)}
                   </span>
                   <span className="shrink-0 tabular-nums text-text-secondary">
                     {s.percent.toFixed(2)}%
@@ -112,7 +117,7 @@ export function PortfolioAllocation({
         )}
       >
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-secondary">
-          Holding breakdown
+          {t("portfolio.holdingBreakdown")}
         </p>
 
         {/* Mobile: stacked cards — no horizontal scroll */}
@@ -140,7 +145,7 @@ export function PortfolioAllocation({
                       style={{ backgroundColor: s.color }}
                     />
                     <span className="truncate font-medium text-text-primary">
-                      {s.label}
+                      {assetLabel(s)}
                     </span>
                   </div>
                   <span className="shrink-0 tabular-nums text-sm text-text-secondary">
@@ -148,15 +153,21 @@ export function PortfolioAllocation({
                   </span>
                 </div>
                 <dl className="grid grid-cols-[4.5rem_1fr] gap-x-2 gap-y-1.5 text-xs min-[400px]:text-sm">
-                  <dt className="text-text-secondary">Entry</dt>
+                  <dt className="text-text-secondary">
+                    {t("portfolio.table.entry")}
+                  </dt>
                   <dd className="text-right tabular-nums text-text-primary">
                     {formatVnd(s.entryPrice)}
                   </dd>
-                  <dt className="text-text-secondary">Current</dt>
+                  <dt className="text-text-secondary">
+                    {t("portfolio.table.current")}
+                  </dt>
                   <dd className="text-right tabular-nums text-text-primary">
                     {formatVnd(s.currentPrice)}
                   </dd>
-                  <dt className="text-text-secondary">Return</dt>
+                  <dt className="text-text-secondary">
+                    {t("portfolio.table.return")}
+                  </dt>
                   <dd className="text-right tabular-nums font-medium">
                     {s.returnPct == null ? (
                       <span className="text-text-secondary">—</span>
@@ -184,11 +195,19 @@ export function PortfolioAllocation({
           <table className="w-full min-w-[520px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-surface-border text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                <th className="px-2 py-2 pr-2">Asset</th>
-                <th className="px-2 py-2 text-right tabular-nums">Weight</th>
-                <th className="px-2 py-2 text-right tabular-nums">Entry</th>
-                <th className="px-2 py-2 text-right tabular-nums">Current</th>
-                <th className="px-2 py-2 text-right tabular-nums">Return</th>
+                <th className="px-2 py-2 pr-2">{t("portfolio.table.asset")}</th>
+                <th className="px-2 py-2 text-right tabular-nums">
+                  {t("portfolio.table.weight")}
+                </th>
+                <th className="px-2 py-2 text-right tabular-nums">
+                  {t("portfolio.table.entry")}
+                </th>
+                <th className="px-2 py-2 text-right tabular-nums">
+                  {t("portfolio.table.current")}
+                </th>
+                <th className="px-2 py-2 text-right tabular-nums">
+                  {t("portfolio.table.return")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -215,7 +234,7 @@ export function PortfolioAllocation({
                           style={{ backgroundColor: s.color }}
                         />
                         <span className="font-medium text-text-primary">
-                          {s.label}
+                          {assetLabel(s)}
                         </span>
                       </div>
                     </td>

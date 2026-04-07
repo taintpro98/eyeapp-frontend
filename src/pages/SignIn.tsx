@@ -1,30 +1,33 @@
-import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { SocialLoginButtons } from '@/components/SocialLoginButtons'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { useAuthStore } from '@/store/useAuthStore'
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SocialLoginButtons } from "@/components/SocialLoginButtons";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export function SignInPage() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const login = useAuthStore((s) => s.login)
-  const successMessage = (location.state as { message?: string })?.message
-  const error = useAuthStore((s) => s.error)
-  const isLoading = useAuthStore((s) => s.isLoading)
-  const clearError = useAuthStore((s) => s.clearError)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const login = useAuthStore((s) => s.login);
+  const successMessageKey = (location.state as { messageKey?: string })
+    ?.messageKey;
+  const error = useAuthStore((s) => s.error);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const clearError = useAuthStore((s) => s.clearError);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    clearError()
-    const success = await login(email, password)
+    e.preventDefault();
+    clearError();
+    const success = await login(email, password);
     if (success) {
-      navigate('/app/dashboard')
+      navigate("/app/dashboard");
     }
-  }
+  };
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-surface-bg px-4">
@@ -33,14 +36,24 @@ export function SignInPage() {
       </div>
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center">
-          <img src="/logo.png" alt="ALumiEye" className="h-14 w-14 rounded-full object-cover" />
-          <h1 className="mt-4 text-2xl font-semibold text-text-primary">ALumiEye</h1>
-          <p className="mt-1 text-sm text-text-secondary">Sign in to your account</p>
+          <img
+            src="/logo.png"
+            alt="ALumiEye"
+            className="h-14 w-14 rounded-full object-cover"
+          />
+          <h1 className="mt-4 text-2xl font-semibold text-text-primary">
+            ALumiEye
+          </h1>
+          <p className="mt-1 text-sm text-text-secondary">
+            {t("auth.signInSubtitle")}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-text-secondary">Email</label>
+            <label className="text-sm font-medium text-text-secondary">
+              {t("auth.email")}
+            </label>
             <Input
               type="email"
               value={email}
@@ -52,7 +65,9 @@ export function SignInPage() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-text-secondary">Password</label>
+            <label className="text-sm font-medium text-text-secondary">
+              {t("auth.password")}
+            </label>
             <Input
               type="password"
               value={password}
@@ -63,10 +78,14 @@ export function SignInPage() {
               required
             />
           </div>
-          {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
+          {successMessageKey && (
+            <p className="text-sm text-green-600">
+              {t(successMessageKey as never)}
+            </p>
+          )}
           {error && <p className="text-sm text-red-600">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? t("auth.signingIn") : t("auth.signIn")}
           </Button>
         </form>
 
@@ -75,19 +94,24 @@ export function SignInPage() {
             <span className="w-full border-t border-surface-border" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-surface-bg px-2 text-text-secondary">Or continue with</span>
+            <span className="bg-surface-bg px-2 text-text-secondary">
+              {t("auth.orContinue")}
+            </span>
           </div>
         </div>
 
         <SocialLoginButtons />
 
         <p className="text-center text-sm text-text-secondary">
-          Don't have an account?{' '}
-          <Link to="/sign-up" className="font-medium text-brand-primary hover:underline">
-            Sign up
+          {t("auth.noAccount")}{" "}
+          <Link
+            to="/sign-up"
+            className="font-medium text-brand-primary hover:underline"
+          >
+            {t("auth.signUp")}
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
