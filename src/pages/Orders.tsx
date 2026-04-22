@@ -120,9 +120,8 @@ export function OrdersPage() {
           <>
             <DataTable
               columns={columns}
-              data={visibleOrders as Record<string, unknown>[]}
-              renderMobileCard={(row) => {
-                const order = row as unknown as Order;
+              data={visibleOrders}
+              renderMobileCard={(order) => {
                 return (
                   <div
                     className={cn(

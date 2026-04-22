@@ -163,9 +163,8 @@ export function SignalsPage() {
           <>
             <DataTable
               columns={columns}
-              data={rows as unknown as Record<string, unknown>[]}
-              renderMobileCard={(raw) => {
-                const row = raw as unknown as SignalRow;
+              data={rows}
+              renderMobileCard={(row) => {
                 return (
                   <div
                     className={cn(
