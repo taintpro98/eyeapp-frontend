@@ -19,6 +19,7 @@
     "dashboard": "Bảng điều khiển",
     "market": "Thị trường",
     "signals": "Tín hiệu",
+    "orders": "Lệnh",
     "watchlist": "Danh sách theo dõi",
     "portfolio": "Danh mục",
     "ai-insights": "Phân tích AI",
@@ -121,7 +122,12 @@
     "advancedAnalyticsBlurb": "Ma trận tương quan, kết quả backtest và cảnh báo tùy chỉnh...",
     "unlockAdvancedAnalytics": "Mở khóa phân tích nâng cao",
     "time": {
-      "minutesAgo": "{{count}} phút trước"
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "yesterday": "Hôm qua {{time}}",
+      "thisWeek": "{{day}} {{time}}",
+      "days": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
     }
   },
   "market": {
@@ -277,6 +283,37 @@
     },
     "registrationSuccess": "Đăng ký thành công. Vui lòng kiểm tra email để xác minh tài khoản.",
     "continueGoogle": "Tiếp tục với Google"
+  },
+  "orders": {
+    "title": "Lệnh",
+    "subtitle": "Lệnh giao dịch từ eyebroker",
+    "filterPlaceholder": "Lọc theo mã...",
+    "filters": "Bộ lọc",
+    "orderHistory": "Lịch sử lệnh",
+    "orderHistorySubtitle": "Lệnh mới nhất trên tất cả thị trường",
+    "loadMore": "Tải thêm",
+    "noOrders": "Không có lệnh nào",
+    "columns": {
+      "symbol": "Mã",
+      "side": "Loại",
+      "orderType": "Lệnh",
+      "price": "Giá",
+      "quantity": "KL",
+      "time": "Thời gian"
+    },
+    "mobile": {
+      "side": "Loại",
+      "orderType": "Lệnh",
+      "price": "Giá",
+      "quantity": "KL",
+      "time": "Thời gian"
+    }
+  },
+  "ordersEnum": {
+    "side": {
+      "buy": "Mua",
+      "sell": "Bán"
+    }
   },
   "signalsEnum": {
     "type": {
