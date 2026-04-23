@@ -1,12 +1,12 @@
 import { apiFetch } from "@/lib/api";
 
-export type Order = {
+export type Signal = {
   id: number;
   symbol: string;
   timestamp: number;
   timestamp_str: string;
   side: "buy" | "sell";
-  order_type: string;
+  signal_type: string;
   main_position: boolean;
   price: number;
   quantity: number;
@@ -14,8 +14,8 @@ export type Order = {
   created_at: string;
 };
 
-export type OrdersResponse = {
-  data: Order[];
+export type SignalsResponse = {
+  data: Signal[];
   pagination: {
     limit: number;
     next_cursor?: string;
@@ -23,31 +23,31 @@ export type OrdersResponse = {
   };
 };
 
-export type OrdersParams = {
+export type SignalsParams = {
   symbol?: string;
   side?: "buy" | "sell";
-  order_type?: string;
+  signal_type?: string;
   from?: string;
   to?: string;
   limit?: number;
   cursor?: string;
 };
 
-export async function fetchOrders(
-  params: OrdersParams,
+export async function fetchSignals(
+  params: SignalsParams,
   accessToken: string,
-): Promise<OrdersResponse> {
+): Promise<SignalsResponse> {
   const query = new URLSearchParams();
   if (params.symbol) query.set("symbol", params.symbol);
   if (params.side) query.set("side", params.side);
-  if (params.order_type) query.set("order_type", params.order_type);
+  if (params.signal_type) query.set("signal_type", params.signal_type);
   if (params.from) query.set("from", params.from);
   if (params.to) query.set("to", params.to);
   if (params.limit) query.set("limit", String(params.limit));
   if (params.cursor) query.set("cursor", params.cursor);
 
   const qs = query.toString();
-  return apiFetch<OrdersResponse>(`/orders${qs ? `?${qs}` : ""}`, {
+  return apiFetch<SignalsResponse>(`/signals${qs ? `?${qs}` : ""}`, {
     accessToken,
   });
 }

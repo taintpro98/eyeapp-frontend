@@ -8,10 +8,10 @@ import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fetchOrders } from "@/api/orders";
+import { fetchSignals } from "@/api/signals";
 import { cn } from "@/lib/utils";
 import { formatRelativeTime } from "@/lib/relativeTime";
-import type { Order } from "@/api/orders";
+import type { Signal } from "@/api/signals";
 
 const PAGE_SIZE = Number(import.meta.env.VITE_ORDERS_PAGE_SIZE ?? 20);
 
@@ -20,12 +20,12 @@ const ORDER_TYPE_STRENGTH: Record<string, string> = {
   limit: "Medium",
 };
 
-function toSignalRow(order: Order) {
+function toSignalRow(order: Signal) {
   return {
     id: order.id,
     symbol: order.symbol,
     type: order.side === "buy" ? "Buy" : "Sell",
-    strength: ORDER_TYPE_STRENGTH[order.order_type] ?? "Weak",
+    strength: ORDER_TYPE_STRENGTH[order.signal_type] ?? "Weak",
     confidence: Math.min(100, Math.round(order.quantity * 100)),
     timestamp: order.timestamp,
   };
@@ -38,7 +38,7 @@ export function SignalsPage() {
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -52,7 +52,7 @@ export function SignalsPage() {
       if (!accessToken) return;
       cursor ? setLoadingMore(true) : setLoading(true);
       try {
-        const res = await fetchOrders(
+        const res = await fetchSignals(
           { symbol: symbol || undefined, limit: PAGE_SIZE, cursor },
           accessToken,
         );
