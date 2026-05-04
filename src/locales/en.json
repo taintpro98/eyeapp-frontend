@@ -272,6 +272,8 @@
     "displayName": "Display name",
     "signIn": "Sign in",
     "signingIn": "Signing in...",
+    "resendVerification": "Didn't receive the email? Click here to resend",
+    "resendCooldown": "Resend again in {{seconds}}s",
     "signUp": "Sign up",
     "creatingAccount": "Creating account...",
     "orContinue": "Or continue with",
@@ -335,7 +337,11 @@
     "expired": "This verification link has expired. Please request a new one.",
     "failed": "Verification failed. The link may be invalid or already used.",
     "signIn": "Sign in",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "resendEmail": "Resend verification email",
+    "resendEmailPlaceholder": "Enter your email address",
+    "resendSent": "Verification email sent. Please check your inbox.",
+    "resendError": "Failed to resend. Please try again."
   },
   "upgrade": {
     "titleDefault": "Upgrade Your Plan",

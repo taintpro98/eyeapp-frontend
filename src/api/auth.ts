@@ -77,3 +77,12 @@ export async function verifyEmail(token: string): Promise<{ message: string }> {
     body: JSON.stringify({ token }),
   });
 }
+
+export async function resendVerificationEmail(
+  email: string,
+): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/resend-verification-email", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}

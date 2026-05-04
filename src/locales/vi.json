@@ -272,6 +272,8 @@
     "displayName": "Tên hiển thị",
     "signIn": "Đăng nhập",
     "signingIn": "Đang đăng nhập...",
+    "resendVerification": "Chưa nhận được email? Nhấn vào đây để gửi lại",
+    "resendCooldown": "Gửi lại sau {{seconds}}s",
     "signUp": "Đăng ký",
     "creatingAccount": "Đang tạo tài khoản...",
     "orContinue": "Hoặc tiếp tục với",
@@ -335,7 +337,11 @@
     "expired": "Liên kết xác minh đã hết hạn. Vui lòng yêu cầu liên kết mới.",
     "failed": "Xác minh thất bại. Liên kết có thể không hợp lệ hoặc đã dùng.",
     "signIn": "Đăng nhập",
-    "createAccount": "Tạo tài khoản"
+    "createAccount": "Tạo tài khoản",
+    "resendEmail": "Gửi lại email xác minh",
+    "resendEmailPlaceholder": "Nhập địa chỉ email của bạn",
+    "resendSent": "Đã gửi email xác minh. Vui lòng kiểm tra hộp thư.",
+    "resendError": "Gửi lại thất bại. Vui lòng thử lại."
   },
   "upgrade": {
     "titleDefault": "Nâng cấp gói",

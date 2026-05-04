@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { SocialLoginButtons } from "@/components/SocialLoginButtons";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuthStore } from "@/store/useAuthStore";
+import { resendVerificationEmail } from "@/api/auth";
 
 export function SignInPage() {
   const { t } = useTranslation();
@@ -19,6 +20,26 @@ export function SignInPage() {
   const clearError = useAuthStore((s) => s.clearError);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resendStatus, setResendStatus] = useState<"idle" | "loading" | "sent" | "error">("idle");
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  const handleResend = async () => {
+    if (!email || resendCooldown > 0) return;
+    setResendStatus("loading");
+    try {
+      await resendVerificationEmail(email);
+      setResendStatus("sent");
+      setResendCooldown(60);
+      const interval = setInterval(() => {
+        setResendCooldown((s) => {
+          if (s <= 1) { clearInterval(interval); setResendStatus("idle"); return 0; }
+          return s - 1;
+        });
+      }, 1000);
+    } catch {
+      setResendStatus("error");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +100,27 @@ export function SignInPage() {
             />
           </div>
           {successMessageKey && (
-            <p className="text-sm text-green-600">
-              {t(successMessageKey as never)}
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm text-green-600">{t(successMessageKey as never)}</p>
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resendStatus === "loading" || resendCooldown > 0 || !email}
+                className="text-sm text-text-secondary underline hover:text-text-primary disabled:no-underline disabled:opacity-50"
+              >
+                {resendStatus === "loading"
+                  ? "..."
+                  : resendCooldown > 0
+                    ? t("auth.resendCooldown", { seconds: resendCooldown })
+                    : t("auth.resendVerification")}
+              </button>
+              {resendStatus === "sent" && resendCooldown > 0 && (
+                <p className="text-sm text-green-600">{t("verify.resendSent")}</p>
+              )}
+              {resendStatus === "error" && (
+                <p className="text-sm text-red-600">{t("verify.resendError")}</p>
+              )}
+            </div>
           )}
           {error && <p className="text-sm text-red-600">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>

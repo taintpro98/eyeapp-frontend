@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { verifyEmail } from "@/api/auth";
+import { verifyEmail, resendVerificationEmail } from "@/api/auth";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 type Status = "idle" | "loading" | "success" | "error";
+type ResendStatus = "idle" | "loading" | "sent" | "error";
 
 const inFlight = new Map<string, Promise<void>>();
 const verifiedTokens = new Set<string>();
@@ -17,6 +19,8 @@ export function VerifyEmailPage() {
   const token = searchParams.get("token");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendStatus, setResendStatus] = useState<ResendStatus>("idle");
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -25,6 +29,17 @@ export function VerifyEmailPage() {
       mountedRef.current = false;
     };
   }, []);
+
+  const handleResend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResendStatus("loading");
+    try {
+      await resendVerificationEmail(resendEmail);
+      setResendStatus("sent");
+    } catch {
+      setResendStatus("error");
+    }
+  };
 
   useEffect(() => {
     if (!token) {
@@ -115,6 +130,29 @@ export function VerifyEmailPage() {
             <>
               <XCircle className="h-12 w-12 text-red-600" />
               <p className="text-center text-sm text-red-600">{error}</p>
+              <form onSubmit={handleResend} className="flex w-full flex-col gap-2">
+                <Input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  placeholder={t("verify.resendEmailPlaceholder")}
+                  required
+                  disabled={resendStatus === "loading" || resendStatus === "sent"}
+                />
+                {resendStatus === "sent" && (
+                  <p className="text-center text-sm text-green-600">{t("verify.resendSent")}</p>
+                )}
+                {resendStatus === "error" && (
+                  <p className="text-center text-sm text-red-600">{t("verify.resendError")}</p>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={resendStatus === "loading" || resendStatus === "sent"}
+                >
+                  {resendStatus === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : t("verify.resendEmail")}
+                </Button>
+              </form>
               <div className="flex w-full flex-col gap-2">
                 <Button asChild variant="default" className="w-full">
                   <Link to="/sign-in">{t("verify.signIn")}</Link>
