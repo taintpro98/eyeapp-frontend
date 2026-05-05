@@ -109,12 +109,14 @@
       "type": "Type",
       "strength": "Strength",
       "confidence": "Confidence",
+      "price": "Price",
       "time": "Time"
     },
     "mobile": {
       "type": "Type",
       "strength": "Strength",
       "confidence": "Confidence",
+      "price": "Price",
       "time": "Time"
     },
     "advancedAnalytics": "Advanced Signal Analytics",

@@ -26,8 +26,9 @@ function toSignalRow(order: Signal) {
     symbol: order.symbol,
     type: order.side === "buy" ? "Buy" : "Sell",
     strength: ORDER_TYPE_STRENGTH[order.signal_type] ?? "Weak",
-    confidence: Math.min(100, Math.round(order.quantity * 100)),
-    timestamp: order.timestamp,
+    confidence: Math.round(order.confidence * 100),
+    price: order.price,
+    timestamp: order.timestamp * 1000,
   };
 }
 
@@ -38,51 +39,59 @@ export function SignalsPage() {
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const accessToken = useAuthStore((s) => s.accessToken);
 
+  const marketId = 2 as const;
   const [orders, setOrders] = useState<Signal[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | undefined>();
+  const [offset, setOffset] = useState(0);
   const [symbolFilter, setSymbolFilter] = useState("");
   const filterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [appliedFilter, setAppliedFilter] = useState("");
 
   const loadOrders = useCallback(
-    async (cursor?: string, symbol?: string) => {
+    async (nextOffset: number, market: 1 | 2) => {
       if (!accessToken) return;
-      cursor ? setLoadingMore(true) : setLoading(true);
+      nextOffset === 0 ? setLoading(true) : setLoadingMore(true);
       try {
         const res = await fetchSignals(
-          { symbol: symbol || undefined, limit: PAGE_SIZE, cursor },
+          { market_id: market, limit: PAGE_SIZE, offset: nextOffset },
           accessToken,
         );
-        setOrders((prev) => (cursor ? [...prev, ...res.data] : res.data));
-        setHasMore(res.pagination.has_more);
-        setNextCursor(res.pagination.next_cursor);
+        setOrders((prev) => (nextOffset === 0 ? res.items : [...prev, ...res.items]));
+        setTotal(res.total);
+        setOffset(nextOffset + res.items.length);
       } catch {
         // keep existing data on error
       } finally {
-        cursor ? setLoadingMore(false) : setLoading(false);
+        nextOffset === 0 ? setLoading(false) : setLoadingMore(false);
       }
     },
     [accessToken],
   );
 
-  // Initial load + re-fetch when filter changes
   useEffect(() => {
     setOrders([]);
-    setNextCursor(undefined);
-    loadOrders(undefined, appliedFilter);
-  }, [loadOrders, appliedFilter]);
+    setOffset(0);
+    loadOrders(0, marketId);
+  }, [loadOrders, marketId]);
 
-  // Debounce symbol filter
+
+  // Debounce symbol filter (client-side only)
   const handleFilterChange = (value: string) => {
     setSymbolFilter(value);
     if (filterTimer.current) clearTimeout(filterTimer.current);
-    filterTimer.current = setTimeout(() => setAppliedFilter(value), 400);
+    filterTimer.current = setTimeout(() => {}, 400);
   };
 
-  const rows = useMemo(() => orders.map(toSignalRow), [orders]);
+  const hasMore = offset < total;
+
+  const rows = useMemo(
+    () =>
+      orders
+        .filter((o) => !symbolFilter || o.symbol.toLowerCase().includes(symbolFilter.toLowerCase()))
+        .map(toSignalRow),
+    [orders, symbolFilter],
+  );
 
   const columns = useMemo(
     () => [
@@ -115,6 +124,13 @@ export function SignalsPage() {
         ),
       },
       {
+        key: "price",
+        header: t("signals.columns.price"),
+        render: (row: SignalRow) => (
+          <span className="tabular-nums">{row.price.toLocaleString()}</span>
+        ),
+      },
+      {
         key: "timestamp",
         header: t("signals.columns.time"),
         render: (row: SignalRow) => (
@@ -140,9 +156,6 @@ export function SignalsPage() {
             value={symbolFilter}
             onChange={(e) => handleFilterChange(e.target.value)}
           />
-          <Button variant="outline" className="w-full shrink-0 sm:w-auto">
-            {t("signals.filters")}
-          </Button>
         </div>
       </PageHeader>
 
@@ -210,6 +223,14 @@ export function SignalsPage() {
                       </div>
                       <div>
                         <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                          {t("signals.columns.price")}
+                        </dt>
+                        <dd className="mt-0.5 tabular-nums text-text-primary">
+                          {row.price.toLocaleString()}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
                           {t("signals.mobile.time")}
                         </dt>
                         <dd className="mt-0.5 text-text-primary">
@@ -226,7 +247,7 @@ export function SignalsPage() {
                 <Button
                   variant="outline"
                   disabled={loadingMore}
-                  onClick={() => loadOrders(nextCursor, appliedFilter)}
+                  onClick={() => loadOrders(offset, marketId)}
                 >
                   {loadingMore ? t("common.loading") : t("orders.loadMore")}
                 </Button>

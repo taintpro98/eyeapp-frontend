@@ -109,12 +109,14 @@
       "type": "Loại",
       "strength": "Độ mạnh",
       "confidence": "Độ tin cậy",
+      "price": "Giá",
       "time": "Thời gian"
     },
     "mobile": {
       "type": "Loại",
       "strength": "Độ mạnh",
       "confidence": "Độ tin cậy",
+      "price": "Giá",
       "time": "Thời gian"
     },
     "advancedAnalytics": "Phân tích tín hiệu nâng cao",
