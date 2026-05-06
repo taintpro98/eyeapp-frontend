@@ -116,18 +116,47 @@ export function SignalsPage() {
 
   const columns = useMemo(
     () => [
-      { key: "symbol", header: t("signals.columns.symbol") },
+      {
+        key: "symbol",
+        header: t("signals.columns.symbol"),
+        render: (row: SignalRow) => (
+          <span className="font-bold text-text-primary">{row.symbol}</span>
+        ),
+      },
       {
         key: "type",
         header: t("signals.columns.type"),
-        render: (row: SignalRow) =>
-          t(`signalsEnum.type.${row.type}` as never),
+        render: (row: SignalRow) => (
+          <span
+            className={cn(
+              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+              row.type === "Buy"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
+            )}
+          >
+            {t(`signalsEnum.type.${row.type}` as never)}
+          </span>
+        ),
       },
       {
         key: "quantity",
         header: t("signals.columns.quantity"),
         render: (row: SignalRow) => (
-          <span className="tabular-nums">{row.quantity.toFixed(2)}%</span>
+          <span
+            className={cn(
+              "tabular-nums font-medium",
+              row.quantity >= 20
+                ? "text-red-500 dark:text-red-400"
+                : row.quantity >= 10
+                  ? "text-orange-500 dark:text-orange-400"
+                  : row.quantity >= 2
+                    ? "text-blue-500 dark:text-blue-400"
+                    : "text-text-secondary",
+            )}
+          >
+            {row.quantity.toFixed(2)}%
+          </span>
         ),
       },
       {
@@ -199,29 +228,45 @@ export function SignalsPage() {
               renderMobileCard={(row) => (
                 <div
                   className={cn(
-                    "rounded-lg border border-surface-border bg-surface-card p-3 sm:p-4",
+                    "rounded-lg border-l-4 border-surface-border bg-surface-card p-3 sm:p-4",
                     "dark:bg-zinc-900/40",
+                    row.type === "Buy"
+                      ? "border-l-green-500"
+                      : "border-l-red-500",
                   )}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-lg font-semibold text-text-primary">
+                    <span className="text-lg font-bold text-text-primary">
                       {row.symbol}
+                    </span>
+                    <span
+                      className={cn(
+                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                        row.type === "Buy"
+                          ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
+                      )}
+                    >
+                      {t(`signalsEnum.type.${row.type}` as never)}
                     </span>
                   </div>
                   <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
                     <div>
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.mobile.type")}
-                      </dt>
-                      <dd className="mt-0.5 font-medium text-text-primary">
-                        {t(`signalsEnum.type.${row.type}` as never)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
                         {t("signals.columns.quantity")}
                       </dt>
-                      <dd className="mt-0.5 font-medium tabular-nums text-text-primary">
+                      <dd
+                        className={cn(
+                          "mt-0.5 font-medium tabular-nums",
+                          row.quantity >= 20
+                            ? "text-red-500 dark:text-red-400"
+                            : row.quantity >= 10
+                              ? "text-orange-500 dark:text-orange-400"
+                              : row.quantity >= 2
+                                ? "text-blue-500 dark:text-blue-400"
+                                : "text-text-secondary",
+                        )}
+                      >
                         {row.quantity.toFixed(2)}%
                       </dd>
                     </div>
