@@ -125,7 +125,7 @@ export function SignalsPage() {
       },
       {
         key: "quantity",
-        header: t("signals.columns.quantity", { defaultValue: "Tỷ trọng" }),
+        header: t("signals.columns.quantity"),
         render: (row: SignalRow) => (
           <span className="tabular-nums">{row.quantity.toFixed(2)}%</span>
         ),
@@ -219,7 +219,7 @@ export function SignalsPage() {
                     </div>
                     <div>
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.columns.quantity", { defaultValue: "Tỷ trọng" })}
+                        {t("signals.columns.quantity")}
                       </dt>
                       <dd className="mt-0.5 font-medium tabular-nums text-text-primary">
                         {row.quantity.toFixed(2)}%

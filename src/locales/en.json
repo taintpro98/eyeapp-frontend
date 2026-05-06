@@ -110,17 +110,13 @@
     "columns": {
       "symbol": "Symbol",
       "type": "Type",
-      "signalType": "Signal Type",
-      "mainPosition": "Position",
-      "confidence": "Confidence",
+      "quantity": "Allocation",
       "price": "Price",
       "time": "Time"
     },
     "mobile": {
       "type": "Type",
-      "signalType": "Signal Type",
-      "mainPosition": "Position",
-      "confidence": "Confidence",
+      "quantity": "Allocation",
       "price": "Price",
       "time": "Time"
     },
