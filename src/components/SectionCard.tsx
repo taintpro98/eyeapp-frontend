@@ -5,6 +5,7 @@ type SectionCardProps = {
   subtitle?: string;
   children: React.ReactNode;
   className?: string;
+  headerAction?: React.ReactNode;
 };
 
 export function SectionCard({
@@ -12,6 +13,7 @@ export function SectionCard({
   subtitle,
   children,
   className,
+  headerAction,
 }: SectionCardProps) {
   return (
     <div
@@ -20,14 +22,17 @@ export function SectionCard({
         className,
       )}
     >
-      {(title || subtitle) && (
-        <div className="mb-4">
-          {title && (
-            <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
-          )}
-          {subtitle && (
-            <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>
-          )}
+      {(title || subtitle || headerAction) && (
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div className="flex-1">
+            {title && (
+              <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+            )}
+            {subtitle && (
+              <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>
+            )}
+          </div>
+          {headerAction && <div className="flex-shrink-0">{headerAction}</div>}
         </div>
       )}
       {children}

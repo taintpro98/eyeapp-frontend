@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Lock } from "lucide-react";
+import { Lock, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { PageHeader } from "@/components/PageHeader";
@@ -48,6 +48,8 @@ export function SignalsPage() {
   const [symbolFilter, setSymbolFilter] = useState("");
   const filterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const loadOrders = useCallback(
     async (nextOffset: number, market: 1 | 2) => {
       if (!accessToken) return;
@@ -68,6 +70,24 @@ export function SignalsPage() {
     },
     [accessToken],
   );
+
+  const handleRefresh = useCallback(async () => {
+    if (!accessToken || isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      const res = await fetchSignals(
+        { market_id: marketId, limit: PAGE_SIZE, offset: 0 },
+        accessToken,
+      );
+      setOrders(res.items);
+      setTotal(res.total);
+      setOffset(res.items.length);
+    } catch {
+      // keep existing data on error
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [accessToken, marketId, isRefreshing]);
 
   useEffect(() => {
     setOrders([]);
@@ -163,6 +183,18 @@ export function SignalsPage() {
         title={t("signals.activeSignals")}
         subtitle={t("signals.activeSignalsSubtitle")}
         className="p-3 sm:p-4 md:p-6"
+        headerAction={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="gap-2"
+          >
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+            <span className="hidden sm:inline">{t("common.refresh")}</span>
+          </Button>
+        }
       >
         {loading ? (
           <p className="py-8 text-center text-sm text-text-secondary">

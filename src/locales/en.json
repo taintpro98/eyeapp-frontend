@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "Loading...",
+    "refresh": "Refresh",
     "trader": "Trader",
     "active": "Active",
     "current": "Current",

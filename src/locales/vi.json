@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "Đang tải...",
+    "refresh": "Làm mới",
     "trader": "Nhà giao dịch",
     "active": "Đang hoạt động",
     "current": "Hiện tại",
