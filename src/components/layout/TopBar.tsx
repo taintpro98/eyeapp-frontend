@@ -108,13 +108,13 @@ export function TopBar({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-medium text-brand-primary">
-                {userDisplayName.charAt(0)}
+            <button className="flex cursor-pointer items-center gap-2 rounded-full px-1 py-1 transition-colors hover:bg-surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:rounded-lg sm:px-2.5 sm:py-1.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-semibold text-white ring-2 ring-brand-primary/30">
+                {userDisplayName.charAt(0).toUpperCase()}
               </div>
-              <span className="hidden sm:inline">{userDisplayName}</span>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
+              <span className="hidden text-sm font-medium text-text-primary sm:inline">{userDisplayName}</span>
+              <ChevronDown className="hidden h-4 w-4 text-text-secondary sm:block" />
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>{t("account.myAccount")}</DropdownMenuLabel>
