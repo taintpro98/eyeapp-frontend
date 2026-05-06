@@ -35,7 +35,8 @@ export function SignalsPage() {
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  const marketId = 2 as const;
+  const selectedMarket = useAppStore((s) => s.selectedMarket);
+  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
   const [signals, setSignals] = useState<Signal[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -71,6 +72,12 @@ export function SignalsPage() {
     },
     [accessToken, marketId],
   );
+
+  // Reset to first page when market changes
+  useEffect(() => {
+    setPage(0);
+    setSignals([]);
+  }, [marketId]);
 
   useEffect(() => {
     load(page, symbolFilter);

@@ -1,6 +1,6 @@
-import { Lock } from "lucide-react";
+// import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAppStore } from "@/store/useAppStore";
+// import { useAppStore } from "@/store/useAppStore";
 import type { MarketToggleItem } from "@/types";
 
 type MarketToggleProps = {
@@ -14,25 +14,26 @@ export function MarketToggle({
   selectedMarket,
   onSelect,
 }: MarketToggleProps) {
-  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
+  // const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
 
   return (
     <div className="scrollbar-none flex items-center gap-1 overflow-x-auto rounded-lg border border-surface-border bg-surface-card p-1">
       {items.map((item) => {
         const isSelected = item.code === selectedMarket;
-        const isLocked = !item.accessible;
+        // const isLocked = !item.accessible;
+        const isLocked = false;
 
         const handleClick = () => {
-          if (isLocked) {
-            openUpgradeModal({
-              market: item.label,
-              marketCode: item.code,
-              reason: item.reason ?? undefined,
-              reasonKey: item.code === "crypto" ? "upgradeToPro" : undefined,
-            });
-          } else {
-            onSelect(item.code);
-          }
+          // if (isLocked) {
+          //   openUpgradeModal({
+          //     market: item.label,
+          //     marketCode: item.code,
+          //     reason: item.reason ?? undefined,
+          //     reasonKey: item.code === "crypto" ? "upgradeToPro" : undefined,
+          //   });
+          // } else {
+          onSelect(item.code);
+          // }
         };
 
         return (
@@ -47,12 +48,12 @@ export function MarketToggle({
               !isSelected &&
                 !isLocked &&
                 "text-text-secondary hover:bg-surface-border/50 hover:text-text-primary",
-              isLocked &&
-                "cursor-not-allowed text-text-secondary opacity-75 hover:opacity-100",
+              // isLocked &&
+              //   "cursor-not-allowed text-text-secondary opacity-75 hover:opacity-100",
             )}
           >
             {item.label}
-            {isLocked && <Lock className="h-3.5 w-3.5" />}
+            {/* {isLocked && <Lock className="h-3.5 w-3.5" />} */}
           </button>
         );
       })}
