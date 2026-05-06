@@ -105,17 +105,21 @@
     "filters": "Filters",
     "activeSignals": "Active Signals",
     "activeSignalsSubtitle": "Market-aware signals",
+    "noSignals": "No signals found.",
+    "total": "total",
     "columns": {
       "symbol": "Symbol",
       "type": "Type",
-      "strength": "Strength",
+      "signalType": "Signal Type",
+      "mainPosition": "Position",
       "confidence": "Confidence",
       "price": "Price",
       "time": "Time"
     },
     "mobile": {
       "type": "Type",
-      "strength": "Strength",
+      "signalType": "Signal Type",
+      "mainPosition": "Position",
       "confidence": "Confidence",
       "price": "Price",
       "time": "Time"
@@ -326,10 +330,16 @@
       "Sell": "Sell",
       "Hold": "Hold"
     },
-    "strength": {
-      "Strong": "Strong",
-      "Medium": "Medium",
-      "Weak": "Weak"
+    "signalType": {
+      "increase": "Accumulate",
+      "decrease": "Reduce",
+      "DIVERGENCE": "Divergence"
+    },
+    "mainPosition": {
+      "buy": "Long",
+      "sell": "Short",
+      "BULL_SIGNAL": "Long Signal",
+      "BEAR_SIGNAL": "Short Signal"
     }
   },
   "verify": {

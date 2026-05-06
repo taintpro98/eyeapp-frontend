@@ -105,17 +105,21 @@
     "filters": "Bộ lọc",
     "activeSignals": "Tín hiệu đang hoạt động",
     "activeSignalsSubtitle": "Tín hiệu theo thị trường",
+    "noSignals": "Không có tín hiệu nào.",
+    "total": "tín hiệu",
     "columns": {
       "symbol": "Mã",
       "type": "Loại",
-      "strength": "Độ mạnh",
+      "signalType": "Loại tín hiệu",
+      "mainPosition": "Vị thế",
       "confidence": "Độ tin cậy",
       "price": "Giá",
       "time": "Thời gian"
     },
     "mobile": {
       "type": "Loại",
-      "strength": "Độ mạnh",
+      "signalType": "Loại tín hiệu",
+      "mainPosition": "Vị thế",
       "confidence": "Độ tin cậy",
       "price": "Giá",
       "time": "Thời gian"
@@ -326,10 +330,16 @@
       "Sell": "Bán",
       "Hold": "Giữ"
     },
-    "strength": {
-      "Strong": "Mạnh",
-      "Medium": "Trung bình",
-      "Weak": "Yếu"
+    "signalType": {
+      "increase": "Gia tăng",
+      "decrease": "Hạ tỷ trọng",
+      "DIVERGENCE": "Phân kỳ"
+    },
+    "mainPosition": {
+      "buy": "Long",
+      "sell": "Short",
+      "BULL_SIGNAL": "Tín hiệu Long",
+      "BEAR_SIGNAL": "Tín hiệu Short"
     }
   },
   "verify": {

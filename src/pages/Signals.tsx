@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Lock, RefreshCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { PageHeader } from "@/components/PageHeader";
@@ -13,22 +13,18 @@ import { cn } from "@/lib/utils";
 import { formatRelativeTime } from "@/lib/relativeTime";
 import type { Signal } from "@/api/signals";
 
-const PAGE_SIZE = Number(import.meta.env.VITE_ORDERS_PAGE_SIZE ?? 20);
+const PAGE_SIZE = 15;
 
-const ORDER_TYPE_STRENGTH: Record<string, string> = {
-  market: "Strong",
-  limit: "Medium",
-};
-
-function toSignalRow(order: Signal) {
+function toSignalRow(s: Signal) {
   return {
-    id: order.id,
-    symbol: order.symbol,
-    type: order.side === "buy" ? "Buy" : "Sell",
-    strength: ORDER_TYPE_STRENGTH[order.signal_type] ?? "Weak",
-    confidence: Math.round(order.confidence * 100),
-    price: order.price,
-    timestamp: order.timestamp * 1000,
+    id: s.id,
+    symbol: s.symbol,
+    type: s.side === "buy" ? "Buy" : "Sell",
+    signal_type: s.signal_type,
+    main_position: s.main_position,
+    confidence: Math.round(s.confidence * 100),
+    price: s.price,
+    timestamp: s.timestamp * 1000,
   };
 }
 
@@ -40,78 +36,78 @@ export function SignalsPage() {
   const accessToken = useAuthStore((s) => s.accessToken);
 
   const marketId = 2 as const;
-  const [orders, setOrders] = useState<Signal[]>([]);
+  const [signals, setSignals] = useState<Signal[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(0);
+  const [symbolInput, setSymbolInput] = useState("");
   const [symbolFilter, setSymbolFilter] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const filterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const loadOrders = useCallback(
-    async (nextOffset: number, market: 1 | 2) => {
+  const load = useCallback(
+    async (p: number, symbol: string) => {
       if (!accessToken) return;
-      nextOffset === 0 ? setLoading(true) : setLoadingMore(true);
+      setLoading(true);
       try {
         const res = await fetchSignals(
-          { market_id: market, limit: PAGE_SIZE, offset: nextOffset },
+          {
+            market_id: marketId,
+            limit: PAGE_SIZE,
+            offset: p * PAGE_SIZE,
+            symbol: symbol || undefined,
+          },
           accessToken,
         );
-        setOrders((prev) => (nextOffset === 0 ? res.items : [...prev, ...res.items]));
+        setSignals(res.items);
         setTotal(res.total);
-        setOffset(nextOffset + res.items.length);
       } catch {
         // keep existing data on error
       } finally {
-        nextOffset === 0 ? setLoading(false) : setLoadingMore(false);
+        setLoading(false);
       }
     },
-    [accessToken],
+    [accessToken, marketId],
   );
+
+  useEffect(() => {
+    load(page, symbolFilter);
+  }, [load, page, symbolFilter]);
+
+  const handleSymbolChange = (value: string) => {
+    setSymbolInput(value);
+    if (filterTimer.current) clearTimeout(filterTimer.current);
+    filterTimer.current = setTimeout(() => {
+      setPage(0);
+      setSymbolFilter(value.trim());
+    }, 400);
+  };
 
   const handleRefresh = useCallback(async () => {
     if (!accessToken || isRefreshing) return;
     setIsRefreshing(true);
     try {
       const res = await fetchSignals(
-        { market_id: marketId, limit: PAGE_SIZE, offset: 0 },
+        {
+          market_id: marketId,
+          limit: PAGE_SIZE,
+          offset: page * PAGE_SIZE,
+          symbol: symbolFilter || undefined,
+        },
         accessToken,
       );
-      setOrders(res.items);
+      setSignals(res.items);
       setTotal(res.total);
-      setOffset(res.items.length);
     } catch {
       // keep existing data on error
     } finally {
       setIsRefreshing(false);
     }
-  }, [accessToken, marketId, isRefreshing]);
+  }, [accessToken, marketId, page, symbolFilter, isRefreshing]);
 
-  useEffect(() => {
-    setOrders([]);
-    setOffset(0);
-    loadOrders(0, marketId);
-  }, [loadOrders, marketId]);
-
-
-  // Debounce symbol filter (client-side only)
-  const handleFilterChange = (value: string) => {
-    setSymbolFilter(value);
-    if (filterTimer.current) clearTimeout(filterTimer.current);
-    filterTimer.current = setTimeout(() => {}, 400);
-  };
-
-  const hasMore = offset < total;
-
-  const rows = useMemo(
-    () =>
-      orders
-        .filter((o) => !symbolFilter || o.symbol.toLowerCase().includes(symbolFilter.toLowerCase()))
-        .map(toSignalRow),
-    [orders, symbolFilter],
-  );
+  const rows = useMemo(() => signals.map(toSignalRow), [signals]);
 
   const columns = useMemo(
     () => [
@@ -123,10 +119,20 @@ export function SignalsPage() {
           t(`signalsEnum.type.${row.type}` as never),
       },
       {
-        key: "strength",
-        header: t("signals.columns.strength"),
+        key: "signal_type",
+        header: t("signals.columns.signalType"),
         render: (row: SignalRow) =>
-          t(`signalsEnum.strength.${row.strength}` as never),
+          t(`signalsEnum.signalType.${row.signal_type}` as never, {
+            defaultValue: row.signal_type,
+          }),
+      },
+      {
+        key: "main_position",
+        header: t("signals.columns.mainPosition"),
+        render: (row: SignalRow) =>
+          t(`signalsEnum.mainPosition.${row.main_position}` as never, {
+            defaultValue: row.main_position,
+          }),
       },
       {
         key: "confidence",
@@ -173,8 +179,8 @@ export function SignalsPage() {
           <Input
             placeholder={t("signals.filterPlaceholder")}
             className="w-full min-w-0 sm:w-48"
-            value={symbolFilter}
-            onChange={(e) => handleFilterChange(e.target.value)}
+            value={symbolInput}
+            onChange={(e) => handleSymbolChange(e.target.value)}
           />
         </div>
       </PageHeader>
@@ -209,82 +215,97 @@ export function SignalsPage() {
             <DataTable
               columns={columns}
               data={rows}
-              renderMobileCard={(row) => {
-                return (
-                  <div
-                    className={cn(
-                      "rounded-lg border border-surface-border bg-surface-card p-3 sm:p-4",
-                      "dark:bg-zinc-900/40",
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-lg font-semibold text-text-primary">
-                        {row.symbol}
-                      </span>
-                    </div>
-                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
-                      <div>
-                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                          {t("signals.mobile.type")}
-                        </dt>
-                        <dd className="mt-0.5 font-medium text-text-primary">
-                          {t(`signalsEnum.type.${row.type}` as never)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                          {t("signals.mobile.strength")}
-                        </dt>
-                        <dd className="mt-0.5 font-medium text-text-primary">
-                          {t(`signalsEnum.strength.${row.strength}` as never)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                          {t("signals.mobile.confidence")}
-                        </dt>
-                        <dd
-                          className={cn(
-                            "mt-0.5 font-medium tabular-nums",
-                            row.confidence >= 80 &&
-                              "text-green-600 dark:text-green-400",
-                          )}
-                        >
-                          {row.confidence}%
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                          {t("signals.columns.price")}
-                        </dt>
-                        <dd className="mt-0.5 tabular-nums text-text-primary">
-                          {row.price.toLocaleString()}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                          {t("signals.mobile.time")}
-                        </dt>
-                        <dd className="mt-0.5 text-text-primary">
-                          {formatRelativeTime(row.timestamp, t)}
-                        </dd>
-                      </div>
-                    </dl>
+              renderMobileCard={(row) => (
+                <div
+                  className={cn(
+                    "rounded-lg border border-surface-border bg-surface-card p-3 sm:p-4",
+                    "dark:bg-zinc-900/40",
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-lg font-semibold text-text-primary">
+                      {row.symbol}
+                    </span>
                   </div>
-                );
-              }}
+                  <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.mobile.type")}
+                      </dt>
+                      <dd className="mt-0.5 font-medium text-text-primary">
+                        {t(`signalsEnum.type.${row.type}` as never)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.columns.strength")}
+                      </dt>
+                      <dd className="mt-0.5 font-medium text-text-primary">
+                        {row.signal_type}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.mobile.confidence")}
+                      </dt>
+                      <dd
+                        className={cn(
+                          "mt-0.5 font-medium tabular-nums",
+                          row.confidence >= 80 &&
+                            "text-green-600 dark:text-green-400",
+                        )}
+                      >
+                        {row.confidence}%
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.columns.price")}
+                      </dt>
+                      <dd className="mt-0.5 tabular-nums text-text-primary">
+                        {row.price.toLocaleString()}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.mobile.time")}
+                      </dt>
+                      <dd className="mt-0.5 text-text-primary">
+                        {formatRelativeTime(row.timestamp, t)}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              )}
             />
-            {hasMore && (
-              <div className="mt-4 flex justify-center">
+
+            {/* Pagination */}
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <p className="text-sm text-text-secondary">
+                {total} {t("signals.total", { defaultValue: "total" })}
+              </p>
+              <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  disabled={loadingMore}
-                  onClick={() => loadOrders(offset, marketId)}
+                  size="sm"
+                  disabled={page === 0}
+                  onClick={() => setPage((p) => p - 1)}
                 >
-                  {loadingMore ? t("common.loading") : t("orders.loadMore")}
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-text-secondary">
+                  {page + 1} / {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages - 1}
+                  onClick={() => setPage((p) => p + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-            )}
+            </div>
           </>
         )}
       </SectionCard>

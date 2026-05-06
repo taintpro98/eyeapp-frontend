@@ -18,14 +18,13 @@ export type Signal = {
 export type SignalsResponse = {
   total: number;
   items: Signal[];
-  limit: number;
-  offset: number;
 };
 
 export type SignalsParams = {
   market_id: 1 | 2;
   limit?: number;
   offset?: number;
+  symbol?: string;
 };
 
 export async function fetchSignals(
@@ -33,11 +32,13 @@ export async function fetchSignals(
   accessToken: string,
 ): Promise<SignalsResponse> {
   const query = new URLSearchParams();
-  query.set("market_id", String(params.market_id));
   if (params.limit) query.set("limit", String(params.limit));
   if (params.offset) query.set("offset", String(params.offset));
+  if (params.symbol) query.set("symbol", params.symbol);
 
-  return apiFetch<SignalsResponse>(`/signals?${query.toString()}`, {
-    accessToken,
-  });
+  const qs = query.toString();
+  return apiFetch<SignalsResponse>(
+    `/signals/${params.market_id}${qs ? `?${qs}` : ""}`,
+    { accessToken },
+  );
 }
