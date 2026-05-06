@@ -245,10 +245,12 @@ export function SignalsPage() {
                     </div>
                     <div>
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.columns.strength")}
+                        {t("signals.mobile.signalType")}
                       </dt>
                       <dd className="mt-0.5 font-medium text-text-primary">
-                        {row.signal_type}
+                        {t(`signalsEnum.signalType.${row.signal_type}` as never, {
+                          defaultValue: row.signal_type,
+                        })}
                       </dd>
                     </div>
                     <div>
@@ -271,6 +273,16 @@ export function SignalsPage() {
                       </dt>
                       <dd className="mt-0.5 tabular-nums text-text-primary">
                         {row.price.toLocaleString()}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("signals.mobile.mainPosition")}
+                      </dt>
+                      <dd className="mt-0.5 font-medium text-text-primary">
+                        {t(`signalsEnum.mainPosition.${row.main_position}` as never, {
+                          defaultValue: row.main_position,
+                        })}
                       </dd>
                     </div>
                     <div>

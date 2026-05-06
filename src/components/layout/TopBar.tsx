@@ -4,10 +4,9 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useAppStore } from "@/store/useAppStore";
 import { accountMenuItems } from "@/config/navigation";
 import { getIcon } from "@/lib/icons";
-import { Search, Bell, ChevronDown, Menu, Lock } from "lucide-react";
+import { Bell, ChevronDown, Menu, Lock } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { Input } from "@/components/ui/input";
 import { MarketToggle } from "./MarketToggle";
 import {
   DropdownMenu,
@@ -55,58 +54,49 @@ export function TopBar({
       >
         <Menu className="h-5 w-5" />
       </Button>
-      <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden sm:gap-6">
-        <h2 className="truncate text-base font-semibold text-text-primary sm:text-lg">
-          {pageTitle}
-        </h2>
-        <div className="hidden min-w-0 shrink sm:block">
-          <MarketToggle
-            items={marketToggleItems}
-            selectedMarket={selectedMarket}
-            onSelect={onMarketSelect}
-          />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="shrink-0 sm:hidden">
-              {marketToggleItems.find((m) => m.code === selectedMarket)
-                ?.label ?? t("common.market")}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {marketToggleItems.map((item) => (
-              <DropdownMenuItem
-                key={item.code}
-                onClick={() =>
-                  item.accessible
-                    ? onMarketSelect(item.code)
-                    : openUpgradeModal({
-                        market: item.label,
-                        marketCode: item.code,
-                        reason: item.reason ?? undefined,
-                        reasonKey:
-                          item.code === "crypto" ? "upgradeToPro" : undefined,
-                      })
-                }
-              >
-                {item.label}
-                {!item.accessible && (
-                  <Lock className="ml-auto h-3.5 w-3.5 text-text-secondary" />
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <h2 className="shrink-0 text-base font-semibold text-text-primary sm:text-lg">
+        {pageTitle}
+      </h2>
+      <div className="hidden shrink-0 sm:block">
+        <MarketToggle
+          items={marketToggleItems}
+          selectedMarket={selectedMarket}
+          onSelect={onMarketSelect}
+        />
       </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="shrink-0 bg-brand-primary text-white hover:bg-brand-primary/90 hover:text-white sm:hidden">
+            {marketToggleItems.find((m) => m.code === selectedMarket)
+              ?.label ?? t("common.market")}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          {marketToggleItems.map((item) => (
+            <DropdownMenuItem
+              key={item.code}
+              onClick={() =>
+                item.accessible
+                  ? onMarketSelect(item.code)
+                  : openUpgradeModal({
+                      market: item.label,
+                      marketCode: item.code,
+                      reason: item.reason ?? undefined,
+                      reasonKey:
+                        item.code === "crypto" ? "upgradeToPro" : undefined,
+                    })
+              }
+            >
+              {item.label}
+              {!item.accessible && (
+                <Lock className="ml-auto h-3.5 w-3.5 text-text-secondary" />
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className="flex-1" />
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <div className="relative hidden sm:block">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
-          <Input
-            placeholder={t("common.searchCmdK")}
-            className="w-40 pl-9 lg:w-64"
-            readOnly
-          />
-        </div>
         <LanguageSwitcher />
         <ThemeToggle />
         <Button

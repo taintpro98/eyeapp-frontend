@@ -17,7 +17,7 @@ export function MarketToggle({
   // const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
 
   return (
-    <div className="scrollbar-none flex items-center gap-1 overflow-x-auto rounded-lg border border-surface-border bg-surface-card p-1">
+    <div className="flex items-center gap-1 rounded-lg border border-surface-border bg-surface-card p-1">
       {items.map((item) => {
         const isSelected = item.code === selectedMarket;
         // const isLocked = !item.accessible;
