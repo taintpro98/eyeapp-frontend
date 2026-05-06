@@ -20,9 +20,7 @@ function toSignalRow(s: Signal) {
     id: s.id,
     symbol: s.symbol,
     type: s.side === "buy" ? "Buy" : "Sell",
-    signal_type: s.signal_type,
-    main_position: s.main_position,
-    confidence: Math.round(s.confidence * 100),
+    quantity: s.quantity,
     price: s.price,
     timestamp: s.timestamp * 1000,
   };
@@ -126,34 +124,10 @@ export function SignalsPage() {
           t(`signalsEnum.type.${row.type}` as never),
       },
       {
-        key: "signal_type",
-        header: t("signals.columns.signalType"),
-        render: (row: SignalRow) =>
-          t(`signalsEnum.signalType.${row.signal_type}` as never, {
-            defaultValue: row.signal_type,
-          }),
-      },
-      {
-        key: "main_position",
-        header: t("signals.columns.mainPosition"),
-        render: (row: SignalRow) =>
-          t(`signalsEnum.mainPosition.${row.main_position}` as never, {
-            defaultValue: row.main_position,
-          }),
-      },
-      {
-        key: "confidence",
-        header: t("signals.columns.confidence"),
+        key: "quantity",
+        header: t("signals.columns.quantity", { defaultValue: "Tỷ trọng" }),
         render: (row: SignalRow) => (
-          <span
-            className={
-              row.confidence >= 80
-                ? "font-medium text-green-600 dark:text-green-400"
-                : ""
-            }
-          >
-            {row.confidence}%
-          </span>
+          <span className="tabular-nums">{row.quantity.toFixed(2)}%</span>
         ),
       },
       {
@@ -245,26 +219,10 @@ export function SignalsPage() {
                     </div>
                     <div>
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.mobile.signalType")}
+                        {t("signals.columns.quantity", { defaultValue: "Tỷ trọng" })}
                       </dt>
-                      <dd className="mt-0.5 font-medium text-text-primary">
-                        {t(`signalsEnum.signalType.${row.signal_type}` as never, {
-                          defaultValue: row.signal_type,
-                        })}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.mobile.confidence")}
-                      </dt>
-                      <dd
-                        className={cn(
-                          "mt-0.5 font-medium tabular-nums",
-                          row.confidence >= 80 &&
-                            "text-green-600 dark:text-green-400",
-                        )}
-                      >
-                        {row.confidence}%
+                      <dd className="mt-0.5 font-medium tabular-nums text-text-primary">
+                        {row.quantity.toFixed(2)}%
                       </dd>
                     </div>
                     <div>
@@ -275,16 +233,7 @@ export function SignalsPage() {
                         {row.price.toLocaleString()}
                       </dd>
                     </div>
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.mobile.mainPosition")}
-                      </dt>
-                      <dd className="mt-0.5 font-medium text-text-primary">
-                        {t(`signalsEnum.mainPosition.${row.main_position}` as never, {
-                          defaultValue: row.main_position,
-                        })}
-                      </dd>
-                    </div>
+
                     <div>
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
                         {t("signals.mobile.time")}
