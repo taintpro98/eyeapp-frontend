@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Lock, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
@@ -41,8 +41,7 @@ export function SignalsPage() {
   const [page, setPage] = useState(0);
   const [symbolInput, setSymbolInput] = useState("");
   const [symbolFilter, setSymbolFilter] = useState("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const filterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -79,38 +78,18 @@ export function SignalsPage() {
 
   useEffect(() => {
     load(page, symbolFilter);
-  }, [load, page, symbolFilter]);
+  }, [load, page, symbolFilter, refreshKey]);
 
-  const handleSymbolChange = (value: string) => {
-    setSymbolInput(value);
-    if (filterTimer.current) clearTimeout(filterTimer.current);
-    filterTimer.current = setTimeout(() => {
+  const isApplyMode = symbolInput.trim() !== symbolFilter;
+
+  const handleAction = () => {
+    if (isApplyMode) {
       setPage(0);
-      setSymbolFilter(value.trim());
-    }, 400);
-  };
-
-  const handleRefresh = useCallback(async () => {
-    if (!accessToken || isRefreshing) return;
-    setIsRefreshing(true);
-    try {
-      const res = await fetchSignals(
-        {
-          market_id: marketId,
-          limit: PAGE_SIZE,
-          offset: page * PAGE_SIZE,
-          symbol: symbolFilter || undefined,
-        },
-        accessToken,
-      );
-      setSignals(res.items);
-      setTotal(res.total);
-    } catch {
-      // keep existing data on error
-    } finally {
-      setIsRefreshing(false);
+      setSymbolFilter(symbolInput.trim());
+    } else {
+      setRefreshKey((k) => k + 1);
     }
-  }, [accessToken, marketId, page, symbolFilter, isRefreshing]);
+  };
 
   const rows = useMemo(() => signals.map(toSignalRow), [signals]);
 
@@ -185,13 +164,30 @@ export function SignalsPage() {
         title={t("signals.title")}
         subtitle={t("signals.subtitle")}
       >
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+        <div className="flex w-full gap-2 sm:w-auto">
           <Input
             placeholder={t("signals.filterPlaceholder")}
-            className="w-full min-w-0 sm:w-48"
+            className="min-w-0 flex-1 sm:w-48 sm:flex-none"
             value={symbolInput}
-            onChange={(e) => handleSymbolChange(e.target.value)}
+            onChange={(e) => setSymbolInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAction()}
           />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAction}
+            disabled={loading}
+            className="shrink-0 gap-2"
+          >
+            {isApplyMode ? (
+              t("common.apply")
+            ) : (
+              <>
+                <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+                <span className="hidden sm:inline">{t("common.refresh")}</span>
+              </>
+            )}
+          </Button>
         </div>
       </PageHeader>
 
@@ -199,18 +195,6 @@ export function SignalsPage() {
         title={t("signals.activeSignals")}
         subtitle={t("signals.activeSignalsSubtitle")}
         className="p-3 sm:p-4 md:p-6"
-        headerAction={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="gap-2"
-          >
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-            <span className="hidden sm:inline">{t("common.refresh")}</span>
-          </Button>
-        }
       >
         {loading ? (
           <p className="py-8 text-center text-sm text-text-secondary">
