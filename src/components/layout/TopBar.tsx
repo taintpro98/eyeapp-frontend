@@ -40,8 +40,14 @@ export function TopBar({
   const logout = useAuthStore((s) => s.logout);
   const setSidebarOpen = useAppStore((s) => s.setSidebarOpen);
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
-  const route = location.pathname.split("/").pop() ?? "dashboard";
-  const pageTitle = t(`nav.${route}`, { defaultValue: route });
+  // For nested detail routes (/app/positions/42) use the parent segment as the nav key
+  const isPositionDetail = /^\/app\/positions\/\d+/.test(location.pathname);
+  const routeSegment = isPositionDetail
+    ? "positions"
+    : (location.pathname.split("/").pop() ?? "dashboard");
+  const pageTitle = t(`nav.${routeSegment}`, { defaultValue: routeSegment });
+  // Hide market toggle on pages where the market context is fixed (e.g. position detail)
+  const hideMarketToggle = isPositionDetail;
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-2 border-b border-surface-border bg-surface-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-surface-card/80 sm:gap-4 sm:px-6">
@@ -57,20 +63,23 @@ export function TopBar({
       <h2 className="shrink-0 text-base font-semibold text-text-primary sm:text-lg">
         {pageTitle}
       </h2>
-      <div className="hidden shrink-0 sm:block">
-        <MarketToggle
-          items={marketToggleItems}
-          selectedMarket={selectedMarket}
-          onSelect={onMarketSelect}
-        />
-      </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="shrink-0 bg-brand-primary text-white hover:bg-brand-primary/90 hover:text-white sm:hidden">
-            {marketToggleItems.find((m) => m.code === selectedMarket)
-              ?.label ?? t("common.market")}
-          </Button>
-        </DropdownMenuTrigger>
+      {!hideMarketToggle && (
+        <div className="hidden shrink-0 sm:block">
+          <MarketToggle
+            items={marketToggleItems}
+            selectedMarket={selectedMarket}
+            onSelect={onMarketSelect}
+          />
+        </div>
+      )}
+      {!hideMarketToggle && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="shrink-0 bg-brand-primary text-white hover:bg-brand-primary/90 hover:text-white sm:hidden">
+              {marketToggleItems.find((m) => m.code === selectedMarket)
+                ?.label ?? t("common.market")}
+            </Button>
+          </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           {marketToggleItems.map((item) => (
             <DropdownMenuItem
@@ -94,7 +103,8 @@ export function TopBar({
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
-      </DropdownMenu>
+        </DropdownMenu>
+      )}
       <div className="flex-1" />
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <LanguageSwitcher />

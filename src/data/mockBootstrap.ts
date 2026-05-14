@@ -42,6 +42,15 @@ export const mockBootstrap: BootstrapResponse = {
         badge: null,
       },
       {
+        key: "positions",
+        label: "Positions",
+        path: "/app/positions",
+        icon: "Target",
+        visible: true,
+        accessible: true,
+        badge: null,
+      },
+      {
         key: "watchlist",
         label: "Watchlist",
         path: "/app/watchlist",

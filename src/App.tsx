@@ -15,6 +15,8 @@ import { PortfolioPage } from "@/pages/Portfolio";
 import { AIInsightsPage } from "@/pages/AIInsights";
 import { BillingPage } from "@/pages/Billing";
 import { SettingsPage } from "@/pages/Settings";
+import { PositionsPage } from "@/pages/Positions";
+import { PositionDetailPage } from "@/pages/PositionDetail";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="market" element={<MarketPage />} />
           <Route path="signals" element={<SignalsPage />} />
+          <Route path="positions" element={<PositionsPage />} />
+          <Route path="positions/:positionId" element={<PositionDetailPage />} />
           <Route path="watchlist" element={<WatchlistPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
           <Route path="ai-insights" element={<AIInsightsPage />} />

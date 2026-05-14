@@ -5,6 +5,7 @@ export const SIDEBAR_NAV_KEYS = [
   "dashboard",
   "market",
   "signals",
+  "positions",
   "watchlist",
   "portfolio",
   "ai-insights",

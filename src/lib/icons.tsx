@@ -8,6 +8,7 @@ import {
   CreditCard,
   Settings,
   ClipboardList,
+  Target,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ const iconMap: Record<string, LucideIcon> = {
   CreditCard,
   Settings,
   ClipboardList,
+  Target,
 };
 
 export function getIcon(name: string): LucideIcon {

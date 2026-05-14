@@ -15,12 +15,21 @@
     "sampleInsight": "Ví dụ insight",
     "aria": {
       "allocationByWeight": "Phân bổ theo tỷ trọng"
+    },
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "yesterday": "Hôm qua {{time}}",
+      "thisWeek": "{{day}} {{time}}",
+      "days": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
     }
   },
   "nav": {
     "dashboard": "Bảng điều khiển",
     "market": "Thị trường",
     "signals": "Tín hiệu",
+    "positions": "Vị thế",
     "orders": "Lệnh",
     "watchlist": "Danh sách theo dõi",
     "portfolio": "Danh mục",
@@ -124,15 +133,7 @@
     "advancedAnalytics": "Phân tích tín hiệu nâng cao",
     "advancedAnalyticsSubtitle": "Tính năng Premium — Mở khóa với gói Pro",
     "advancedAnalyticsBlurb": "Ma trận tương quan, kết quả backtest và cảnh báo tùy chỉnh...",
-    "unlockAdvancedAnalytics": "Mở khóa phân tích nâng cao",
-    "time": {
-      "justNow": "Vừa xong",
-      "minutesAgo": "{{count}} phút trước",
-      "hoursAgo": "{{count}} giờ trước",
-      "yesterday": "Hôm qua {{time}}",
-      "thisWeek": "{{day}} {{time}}",
-      "days": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
-    }
+    "unlockAdvancedAnalytics": "Mở khóa phân tích nâng cao"
   },
   "market": {
     "title": "Tổng quan thị trường",
@@ -319,6 +320,68 @@
     "side": {
       "buy": "Mua",
       "sell": "Bán"
+    }
+  },
+  "positions": {
+    "title": "Vị thế",
+    "subtitle": "Các vị thế được Eyebroker phát hiện và quản lý",
+    "filterPlaceholder": "Lọc theo mã...",
+    "listTitle": "Danh sách vị thế",
+    "listSubtitle": "Tất cả vị thế theo thị trường đang chọn",
+    "noPositions": "Không có vị thế nào.",
+    "total": "vị thế",
+    "filter": {
+      "all": "Tất cả",
+      "opening": "Đang mở",
+      "opened": "Đã mở",
+      "closing": "Đang đóng",
+      "closed": "Đã đóng",
+      "activeOnly": "Chỉ đang hoạt động"
+    },
+    "columns": {
+      "symbol": "Mã",
+      "side": "Chiều",
+      "status": "Trạng thái",
+      "term": "Kỳ hạn",
+      "time": "Thời gian",
+      "avgPrice": "Giá TB",
+      "size": "Khối lượng",
+      "capacity": "Tỷ trọng"
+    },
+    "detail": {
+      "back": "Quay lại",
+      "notFound": "Không tìm thấy vị thế.",
+      "summary": "Tổng quan",
+      "orders": "Lịch sử lệnh",
+      "ordersSubtitle": "Tất cả lệnh theo thứ tự thời gian",
+      "noOrders": "Không có lệnh nào.",
+      "col": {
+        "time": "Thời gian",
+        "side": "Chiều",
+        "type": "Loại",
+        "price": "Giá",
+        "qty": "Khối lượng"
+      },
+      "orderType": {
+        "increase": "Mua thêm",
+        "decrease": "Bán bớt"
+      }
+    }
+  },
+  "positionsEnum": {
+    "side": {
+      "buy": "Long",
+      "sell": "Short"
+    },
+    "status": {
+      "opening": "Đang mở",
+      "opened": "Đã mở",
+      "closing": "Đang đóng",
+      "closed": "Đã đóng"
+    },
+    "term": {
+      "short_term": "Ngắn hạn",
+      "mid_term": "Trung hạn"
     }
   },
   "signalsEnum": {

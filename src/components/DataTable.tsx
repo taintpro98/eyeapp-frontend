@@ -12,6 +12,7 @@ type DataTableProps<T> = {
   className?: string;
   /** Renders each row as a card below `md` instead of using the table */
   renderMobileCard?: (row: T) => React.ReactNode;
+  onRowClick?: (row: T) => void;
 };
 
 function getRowKey<T extends Record<string, unknown>>(
@@ -28,6 +29,7 @@ export function DataTable<T extends Record<string, unknown>>({
   data,
   className,
   renderMobileCard,
+  onRowClick,
 }: DataTableProps<T>) {
   const table = (
     <table className="min-w-[640px] w-full text-sm">
@@ -47,7 +49,11 @@ export function DataTable<T extends Record<string, unknown>>({
         {data.map((row, i) => (
           <tr
             key={getRowKey(row, i)}
-            className="border-b border-surface-border last:border-0 transition-colors hover:bg-surface-warm/30"
+            className={cn(
+              "border-b border-surface-border last:border-0 transition-colors hover:bg-surface-warm/30",
+              onRowClick && "cursor-pointer",
+            )}
+            onClick={() => onRowClick?.(row)}
           >
             {columns.map((col) => (
               <td key={String(col.key)} className="px-4 py-3 text-text-primary">
@@ -79,7 +85,13 @@ export function DataTable<T extends Record<string, unknown>>({
     <div className={cn(className)}>
       <div className="flex flex-col gap-3 md:hidden">
         {data.map((row, i) => (
-          <div key={getRowKey(row, i)}>{renderMobileCard(row)}</div>
+          <div
+            key={getRowKey(row, i)}
+            onClick={() => onRowClick?.(row)}
+            className={cn(onRowClick && "cursor-pointer")}
+          >
+            {renderMobileCard(row)}
+          </div>
         ))}
       </div>
       <div className="hidden overflow-x-auto rounded-card border border-surface-border md:block">

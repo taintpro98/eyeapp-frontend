@@ -15,12 +15,21 @@
     "sampleInsight": "Sample insight",
     "aria": {
       "allocationByWeight": "Allocation by weight"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "{{count}} min ago",
+      "hoursAgo": "{{count}} hr ago",
+      "yesterday": "Yesterday {{time}}",
+      "thisWeek": "{{day}} {{time}}",
+      "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     }
   },
   "nav": {
     "dashboard": "Dashboard",
     "market": "Market",
     "signals": "Signals",
+    "positions": "Positions",
     "orders": "Orders",
     "watchlist": "Watchlist",
     "portfolio": "Portfolio",
@@ -124,15 +133,7 @@
     "advancedAnalytics": "Advanced Signal Analytics",
     "advancedAnalyticsSubtitle": "Premium feature — Unlock with Pro plan",
     "advancedAnalyticsBlurb": "Correlation matrix, backtest results, and custom alerts...",
-    "unlockAdvancedAnalytics": "Unlock Advanced Analytics",
-    "time": {
-      "justNow": "Just now",
-      "minutesAgo": "{{count}} min ago",
-      "hoursAgo": "{{count}} hr ago",
-      "yesterday": "Yesterday {{time}}",
-      "thisWeek": "{{day}} {{time}}",
-      "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    }
+    "unlockAdvancedAnalytics": "Unlock Advanced Analytics"
   },
   "market": {
     "title": "Market Overview",
@@ -313,6 +314,68 @@
       "price": "Price",
       "quantity": "Qty",
       "time": "Time"
+    }
+  },
+  "positions": {
+    "title": "Positions",
+    "subtitle": "Positions discovered and managed by Eyebroker",
+    "filterPlaceholder": "Filter by symbol...",
+    "listTitle": "Position List",
+    "listSubtitle": "All positions for the selected market",
+    "noPositions": "No positions found.",
+    "total": "positions",
+    "filter": {
+      "all": "All",
+      "opening": "Opening",
+      "opened": "Opened",
+      "closing": "Closing",
+      "closed": "Closed",
+      "activeOnly": "Active only"
+    },
+    "columns": {
+      "symbol": "Symbol",
+      "side": "Side",
+      "status": "Status",
+      "term": "Term",
+      "time": "Time",
+      "avgPrice": "Avg Price",
+      "size": "Size",
+      "capacity": "Capacity"
+    },
+    "detail": {
+      "back": "Back",
+      "notFound": "Position not found.",
+      "summary": "Summary",
+      "orders": "Order History",
+      "ordersSubtitle": "All orders in chronological order",
+      "noOrders": "No orders found.",
+      "col": {
+        "time": "Time",
+        "side": "Side",
+        "type": "Type",
+        "price": "Price",
+        "qty": "Qty"
+      },
+      "orderType": {
+        "increase": "Buy more",
+        "decrease": "Sell down"
+      }
+    }
+  },
+  "positionsEnum": {
+    "side": {
+      "buy": "Long",
+      "sell": "Short"
+    },
+    "status": {
+      "opening": "Opening",
+      "opened": "Opened",
+      "closing": "Closing",
+      "closed": "Closed"
+    },
+    "term": {
+      "short_term": "Short-term",
+      "mid_term": "Mid-term"
     }
   },
   "ordersEnum": {

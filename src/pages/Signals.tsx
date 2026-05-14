@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fetchSignals } from "@/api/signals";
 import { cn } from "@/lib/utils";
-import { formatRelativeTime } from "@/lib/relativeTime";
+import { RelativeTime } from "@/components/RelativeTime";
 import type { Signal } from "@/api/signals";
 
 const PAGE_SIZE = 15;
@@ -149,9 +149,7 @@ export function SignalsPage() {
         key: "timestamp",
         header: t("signals.columns.time"),
         render: (row: SignalRow) => (
-          <span className="text-text-secondary">
-            {formatRelativeTime(row.timestamp, t)}
-          </span>
+          <RelativeTime timestampMs={row.timestamp} />
         ),
       },
     ],
@@ -267,8 +265,8 @@ export function SignalsPage() {
                       <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
                         {t("signals.mobile.time")}
                       </dt>
-                      <dd className="mt-0.5 text-text-primary">
-                        {formatRelativeTime(row.timestamp, t)}
+                      <dd className="mt-0.5">
+                        <RelativeTime timestampMs={row.timestamp} />
                       </dd>
                     </div>
                   </dl>
