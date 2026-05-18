@@ -326,6 +326,7 @@
     "total": "positions",
     "filter": {
       "all": "All",
+      "running": "Running",
       "opening": "Opening",
       "opened": "Opened",
       "closing": "Closing",
@@ -368,6 +369,7 @@
       "sell": "Short"
     },
     "status": {
+      "running": "Running",
       "opening": "Opening",
       "opened": "Opened",
       "closing": "Closing",

@@ -18,10 +18,12 @@ const PAGE_SIZE = 15;
 
 type StatusFilter = "all" | PositionStatus;
 
-const STATUS_FILTERS: StatusFilter[] = ["all", "opening", "opened", "closing", "closed"];
+const STATUS_FILTERS: StatusFilter[] = ["all", "running", "opening", "opened", "closing", "closed"];
 
 function statusClass(status: PositionStatus) {
   switch (status) {
+    case "running":
+      return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
     case "opening":
       return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
     case "opened":
@@ -209,7 +211,7 @@ export function PositionsPage() {
                 />
               </div>
               <span className="tabular-nums text-xs text-text-secondary w-9 text-right">
-                {(row.capacity * 100).toFixed(0)}%
+                {row.capacity.toFixed(0)}%
               </span>
             </div>
           );
@@ -379,7 +381,7 @@ export function PositionsPage() {
                           />
                         </div>
                         <span className="tabular-nums text-[10px] text-text-secondary">
-                          {(row.capacity * 100).toFixed(0)}%
+                          {row.capacity.toFixed(0)}%
                         </span>
                       </dd>
                     </div>

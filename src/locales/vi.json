@@ -332,6 +332,7 @@
     "total": "vị thế",
     "filter": {
       "all": "Tất cả",
+      "running": "Đang chạy",
       "opening": "Đang mở",
       "opened": "Đã mở",
       "closing": "Đang đóng",
@@ -374,6 +375,7 @@
       "sell": "Short"
     },
     "status": {
+      "running": "Đang chạy",
       "opening": "Đang mở",
       "opened": "Đã mở",
       "closing": "Đang đóng",

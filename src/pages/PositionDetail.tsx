@@ -12,6 +12,7 @@ import type { PositionDetail, PositionStatus, PositionSide } from "@/api/positio
 
 function statusClass(status: PositionStatus) {
   switch (status) {
+    case "running":  return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
     case "opening":  return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
     case "opened":   return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
     case "closing":  return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400";
@@ -171,7 +172,7 @@ export function PositionDetailPage() {
                   />
                 </div>
                 <span className="tabular-nums text-sm font-semibold text-text-primary">
-                  {(detail.capacity * 100).toFixed(0)}%
+                  {detail.capacity.toFixed(0)}%
                 </span>
               </dd>
             </div>
