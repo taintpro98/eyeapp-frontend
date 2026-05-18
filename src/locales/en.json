@@ -352,13 +352,16 @@
       "noOrders": "No orders found.",
       "current": "current",
       "max": "max",
+      "realizedPnl": "Realized P&L",
       "col": {
         "no": "#",
         "time": "Time",
         "side": "Side",
         "type": "Type",
         "price": "Price",
-        "qty": "Qty"
+        "qty": "Qty",
+        "orderPnl": "Order P&L",
+        "positionPnl": "Position P&L"
       },
       "orderType": {
         "increase": "Increase",

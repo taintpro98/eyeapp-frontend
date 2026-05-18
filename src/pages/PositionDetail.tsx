@@ -138,14 +138,29 @@ export function PositionDetailPage() {
 
           {/* Stats: avg price | bar | legend */}
           <div className="flex items-start gap-6">
-            {/* Left: avg price */}
-            <div className="shrink-0">
-              <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                {t("positions.columns.avgPrice")}
-              </p>
-              <p className="mt-0.5 tabular-nums font-semibold text-text-primary">
-                {formatPrice(detail.avg_price)}
-              </p>
+            {/* Left: avg price + realized pnl */}
+            <div className="shrink-0 space-y-3">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                  {t("positions.columns.avgPrice")}
+                </p>
+                <p className="mt-0.5 tabular-nums font-semibold text-text-primary">
+                  {formatPrice(detail.avg_price)}
+                </p>
+              </div>
+              {detail.realized_pnl != null && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                    {t("positions.detail.realizedPnl")}
+                  </p>
+                  <p className={cn(
+                    "mt-0.5 tabular-nums font-semibold",
+                    detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                  )}>
+                    {detail.realized_pnl > 0 ? "+" : ""}{formatPrice(detail.realized_pnl)}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Middle: bar */}
@@ -265,6 +280,28 @@ export function PositionDetailPage() {
                         {o.quantity.toFixed(4)}%
                       </p>
                     </div>
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("positions.detail.col.orderPnl")}
+                      </p>
+                      <p className={cn(
+                        "mt-0.5 tabular-nums",
+                        o.order_pnl > 0 ? "text-green-500" : o.order_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                      )}>
+                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}`}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+                        {t("positions.detail.col.positionPnl")}
+                      </p>
+                      <p className={cn(
+                        "mt-0.5 tabular-nums",
+                        o.position_pnl > 0 ? "text-green-500" : o.position_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                      )}>
+                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}`}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -275,7 +312,7 @@ export function PositionDetailPage() {
               <table className="w-full min-w-[520px] text-sm">
                 <thead>
                   <tr className="border-b border-surface-border bg-surface-warm/50">
-                    {["no", "time", "side", "type", "price", "qty"].map((k) => (
+                    {["no", "time", "side", "type", "price", "qty", "orderPnl", "positionPnl"].map((k) => (
                       <th key={k} className="px-4 py-3 text-left font-medium text-text-secondary">
                         {t(`positions.detail.col.${k}`)}
                       </th>
@@ -300,6 +337,18 @@ export function PositionDetailPage() {
                       </td>
                       <td className="px-4 py-3 tabular-nums text-text-primary">
                         {o.quantity.toFixed(4)}%
+                      </td>
+                      <td className={cn(
+                        "px-4 py-3 tabular-nums",
+                        o.order_pnl > 0 ? "text-green-500" : o.order_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                      )}>
+                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}`}
+                      </td>
+                      <td className={cn(
+                        "px-4 py-3 tabular-nums",
+                        o.position_pnl > 0 ? "text-green-500" : o.position_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                      )}>
+                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}`}
                       </td>
                     </tr>
                   ))}

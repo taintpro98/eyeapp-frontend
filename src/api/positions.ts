@@ -17,6 +17,7 @@ export type Position = {
   avg_price: number;
   size: number;
   capacity: number;
+  realized_pnl: number | null;
   drive_candle_id: number;
   created_at: string;
   updated_at: string;
@@ -45,6 +46,8 @@ export type PositionOrder = {
   order_type: "increase" | "decrease";
   price: number;
   quantity: number;
+  order_pnl: number;
+  position_pnl: number;
   signal_id: number | null;
   created_at: string;
 };

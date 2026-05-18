@@ -358,13 +358,16 @@
       "noOrders": "Không có lệnh nào.",
       "current": "hiện tại",
       "max": "tối đa",
+      "realizedPnl": "Lợi nhuận",
       "col": {
         "no": "STT",
         "time": "Thời gian",
         "side": "Chiều",
         "type": "Loại",
         "price": "Giá",
-        "qty": "Khối lượng"
+        "qty": "Khối lượng",
+        "orderPnl": "P&L lệnh",
+        "positionPnl": "P&L vị thế"
       },
       "orderType": {
         "increase": "Gia tăng",
