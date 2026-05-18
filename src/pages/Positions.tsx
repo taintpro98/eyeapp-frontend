@@ -74,6 +74,7 @@ export function PositionsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [isActive, setIsActive] = useState<boolean>(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -115,6 +116,7 @@ export function PositionsPage() {
 
   const handleRowClick = useCallback(
     (row: Position) => {
+      setSelectedId(row.id);
       navigate(`/app/positions/${row.id}`, { state: { marketId } });
     },
     [navigate, marketId],
@@ -307,55 +309,64 @@ export function PositionsPage() {
               columns={columns}
               data={positions}
               onRowClick={handleRowClick}
-              renderMobileCard={(row: Position) => (
+              renderMobileCard={(row: Position, index: number) => (
                 <div
                   className={cn(
-                    "rounded-lg border-l-4 border-surface-border bg-surface-card p-3 sm:p-4 dark:bg-zinc-900/40",
-                    row.side === "buy" ? "border-l-green-500" : "border-l-red-500",
+                    "group relative overflow-hidden rounded-xl border bg-surface-card p-4 shadow-card transition-all duration-150 card-hint",
+                    "group-active/card:scale-[0.98]",
+                    row.id === selectedId
+                      ? "border-l-4 border-l-[var(--brand-primary)] bg-brand-primary/5 shadow-[inset_3px_0_0_var(--brand-primary)]"
+                      : cn(
+                          "border-surface-border",
+                          row.side === "buy" ? "border-l-4 border-l-green-500" : "border-l-4 border-l-red-500",
+                        ),
                   )}
+                  style={{ ["--row-delay" as string]: `${index * 80}ms` }}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <span className="text-lg font-bold text-text-primary">{row.symbol}</span>
-                      <RelativeTime timestampMs={row.timestamp * 1000} className="mt-0.5 block text-[11px]" />
-                    </div>
-                    <div className="flex items-center gap-1.5">
+                  {/* header row */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-text-primary">{row.symbol}</span>
                       <Badge className={sideClass(row.side)}>
                         {t(`positionsEnum.side.${row.side}`)}
                       </Badge>
+                    </div>
+                    <div className="flex items-center gap-1.5">
                       <Badge className={statusClass(row.status)}>
                         {t(`positionsEnum.status.${row.status}`)}
                       </Badge>
+                      <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary opacity-40" />
                     </div>
                   </div>
-                  <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
+
+                  {/* time + term */}
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <RelativeTime timestampMs={row.timestamp * 1000} className="text-[11px]" />
+                    <span className="text-[11px] text-text-secondary">·</span>
+                    <Badge className={termClass(row.term)}>
+                      {t(`positionsEnum.term.${row.term}`)}
+                    </Badge>
+                  </div>
+
+                  {/* metrics grid */}
+                  <dl className="mt-3 grid grid-cols-3 gap-x-2 gap-y-2.5 text-sm">
                     <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                      <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
                         {t("positions.columns.avgPrice")}
                       </dt>
-                      <dd className="mt-0.5 tabular-nums text-text-primary">{formatPrice(row.avg_price)}</dd>
+                      <dd className="mt-0.5 tabular-nums font-medium text-text-primary">{formatPrice(row.avg_price)}</dd>
                     </div>
                     <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                      <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
                         {t("positions.columns.size")}
                       </dt>
                       <dd className="mt-0.5 tabular-nums text-text-secondary">{row.size.toFixed(4)}</dd>
                     </div>
                     <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("positions.columns.term")}
-                      </dt>
-                      <dd className="mt-0.5">
-                        <Badge className={termClass(row.term)}>
-                          {t(`positionsEnum.term.${row.term}`)}
-                        </Badge>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                      <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
                         {t("positions.columns.capacity")}
                       </dt>
-                      <dd className="mt-1 flex items-center gap-2">
+                      <dd className="mt-1 flex items-center gap-1.5">
                         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-border">
                           <div
                             className={cn(
@@ -367,7 +378,7 @@ export function PositionsPage() {
                             }}
                           />
                         </div>
-                        <span className="tabular-nums text-xs text-text-secondary">
+                        <span className="tabular-nums text-[10px] text-text-secondary">
                           {(row.capacity * 100).toFixed(0)}%
                         </span>
                       </dd>

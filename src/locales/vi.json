@@ -363,8 +363,8 @@
         "qty": "Khối lượng"
       },
       "orderType": {
-        "increase": "Mua thêm",
-        "decrease": "Bán bớt"
+        "increase": "Gia tăng",
+        "decrease": "Giảm bớt"
       }
     }
   },

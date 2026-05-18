@@ -357,8 +357,8 @@
         "qty": "Qty"
       },
       "orderType": {
-        "increase": "Buy more",
-        "decrease": "Sell down"
+        "increase": "Increase",
+        "decrease": "Decrease"
       }
     }
   },

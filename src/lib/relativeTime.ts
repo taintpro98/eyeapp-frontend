@@ -32,5 +32,8 @@ export function formatRelativeTime(
     return t(`${ns}.thisWeek`, { day: days[date.getDay()], time: hhmm });
   }
 
-  return date.toLocaleDateString([], { day: "2-digit", month: "2-digit", year: "numeric" });
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy} ${hhmm}`;
 }
