@@ -226,7 +226,7 @@ export function PositionDetailPage() {
                         {t("positions.detail.col.qty")}
                       </p>
                       <p className="mt-0.5 tabular-nums text-text-primary">
-                        {o.quantity.toFixed(4)}
+                        {o.quantity.toFixed(4)}%
                       </p>
                     </div>
                   </div>
@@ -262,7 +262,7 @@ export function PositionDetailPage() {
                         {formatPrice(o.price)}
                       </td>
                       <td className="px-4 py-3 tabular-nums text-text-primary">
-                        {o.quantity.toFixed(4)}
+                        {o.quantity.toFixed(4)}%
                       </td>
                     </tr>
                   ))}
