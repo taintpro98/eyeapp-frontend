@@ -95,8 +95,6 @@ export function PositionDetailPage() {
     );
   }
 
-  const capacityPct =
-    detail.capacity > 0 ? Math.min(100, (detail.size / detail.capacity) * 100) : 0;
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -138,45 +136,79 @@ export function PositionDetailPage() {
             </p>
           </div>
 
-          {/* Stats: 2-col on mobile, 3-col on sm+ */}
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3">
-            <div>
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+          {/* Stats: avg price | bar | legend */}
+          <div className="flex items-start gap-6">
+            {/* Left: avg price */}
+            <div className="shrink-0">
+              <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
                 {t("positions.columns.avgPrice")}
-              </dt>
-              <dd className="mt-0.5 tabular-nums font-semibold text-text-primary">
+              </p>
+              <p className="mt-0.5 tabular-nums font-semibold text-text-primary">
                 {formatPrice(detail.avg_price)}
-              </dd>
+              </p>
             </div>
-            <div>
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                {t("positions.columns.size")}
-              </dt>
-              <dd className="mt-0.5 tabular-nums font-semibold text-text-primary">
-                {detail.size.toFixed(6)}
-              </dd>
-            </div>
-            {/* Capacity with progress bar — spans both cols on mobile */}
-            <div className="col-span-2 sm:col-span-1">
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                {t("positions.columns.capacity")}
-              </dt>
-              <dd className="mt-1.5 flex items-center gap-3">
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-border sm:max-w-[120px]">
-                  <div
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      detail.side === "buy" ? "bg-green-500" : "bg-red-500",
-                    )}
-                    style={{ width: `${capacityPct}%` }}
-                  />
+
+            {/* Middle: bar */}
+            {(() => {
+              const scaleMax = Math.max(detail.capacity, detail.size, 100);
+              const sizePct = (detail.size / scaleMax) * 100;
+              const capPct = (detail.capacity / scaleMax) * 100;
+              const marker = scaleMax > 100 ? (100 / scaleMax) * 100 : null;
+              return (
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
+                    {t("positions.columns.capacity")}
+                  </p>
+                  <div className="mt-2">
+                    {/* Size label above bar */}
+                    <div className="relative h-3.5 tabular-nums">
+                      <span
+                        className={cn("absolute -translate-x-1/2 text-[10px] font-semibold", detail.side === "buy" ? "text-green-500" : "text-red-500")}
+                        style={{ left: `${sizePct}%` }}
+                      >
+                        {detail.size.toFixed(0)}%
+                      </span>
+                    </div>
+                    {/* Bar */}
+                    <div className="relative h-2 overflow-hidden rounded-full bg-surface-border">
+                      <div
+                        className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500/25" : "bg-red-500/25")}
+                        style={{ width: `${capPct}%` }}
+                      />
+                      <div
+                        className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500" : "bg-red-500")}
+                        style={{ width: `${sizePct}%` }}
+                      />
+                      {marker !== null && (
+                        <div className="absolute top-0 h-full w-px bg-white/40" style={{ left: `${marker}%` }} />
+                      )}
+                    </div>
+                    {/* Capacity label below bar */}
+                    <div className="relative h-3.5 tabular-nums">
+                      <span
+                        className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-secondary"
+                        style={{ left: `${capPct}%` }}
+                      >
+                        {detail.capacity.toFixed(0)}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <span className="tabular-nums text-sm font-semibold text-text-primary">
-                  {detail.capacity.toFixed(0)}%
-                </span>
-              </dd>
+              );
+            })()}
+
+            {/* Right: legend */}
+            <div className="flex shrink-0 flex-col justify-center gap-1 pt-5">
+              <span className="flex items-center gap-1.5">
+                <span className={cn("h-2 w-2 shrink-0 rounded-full", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
+                <span className="text-xs text-text-secondary">{t("positions.detail.current")}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className={cn("h-2 w-2 shrink-0 rounded-full opacity-30", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
+                <span className="text-xs text-text-secondary">{t("positions.detail.max")}</span>
+              </span>
             </div>
-          </dl>
+          </div>
         </div>
       </div>
 
@@ -194,13 +226,16 @@ export function PositionDetailPage() {
           <>
             {/* Mobile cards — hidden on sm+ */}
             <div className="space-y-3 sm:hidden">
-              {detail.orders.map((o) => (
+              {detail.orders.map((o, idx) => (
                 <div
                   key={o.id}
                   className="rounded-lg border border-surface-border bg-surface-warm/30 p-3"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <RelativeTime timestampMs={o.timestamp * 1000} />
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold tabular-nums text-text-secondary">{idx + 1}.</span>
+                      <RelativeTime timestampMs={o.timestamp * 1000} />
+                    </div>
                     <Badge className={sideClass(o.side)}>
                       {t(`ordersEnum.side.${o.side}`)}
                     </Badge>
@@ -240,7 +275,7 @@ export function PositionDetailPage() {
               <table className="w-full min-w-[520px] text-sm">
                 <thead>
                   <tr className="border-b border-surface-border bg-surface-warm/50">
-                    {["time", "side", "type", "price", "qty"].map((k) => (
+                    {["no", "time", "side", "type", "price", "qty"].map((k) => (
                       <th key={k} className="px-4 py-3 text-left font-medium text-text-secondary">
                         {t(`positions.detail.col.${k}`)}
                       </th>
@@ -248,8 +283,9 @@ export function PositionDetailPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {detail.orders.map((o) => (
+                  {detail.orders.map((o, idx) => (
                     <tr key={o.id} className="border-b border-surface-border last:border-0 hover:bg-surface-warm/30">
+                      <td className="px-4 py-3 tabular-nums text-text-secondary">{idx + 1}</td>
                       <td className="px-4 py-3"><RelativeTime timestampMs={o.timestamp * 1000} /></td>
                       <td className="px-4 py-3">
                         <Badge className={sideClass(o.side)}>

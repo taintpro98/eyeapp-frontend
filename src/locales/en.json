@@ -350,7 +350,10 @@
       "orders": "Order History",
       "ordersSubtitle": "All orders in chronological order",
       "noOrders": "No orders found.",
+      "current": "current",
+      "max": "max",
       "col": {
+        "no": "#",
         "time": "Time",
         "side": "Side",
         "type": "Type",

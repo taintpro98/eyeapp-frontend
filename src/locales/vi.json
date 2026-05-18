@@ -356,7 +356,10 @@
       "orders": "Lịch sử lệnh",
       "ordersSubtitle": "Tất cả lệnh theo thứ tự thời gian",
       "noOrders": "Không có lệnh nào.",
+      "current": "hiện tại",
+      "max": "tối đa",
       "col": {
+        "no": "STT",
         "time": "Thời gian",
         "side": "Chiều",
         "type": "Loại",
