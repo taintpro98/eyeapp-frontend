@@ -89,7 +89,7 @@ export function PositionsPage() {
             limit: PAGE_SIZE,
             offset: p * PAGE_SIZE,
             symbol: symbol || undefined,
-            is_active: active !== null ? active : undefined,
+            is_active: active || undefined,
             status: sf !== "all" ? (sf as PositionStatus) : undefined,
           },
           accessToken,
