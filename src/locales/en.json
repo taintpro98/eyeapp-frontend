@@ -343,7 +343,8 @@
       "size": "Size",
       "capacity": "Capacity",
       "currentPrice": "Cur. Price",
-      "currentPnl": "Unr. P&L"
+      "currentPnl": "Unr. P&L",
+      "positionReturn": "P&L"
     },
     "detail": {
       "back": "Back",
@@ -357,6 +358,7 @@
       "realizedPnl": "Realized P&L",
       "currentPrice": "Current Price",
       "unrealizedPnl": "Unrealized P&L",
+      "positionReturn": "Position Return",
       "refreshLive": "Refresh",
       "col": {
         "no": "#",

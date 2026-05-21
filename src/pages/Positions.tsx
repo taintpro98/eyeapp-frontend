@@ -14,7 +14,7 @@ import { RelativeTime } from "@/components/RelativeTime";
 import { cn } from "@/lib/utils";
 import type { Position, PositionStatus } from "@/api/positions";
 
-type LiveEntry = { price: number | null; pnl: number | null };
+type LiveEntry = { price: number | null; pnl: number | null; positionReturn: number | null };
 type LiveMap = Map<number, LiveEntry>;
 type LoadingSet = Set<number>;
 
@@ -152,7 +152,7 @@ export function PositionsPage() {
         const live = await fetchPositionLive(marketId, row.id, accessToken);
         setLiveMap((prev) => {
           const next = new Map(prev);
-          next.set(row.id, { price: live.current_price, pnl: live.current_pnl });
+          next.set(row.id, { price: live.current_price, pnl: live.current_pnl, positionReturn: live.position_return });
           return next;
         });
       } catch {
@@ -275,6 +275,22 @@ export function PositionsPage() {
               live.pnl > 0 ? "text-green-500" : live.pnl < 0 ? "text-red-500" : "text-text-secondary",
             )}>
               {live.pnl > 0 ? "+" : ""}{formatPrice(live.pnl)}%
+            </span>
+          );
+        },
+      },
+      {
+        key: "position_return",
+        header: t("positions.columns.positionReturn"),
+        render: (row: Position) => {
+          const live = liveMap.get(row.id);
+          if (!live || live.positionReturn == null) return <span className="text-text-secondary">—</span>;
+          return (
+            <span className={cn(
+              "tabular-nums",
+              live.positionReturn > 0 ? "text-green-500" : live.positionReturn < 0 ? "text-red-500" : "text-text-secondary",
+            )}>
+              {live.positionReturn > 0 ? "+" : ""}{formatPrice(live.positionReturn)}%
             </span>
           );
         },
@@ -497,6 +513,20 @@ export function PositionsPage() {
                                 : "text-text-secondary",
                             )}>
                               {live.pnl == null ? "—" : `${live.pnl > 0 ? "+" : ""}${formatPrice(live.pnl)}%`}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
+                              {t("positions.columns.positionReturn")}
+                            </dt>
+                            <dd className={cn(
+                              "mt-0.5 tabular-nums font-medium",
+                              live.positionReturn == null ? "text-text-secondary"
+                                : live.positionReturn > 0 ? "text-green-500"
+                                : live.positionReturn < 0 ? "text-red-500"
+                                : "text-text-secondary",
+                            )}>
+                              {live.positionReturn == null ? "—" : `${live.positionReturn > 0 ? "+" : ""}${formatPrice(live.positionReturn)}%`}
                             </dd>
                           </div>
                         </>

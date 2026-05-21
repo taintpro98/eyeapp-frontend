@@ -59,6 +59,7 @@ export type PositionDetail = Position & {
 export type PositionLive = Position & {
   current_price: number | null;
   current_pnl: number | null;
+  position_return: number | null;
 };
 
 export async function fetchPositions(

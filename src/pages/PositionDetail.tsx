@@ -52,6 +52,10 @@ function formatPrice(n: number) {
   return n.toLocaleString(undefined, { maximumFractionDigits: 6 });
 }
 
+function fmt2(n: number) {
+  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export function PositionDetailPage() {
   const { t } = useTranslation();
   const { positionId } = useParams<{ positionId: string }>();
@@ -69,6 +73,7 @@ export function PositionDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [livePrice, setLivePrice] = useState<number | null>(null);
   const [livePnl, setLivePnl] = useState<number | null>(null);
+  const [livePositionReturn, setLivePositionReturn] = useState<number | null>(null);
   const [liveLoading, setLiveLoading] = useState(false);
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export function PositionDetailPage() {
       const live = await fetchPositionLive(resolvedMarketId, id, accessToken);
       setLivePrice(live.current_price);
       setLivePnl(live.current_pnl);
+      setLivePositionReturn(live.position_return);
     } catch {
       // keep existing live data on error
     } finally {
@@ -157,40 +163,66 @@ export function PositionDetailPage() {
           </div>
 
           {/* Live price & PnL refresh */}
-          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-surface-border bg-surface-warm/40 px-3 py-2">
-            <div className="flex flex-1 flex-wrap items-center gap-4">
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+          <div className="overflow-hidden rounded-xl border border-surface-border">
+            {/* Header bar */}
+            <div className="flex items-center justify-between border-b border-surface-border bg-surface-warm/50 px-4 py-2">
+              <div className="flex items-center gap-2">
+                <span className={cn(
+                  "h-1.5 w-1.5 rounded-full transition-colors",
+                  livePrice != null ? "animate-pulse bg-green-500" : "bg-surface-border",
+                )} />
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-text-secondary">Live</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefreshLive}
+                disabled={liveLoading}
+                className="h-7 gap-1.5 px-2.5 text-xs text-text-secondary hover:text-text-primary"
+              >
+                <RefreshCw className={cn("h-3.5 w-3.5", liveLoading && "animate-spin")} />
+                {t("positions.detail.refreshLive")}
+              </Button>
+            </div>
+            {/* Metrics grid */}
+            <div className="grid grid-cols-3 divide-x divide-surface-border">
+              <div className="px-4 py-3.5">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.currentPrice")}
                 </p>
-                <p className="mt-0.5 tabular-nums font-semibold text-text-primary">
-                  {livePrice != null ? formatPrice(livePrice) : "—"}
+                <p className="mt-1.5 tabular-nums text-lg font-bold text-text-primary">
+                  {livePrice != null ? fmt2(livePrice) : <span className="text-sm font-normal text-text-secondary/40">—</span>}
                 </p>
               </div>
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+              <div className="px-4 py-3.5">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.unrealizedPnl")}
                 </p>
                 <p className={cn(
-                  "mt-0.5 tabular-nums font-semibold",
-                  livePnl == null
-                    ? "text-text-secondary"
-                    : livePnl > 0 ? "text-green-500" : livePnl < 0 ? "text-red-500" : "text-text-secondary",
+                  "mt-1.5 tabular-nums text-lg font-bold",
+                  livePnl == null ? "text-sm font-normal text-text-secondary/40"
+                    : livePnl > 0 ? "text-green-500"
+                    : livePnl < 0 ? "text-red-500"
+                    : "text-text-secondary",
                 )}>
-                  {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${formatPrice(livePnl)}%`}
+                  {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${fmt2(livePnl)}%`}
+                </p>
+              </div>
+              <div className="px-4 py-3.5">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  {t("positions.detail.positionReturn")}
+                </p>
+                <p className={cn(
+                  "mt-1.5 tabular-nums text-lg font-bold",
+                  livePositionReturn == null ? "text-sm font-normal text-text-secondary/40"
+                    : livePositionReturn > 0 ? "text-green-500"
+                    : livePositionReturn < 0 ? "text-red-500"
+                    : "text-text-secondary",
+                )}>
+                  {livePositionReturn == null ? "—" : `${livePositionReturn > 0 ? "+" : ""}${fmt2(livePositionReturn)}%`}
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefreshLive}
-              disabled={liveLoading}
-              className="shrink-0 gap-1.5"
-            >
-              <RefreshCw className={cn("h-3.5 w-3.5", liveLoading && "animate-spin")} />
-              <span>{t("positions.detail.refreshLive")}</span>
-            </Button>
           </div>
 
           {/* Stats: avg price | bar | legend */}

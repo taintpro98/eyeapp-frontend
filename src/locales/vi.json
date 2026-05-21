@@ -349,7 +349,8 @@
       "size": "Khối lượng",
       "capacity": "Tỷ trọng",
       "currentPrice": "Giá TT",
-      "currentPnl": "Lãi/lỗ TT"
+      "currentPnl": "Lãi/lỗ TT",
+      "positionReturn": "Lãi/lỗ"
     },
     "detail": {
       "back": "Quay lại",
@@ -363,6 +364,7 @@
       "realizedPnl": "Lợi nhuận",
       "currentPrice": "Giá hiện tại",
       "unrealizedPnl": "Lãi/lỗ chưa chốt",
+      "positionReturn": "Lãi/lỗ vị thế",
       "refreshLive": "Làm mới",
       "col": {
         "no": "STT",
