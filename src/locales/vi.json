@@ -347,7 +347,9 @@
       "time": "Thời gian",
       "avgPrice": "Giá TB",
       "size": "Khối lượng",
-      "capacity": "Tỷ trọng"
+      "capacity": "Tỷ trọng",
+      "currentPrice": "Giá TT",
+      "currentPnl": "Lãi/lỗ TT"
     },
     "detail": {
       "back": "Quay lại",
@@ -359,6 +361,9 @@
       "current": "hiện tại",
       "max": "tối đa",
       "realizedPnl": "Lợi nhuận",
+      "currentPrice": "Giá hiện tại",
+      "unrealizedPnl": "Lãi/lỗ chưa chốt",
+      "refreshLive": "Làm mới",
       "col": {
         "no": "STT",
         "time": "Thời gian",

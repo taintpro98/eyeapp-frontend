@@ -56,6 +56,11 @@ export type PositionDetail = Position & {
   orders: PositionOrder[];
 };
 
+export type PositionLive = Position & {
+  current_price: number | null;
+  current_pnl: number | null;
+};
+
 export async function fetchPositions(
   params: PositionsParams,
   accessToken: string,
@@ -80,6 +85,17 @@ export async function fetchPositionDetail(
 ): Promise<PositionDetail> {
   return apiFetch<PositionDetail>(
     `/positions/${marketId}/${positionId}`,
+    { accessToken },
+  );
+}
+
+export async function fetchPositionLive(
+  marketId: 1 | 2,
+  positionId: number,
+  accessToken: string,
+): Promise<PositionLive> {
+  return apiFetch<PositionLive>(
+    `/positions/${marketId}/${positionId}/live`,
     { accessToken },
   );
 }

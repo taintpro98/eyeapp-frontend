@@ -9,10 +9,14 @@ import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fetchPositions } from "@/api/positions";
+import { fetchPositions, fetchPositionLive } from "@/api/positions";
 import { RelativeTime } from "@/components/RelativeTime";
 import { cn } from "@/lib/utils";
 import type { Position, PositionStatus } from "@/api/positions";
+
+type LiveEntry = { price: number | null; pnl: number | null };
+type LiveMap = Map<number, LiveEntry>;
+type LoadingSet = Set<number>;
 
 const PAGE_SIZE = 15;
 
@@ -77,6 +81,8 @@ export function PositionsPage() {
   const [isActive, setIsActive] = useState<boolean>(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [liveMap, setLiveMap] = useState<LiveMap>(new Map());
+  const [liveLoadingSet, setLiveLoadingSet] = useState<LoadingSet>(new Set());
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -110,6 +116,8 @@ export function PositionsPage() {
   useEffect(() => {
     setPage(0);
     setPositions([]);
+    setLiveMap(new Map());
+    setLiveLoadingSet(new Set());
   }, [marketId]);
 
   useEffect(() => {
@@ -134,6 +142,31 @@ export function PositionsPage() {
       setRefreshKey((k) => k + 1);
     }
   };
+
+  const handleRefreshPositionLive = useCallback(
+    async (e: React.MouseEvent, row: Position) => {
+      e.stopPropagation();
+      if (!accessToken || liveLoadingSet.has(row.id)) return;
+      setLiveLoadingSet((prev) => new Set(prev).add(row.id));
+      try {
+        const live = await fetchPositionLive(marketId, row.id, accessToken);
+        setLiveMap((prev) => {
+          const next = new Map(prev);
+          next.set(row.id, { price: live.current_price, pnl: live.current_pnl });
+          return next;
+        });
+      } catch {
+        // keep existing live data on error
+      } finally {
+        setLiveLoadingSet((prev) => {
+          const next = new Set(prev);
+          next.delete(row.id);
+          return next;
+        });
+      }
+    },
+    [accessToken, marketId, liveLoadingSet],
+  );
 
   const columns = useMemo(
     () => [
@@ -217,8 +250,54 @@ export function PositionsPage() {
           );
         },
       },
+      {
+        key: "current_price",
+        header: t("positions.columns.currentPrice"),
+        render: (row: Position) => {
+          const live = liveMap.get(row.id);
+          if (!live) return <span className="tabular-nums text-text-secondary">—</span>;
+          return (
+            <span className="tabular-nums text-text-primary">
+              {live.price != null ? formatPrice(live.price) : "—"}
+            </span>
+          );
+        },
+      },
+      {
+        key: "current_pnl",
+        header: t("positions.columns.currentPnl"),
+        render: (row: Position) => {
+          const live = liveMap.get(row.id);
+          if (!live || live.pnl == null) return <span className="text-text-secondary">—</span>;
+          return (
+            <span className={cn(
+              "tabular-nums",
+              live.pnl > 0 ? "text-green-500" : live.pnl < 0 ? "text-red-500" : "text-text-secondary",
+            )}>
+              {live.pnl > 0 ? "+" : ""}{formatPrice(live.pnl)}%
+            </span>
+          );
+        },
+      },
+      {
+        key: "refresh_live",
+        header: "",
+        render: (row: Position) => {
+          const refreshing = liveLoadingSet.has(row.id);
+          return (
+            <button
+              onClick={(e) => handleRefreshPositionLive(e, row)}
+              disabled={refreshing}
+              className="rounded p-1 text-text-secondary transition-colors hover:text-text-primary disabled:opacity-50"
+              title={t("positions.detail.refreshLive")}
+            >
+              <RefreshCw className={cn("h-3.5 w-3.5", refreshing && "animate-spin")} />
+            </button>
+          );
+        },
+      },
     ],
-    [t],
+    [t, liveMap, liveLoadingSet, handleRefreshPositionLive],
   );
 
   return (
@@ -337,6 +416,14 @@ export function PositionsPage() {
                       <Badge className={statusClass(row.status)}>
                         {t(`positionsEnum.status.${row.status}`)}
                       </Badge>
+                      <button
+                        onClick={(e) => handleRefreshPositionLive(e, row)}
+                        disabled={liveLoadingSet.has(row.id)}
+                        className="rounded p-1 text-text-secondary transition-colors hover:text-brand-primary disabled:opacity-50"
+                        title={t("positions.detail.refreshLive")}
+                      >
+                        <RefreshCw className={cn("h-3.5 w-3.5", liveLoadingSet.has(row.id) && "animate-spin")} />
+                      </button>
                       <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary opacity-40" />
                     </div>
                   </div>
@@ -385,6 +472,36 @@ export function PositionsPage() {
                         </span>
                       </dd>
                     </div>
+                    {(() => {
+                      const live = liveMap.get(row.id);
+                      if (!live) return null;
+                      return (
+                        <>
+                          <div>
+                            <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
+                              {t("positions.columns.currentPrice")}
+                            </dt>
+                            <dd className="mt-0.5 tabular-nums font-medium text-text-primary">
+                              {live.price != null ? formatPrice(live.price) : "—"}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
+                              {t("positions.columns.currentPnl")}
+                            </dt>
+                            <dd className={cn(
+                              "mt-0.5 tabular-nums font-medium",
+                              live.pnl == null ? "text-text-secondary"
+                                : live.pnl > 0 ? "text-green-500"
+                                : live.pnl < 0 ? "text-red-500"
+                                : "text-text-secondary",
+                            )}>
+                              {live.pnl == null ? "—" : `${live.pnl > 0 ? "+" : ""}${formatPrice(live.pnl)}%`}
+                            </dd>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </dl>
                 </div>
               )}

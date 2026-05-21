@@ -341,7 +341,9 @@
       "time": "Time",
       "avgPrice": "Avg Price",
       "size": "Size",
-      "capacity": "Capacity"
+      "capacity": "Capacity",
+      "currentPrice": "Cur. Price",
+      "currentPnl": "Unr. P&L"
     },
     "detail": {
       "back": "Back",
@@ -353,6 +355,9 @@
       "current": "current",
       "max": "max",
       "realizedPnl": "Realized P&L",
+      "currentPrice": "Current Price",
+      "unrealizedPnl": "Unrealized P&L",
+      "refreshLive": "Refresh",
       "col": {
         "no": "#",
         "time": "Time",

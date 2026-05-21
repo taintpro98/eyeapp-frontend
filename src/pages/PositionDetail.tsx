@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { SectionCard } from "@/components/SectionCard";
-import { fetchPositionDetail } from "@/api/positions";
+import { Button } from "@/components/ui/button";
+import { fetchPositionDetail, fetchPositionLive } from "@/api/positions";
 import { RelativeTime } from "@/components/RelativeTime";
 import { cn } from "@/lib/utils";
 import type { PositionDetail, PositionStatus, PositionSide } from "@/api/positions";
@@ -66,6 +67,9 @@ export function PositionDetailPage() {
   const [detail, setDetail] = useState<PositionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [livePrice, setLivePrice] = useState<number | null>(null);
+  const [livePnl, setLivePnl] = useState<number | null>(null);
+  const [liveLoading, setLiveLoading] = useState(false);
 
   useEffect(() => {
     if (!accessToken || !positionId) return;
@@ -77,6 +81,22 @@ export function PositionDetailPage() {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [accessToken, positionId, resolvedMarketId]);
+
+  const handleRefreshLive = useCallback(async () => {
+    if (!accessToken || !positionId || liveLoading) return;
+    const id = parseInt(positionId, 10);
+    if (isNaN(id)) return;
+    setLiveLoading(true);
+    try {
+      const live = await fetchPositionLive(resolvedMarketId, id, accessToken);
+      setLivePrice(live.current_price);
+      setLivePnl(live.current_pnl);
+    } catch {
+      // keep existing live data on error
+    } finally {
+      setLiveLoading(false);
+    }
+  }, [accessToken, positionId, resolvedMarketId, liveLoading]);
 
   if (loading) {
     return (
@@ -136,6 +156,43 @@ export function PositionDetailPage() {
             </p>
           </div>
 
+          {/* Live price & PnL refresh */}
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-surface-border bg-surface-warm/40 px-3 py-2">
+            <div className="flex flex-1 flex-wrap items-center gap-4">
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+                  {t("positions.detail.currentPrice")}
+                </p>
+                <p className="mt-0.5 tabular-nums font-semibold text-text-primary">
+                  {livePrice != null ? formatPrice(livePrice) : "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+                  {t("positions.detail.unrealizedPnl")}
+                </p>
+                <p className={cn(
+                  "mt-0.5 tabular-nums font-semibold",
+                  livePnl == null
+                    ? "text-text-secondary"
+                    : livePnl > 0 ? "text-green-500" : livePnl < 0 ? "text-red-500" : "text-text-secondary",
+                )}>
+                  {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${formatPrice(livePnl)}%`}
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshLive}
+              disabled={liveLoading}
+              className="shrink-0 gap-1.5"
+            >
+              <RefreshCw className={cn("h-3.5 w-3.5", liveLoading && "animate-spin")} />
+              <span>{t("positions.detail.refreshLive")}</span>
+            </Button>
+          </div>
+
           {/* Stats: avg price | bar | legend */}
           <div className="flex items-start gap-6">
             {/* Left: avg price + realized pnl */}
@@ -157,7 +214,7 @@ export function PositionDetailPage() {
                     "mt-0.5 tabular-nums font-semibold",
                     detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
                   )}>
-                    {detail.realized_pnl > 0 ? "+" : ""}{formatPrice(detail.realized_pnl)}
+                    {detail.realized_pnl > 0 ? "+" : ""}{formatPrice(detail.realized_pnl)}%
                   </p>
                 </div>
               )}
@@ -288,7 +345,7 @@ export function PositionDetailPage() {
                         "mt-0.5 tabular-nums",
                         o.order_pnl > 0 ? "text-green-500" : o.order_pnl < 0 ? "text-red-500" : "text-text-secondary",
                       )}>
-                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}`}
+                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}%`}
                       </p>
                     </div>
                     <div>
@@ -299,7 +356,7 @@ export function PositionDetailPage() {
                         "mt-0.5 tabular-nums",
                         o.position_pnl > 0 ? "text-green-500" : o.position_pnl < 0 ? "text-red-500" : "text-text-secondary",
                       )}>
-                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}`}
+                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}%`}
                       </p>
                     </div>
                   </div>
@@ -342,13 +399,13 @@ export function PositionDetailPage() {
                         "px-4 py-3 tabular-nums",
                         o.order_pnl > 0 ? "text-green-500" : o.order_pnl < 0 ? "text-red-500" : "text-text-secondary",
                       )}>
-                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}`}
+                        {o.order_pnl === 0 ? "—" : `${o.order_pnl > 0 ? "+" : ""}${formatPrice(o.order_pnl)}%`}
                       </td>
                       <td className={cn(
                         "px-4 py-3 tabular-nums",
                         o.position_pnl > 0 ? "text-green-500" : o.position_pnl < 0 ? "text-red-500" : "text-text-secondary",
                       )}>
-                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}`}
+                        {o.position_pnl === 0 ? "—" : `${o.position_pnl > 0 ? "+" : ""}${formatPrice(o.position_pnl)}%`}
                       </td>
                     </tr>
                   ))}
