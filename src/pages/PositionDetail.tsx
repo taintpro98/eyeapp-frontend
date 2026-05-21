@@ -268,7 +268,7 @@ export function PositionDetailPage() {
                 </div>
               )}
 
-              {/* Capacity bar — grows to fill remaining space */}
+              {/* Capacity bar + legend — single cell, no divider */}
               {(() => {
                 const scaleMax = Math.max(detail.capacity, detail.size, 100);
                 const sizePct = (detail.size / scaleMax) * 100;
@@ -276,55 +276,59 @@ export function PositionDetailPage() {
                 const marker = scaleMax > 100 ? (100 / scaleMax) * 100 : null;
                 return (
                   <div className="min-w-0 flex-1 px-4 py-3">
-                    <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                      {t("positions.columns.capacity")}
-                    </p>
-                    <div className="mt-2">
-                      <div className="relative h-3.5 tabular-nums">
-                        <span
-                          className={cn("absolute -translate-x-1/2 text-[10px] font-semibold", detail.side === "buy" ? "text-green-500" : "text-red-500")}
-                          style={{ left: `${sizePct}%` }}
-                        >
-                          {detail.size.toFixed(0)}%
+                    <div className="flex items-start justify-between gap-4">
+                      {/* Bar section */}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                          {t("positions.columns.capacity")}
+                        </p>
+                        <div className="mt-2">
+                          <div className="relative h-3.5 tabular-nums">
+                            <span
+                              className={cn("absolute -translate-x-1/2 text-[10px] font-semibold", detail.side === "buy" ? "text-green-500" : "text-red-500")}
+                              style={{ left: `${sizePct}%` }}
+                            >
+                              {detail.size.toFixed(0)}%
+                            </span>
+                          </div>
+                          <div className="relative h-2 overflow-hidden rounded-full bg-surface-border">
+                            <div
+                              className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500/25" : "bg-red-500/25")}
+                              style={{ width: `${capPct}%` }}
+                            />
+                            <div
+                              className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500" : "bg-red-500")}
+                              style={{ width: `${sizePct}%` }}
+                            />
+                            {marker !== null && (
+                              <div className="absolute top-0 h-full w-px bg-white/40" style={{ left: `${marker}%` }} />
+                            )}
+                          </div>
+                          <div className="relative h-3.5 tabular-nums">
+                            <span
+                              className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-secondary"
+                              style={{ left: `${capPct}%` }}
+                            >
+                              {detail.capacity.toFixed(0)}%
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Legend */}
+                      <div className="flex shrink-0 flex-col justify-center gap-1.5 pt-5">
+                        <span className="flex items-center gap-1.5">
+                          <span className={cn("h-2 w-2 shrink-0 rounded-full", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
+                          <span className="text-xs text-text-secondary">{t("positions.detail.current")}</span>
                         </span>
-                      </div>
-                      <div className="relative h-2 overflow-hidden rounded-full bg-surface-border">
-                        <div
-                          className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500/25" : "bg-red-500/25")}
-                          style={{ width: `${capPct}%` }}
-                        />
-                        <div
-                          className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500" : "bg-red-500")}
-                          style={{ width: `${sizePct}%` }}
-                        />
-                        {marker !== null && (
-                          <div className="absolute top-0 h-full w-px bg-white/40" style={{ left: `${marker}%` }} />
-                        )}
-                      </div>
-                      <div className="relative h-3.5 tabular-nums">
-                        <span
-                          className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-secondary"
-                          style={{ left: `${capPct}%` }}
-                        >
-                          {detail.capacity.toFixed(0)}%
+                        <span className="flex items-center gap-1.5">
+                          <span className={cn("h-2 w-2 shrink-0 rounded-full opacity-30", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
+                          <span className="text-xs text-text-secondary">{t("positions.detail.max")}</span>
                         </span>
                       </div>
                     </div>
                   </div>
                 );
               })()}
-
-              {/* Legend */}
-              <div className="flex shrink-0 flex-col justify-center gap-1.5 px-4 py-3">
-                <span className="flex items-center gap-1.5">
-                  <span className={cn("h-2 w-2 shrink-0 rounded-full", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
-                  <span className="text-xs text-text-secondary">{t("positions.detail.current")}</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className={cn("h-2 w-2 shrink-0 rounded-full opacity-30", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
-                  <span className="text-xs text-text-secondary">{t("positions.detail.max")}</span>
-                </span>
-              </div>
             </div>
           </div>
 
