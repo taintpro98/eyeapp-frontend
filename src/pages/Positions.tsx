@@ -454,7 +454,7 @@ export function PositionsPage() {
                   </div>
 
                   {/* metrics grid */}
-                  <dl className="mt-3 grid grid-cols-3 gap-x-2 gap-y-2.5 text-sm">
+                  <dl className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2.5 text-sm">
                     <div>
                       <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
                         {t("positions.columns.avgPrice")}
@@ -467,7 +467,7 @@ export function PositionsPage() {
                       </dt>
                       <dd className="mt-0.5 tabular-nums text-text-secondary">{row.size.toFixed(4)}</dd>
                     </div>
-                    <div>
+                    <div className="col-span-2">
                       <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
                         {t("positions.columns.capacity")}
                       </dt>

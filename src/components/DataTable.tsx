@@ -39,7 +39,7 @@ export function DataTable<T extends Record<string, unknown>>({
           {columns.map((col) => (
             <th
               key={String(col.key)}
-              className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-text-secondary"
+              className="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-text-secondary"
             >
               {col.header}
             </th>

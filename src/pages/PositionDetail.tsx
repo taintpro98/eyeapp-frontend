@@ -186,7 +186,7 @@ export function PositionDetailPage() {
             </div>
             {/* Metrics grid */}
             <div className="grid grid-cols-3 divide-x divide-surface-border">
-              <div className="px-4 py-3.5">
+              <div className="min-w-0 overflow-hidden px-4 py-3.5">
                 <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.currentPrice")}
                 </p>
@@ -194,7 +194,7 @@ export function PositionDetailPage() {
                   {livePrice != null ? fmt2(livePrice) : <span className="text-sm font-normal text-text-secondary/40">—</span>}
                 </p>
               </div>
-              <div className="px-4 py-3.5">
+              <div className="min-w-0 overflow-hidden px-4 py-3.5">
                 <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.unrealizedPnl")}
                 </p>
@@ -208,7 +208,7 @@ export function PositionDetailPage() {
                   {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${fmt2(livePnl)}%`}
                 </p>
               </div>
-              <div className="px-4 py-3.5">
+              <div className="min-w-0 overflow-hidden px-4 py-3.5">
                 <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.positionReturn")}
                 </p>
@@ -227,95 +227,96 @@ export function PositionDetailPage() {
 
           {/* Stats row */}
           <div className="overflow-hidden rounded-xl border border-surface-border">
-            <div className="flex divide-x divide-surface-border">
-              {/* Avg price */}
-              <div className="shrink-0 px-4 py-3">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                  {t("positions.columns.avgPrice")}
-                </p>
-                <p className="mt-1 tabular-nums font-semibold text-text-primary">
-                  {fmt2(detail.avg_price)}
-                </p>
+            <div className="flex flex-wrap">
+              {/* Stat items grouped — equal-width columns */}
+              <div className="flex flex-1 divide-x divide-surface-border">
+                {/* Avg price */}
+                <div className="flex-1 px-4 py-3">
+                  <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.columns.avgPrice")}
+                  </p>
+                  <p className="mt-1 tabular-nums font-semibold text-text-primary">
+                    {fmt2(detail.avg_price)}
+                  </p>
+                </div>
+
+                {/* Booked PnL */}
+                {detail.booked_pnl !== 0 && (
+                  <div className="flex-1 px-4 py-3">
+                    <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      {t("positions.detail.bookedPnl")}
+                    </p>
+                    <p className={cn(
+                      "mt-1 tabular-nums font-semibold",
+                      detail.booked_pnl > 0 ? "text-green-500" : detail.booked_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                    )}>
+                      {detail.booked_pnl > 0 ? "+" : ""}{fmt2(detail.booked_pnl)}%
+                    </p>
+                  </div>
+                )}
+
+                {/* Realized PnL */}
+                {detail.realized_pnl != null && (
+                  <div className="flex-1 px-4 py-3">
+                    <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      {t("positions.detail.realizedPnl")}
+                    </p>
+                    <p className={cn(
+                      "mt-1 tabular-nums font-semibold",
+                      detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                    )}>
+                      {detail.realized_pnl > 0 ? "+" : ""}{fmt2(detail.realized_pnl)}%
+                    </p>
+                  </div>
+                )}
               </div>
 
-              {/* Booked PnL */}
-              {detail.booked_pnl !== 0 && (
-                <div className="shrink-0 px-4 py-3">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                    {t("positions.detail.bookedPnl")}
-                  </p>
-                  <p className={cn(
-                    "mt-1 tabular-nums font-semibold",
-                    detail.booked_pnl > 0 ? "text-green-500" : detail.booked_pnl < 0 ? "text-red-500" : "text-text-secondary",
-                  )}>
-                    {detail.booked_pnl > 0 ? "+" : ""}{fmt2(detail.booked_pnl)}%
-                  </p>
-                </div>
-              )}
-
-              {/* Realized PnL */}
-              {detail.realized_pnl != null && (
-                <div className="shrink-0 px-4 py-3">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                    {t("positions.detail.realizedPnl")}
-                  </p>
-                  <p className={cn(
-                    "mt-1 tabular-nums font-semibold",
-                    detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
-                  )}>
-                    {detail.realized_pnl > 0 ? "+" : ""}{fmt2(detail.realized_pnl)}%
-                  </p>
-                </div>
-              )}
-
-              {/* Capacity bar + legend — single cell, no divider */}
+              {/* Capacity — own row on mobile, inline on sm+ */}
               {(() => {
                 const scaleMax = Math.max(detail.capacity, detail.size, 100);
                 const sizePct = (detail.size / scaleMax) * 100;
                 const capPct = (detail.capacity / scaleMax) * 100;
                 const marker = scaleMax > 100 ? (100 / scaleMax) * 100 : null;
                 return (
-                  <div className="min-w-0 flex-1 px-4 py-3">
-                    <div className="flex items-start justify-between gap-4">
+                  <div className="w-full border-t border-surface-border px-4 py-3 sm:w-auto sm:flex-1 sm:border-l sm:border-t-0">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      {t("positions.columns.capacity")}
+                    </p>
+                    <div className="mt-2 flex items-start gap-4">
                       {/* Bar section */}
                       <div className="min-w-0 flex-1">
-                        <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                          {t("positions.columns.capacity")}
-                        </p>
-                        <div className="mt-2">
-                          <div className="relative h-3.5 tabular-nums">
-                            <span
-                              className={cn("absolute -translate-x-1/2 text-[10px] font-semibold", detail.side === "buy" ? "text-green-500" : "text-red-500")}
-                              style={{ left: `${sizePct}%` }}
-                            >
-                              {detail.size.toFixed(0)}%
-                            </span>
-                          </div>
-                          <div className="relative h-2 overflow-hidden rounded-full bg-surface-border">
-                            <div
-                              className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500/25" : "bg-red-500/25")}
-                              style={{ width: `${capPct}%` }}
-                            />
-                            <div
-                              className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500" : "bg-red-500")}
-                              style={{ width: `${sizePct}%` }}
-                            />
-                            {marker !== null && (
-                              <div className="absolute top-0 h-full w-px bg-white/40" style={{ left: `${marker}%` }} />
-                            )}
-                          </div>
-                          <div className="relative h-3.5 tabular-nums">
-                            <span
-                              className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-secondary"
-                              style={{ left: `${capPct}%` }}
-                            >
-                              {detail.capacity.toFixed(0)}%
-                            </span>
-                          </div>
+                        <div className="relative h-3.5 tabular-nums">
+                          <span
+                            className={cn("absolute -translate-x-1/2 text-[10px] font-semibold", detail.side === "buy" ? "text-green-500" : "text-red-500")}
+                            style={{ left: `${sizePct}%` }}
+                          >
+                            {detail.size.toFixed(0)}%
+                          </span>
+                        </div>
+                        <div className="relative h-2 overflow-hidden rounded-full bg-surface-border">
+                          <div
+                            className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500/25" : "bg-red-500/25")}
+                            style={{ width: `${capPct}%` }}
+                          />
+                          <div
+                            className={cn("absolute left-0 h-full transition-all", detail.side === "buy" ? "bg-green-500" : "bg-red-500")}
+                            style={{ width: `${sizePct}%` }}
+                          />
+                          {marker !== null && (
+                            <div className="absolute top-0 h-full w-px bg-white/40" style={{ left: `${marker}%` }} />
+                          )}
+                        </div>
+                        <div className="relative h-3.5 tabular-nums">
+                          <span
+                            className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-secondary"
+                            style={{ left: `${capPct}%` }}
+                          >
+                            {detail.capacity.toFixed(0)}%
+                          </span>
                         </div>
                       </div>
                       {/* Legend */}
-                      <div className="flex shrink-0 flex-col justify-center gap-1.5 pt-5">
+                      <div className="flex shrink-0 flex-col gap-1.5 pt-1">
                         <span className="flex items-center gap-1.5">
                           <span className={cn("h-2 w-2 shrink-0 rounded-full", detail.side === "buy" ? "bg-green-500" : "bg-red-500")} />
                           <span className="text-xs text-text-secondary">{t("positions.detail.current")}</span>
