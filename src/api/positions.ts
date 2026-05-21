@@ -18,6 +18,7 @@ export type Position = {
   size: number;
   capacity: number;
   realized_pnl: number | null;
+  booked_pnl: number;
   drive_candle_id: number;
   created_at: string;
   updated_at: string;

@@ -355,6 +355,7 @@
       "noOrders": "No orders found.",
       "current": "current",
       "max": "max",
+      "bookedPnl": "Booked P&L",
       "realizedPnl": "Realized P&L",
       "currentPrice": "Current Price",
       "unrealizedPnl": "Unrealized P&L",

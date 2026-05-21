@@ -361,6 +361,7 @@
       "noOrders": "Không có lệnh nào.",
       "current": "hiện tại",
       "max": "tối đa",
+      "bookedPnl": "Lãi/lỗ đã chốt",
       "realizedPnl": "Lợi nhuận",
       "currentPrice": "Giá hiện tại",
       "unrealizedPnl": "Lãi/lỗ chưa chốt",
