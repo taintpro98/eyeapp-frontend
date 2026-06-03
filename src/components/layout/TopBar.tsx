@@ -60,7 +60,7 @@ export function TopBar({
       >
         <Menu className="h-5 w-5" />
       </Button>
-      <h2 className="shrink-0 text-base font-semibold text-text-primary sm:text-lg">
+      <h2 className="max-w-[100px] truncate text-base font-semibold text-text-primary xs:max-w-[140px] sm:max-w-none sm:text-lg">
         {pageTitle}
       </h2>
       {!hideMarketToggle && (
@@ -106,9 +106,11 @@ export function TopBar({
         </DropdownMenu>
       )}
       <div className="flex-1" />
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <LanguageSwitcher />
-        <ThemeToggle />
+      <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+        <div className="hidden sm:flex items-center gap-1 sm:gap-3">
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
         <Button
           variant="ghost"
           size="icon"
@@ -139,6 +141,7 @@ export function TopBar({
               return (
                 <DropdownMenuItem
                   key={item.path}
+                  className="cursor-pointer"
                   onClick={() => navigate(item.path)}
                 >
                   <div className="flex flex-col">
@@ -157,7 +160,7 @@ export function TopBar({
             })}
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-red-600"
+              className="cursor-pointer text-red-600"
               onClick={async () => {
                 await logout();
                 navigate("/sign-in");

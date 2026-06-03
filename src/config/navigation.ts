@@ -23,6 +23,12 @@ export type AccountMenuLinkItem = {
 export const accountMenuItems: AccountMenuLinkItem[] = [
   {
     type: "link",
+    labelKey: "account.profile",
+    path: "/app/profile",
+    icon: "User",
+  },
+  {
+    type: "link",
     labelKey: "account.planBilling",
     path: "/app/billing",
     icon: "CreditCard",

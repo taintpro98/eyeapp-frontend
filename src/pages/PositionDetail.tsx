@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { SectionCard } from "@/components/SectionCard";
 import { Button } from "@/components/ui/button";
 import { fetchPositionDetail, fetchPositionLive } from "@/api/positions";
@@ -62,6 +63,7 @@ export function PositionDetailPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const handleApiError = useApiErrorHandler();
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
 
@@ -83,7 +85,7 @@ export function PositionDetailPage() {
     setLoading(true);
     fetchPositionDetail(resolvedMarketId, id, accessToken)
       .then((d) => setDetail(d))
-      .catch(() => setNotFound(true))
+      .catch((err) => { handleApiError(err); setNotFound(true); })
       .finally(() => setLoading(false));
   }, [accessToken, positionId, resolvedMarketId]);
 
@@ -97,8 +99,8 @@ export function PositionDetailPage() {
       setLivePrice(live.current_price);
       setLivePnl(live.current_pnl);
       setLivePositionReturn(live.position_return);
-    } catch {
-      // keep existing live data on error
+    } catch (err) {
+      handleApiError(err);
     } finally {
       setLiveLoading(false);
     }

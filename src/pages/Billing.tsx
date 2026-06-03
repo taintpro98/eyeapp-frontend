@@ -1,111 +1,107 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Check } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Check, Lock } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
-import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { PlanBadge } from "@/components/PlanBadge";
-import { mockPlans, mockInvoices } from "@/data/mockBilling";
+import { fetchUserMarkets } from "@/api/markets";
+import { useAppStore } from "@/store/useAppStore";
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 export function BillingPage() {
   const { t } = useTranslation();
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
 
-  const invoiceColumns = useMemo(
-    () => [
-      { key: "id", header: t("billing.columns.invoice") },
-      { key: "date", header: t("billing.columns.date") },
-      { key: "amount", header: t("billing.columns.amount") },
-      {
-        key: "status",
-        header: t("billing.columns.status"),
-        render: (row: (typeof mockInvoices)[number]) =>
-          row.status === "Paid" ? t("billing.invoicePaid") : row.status,
-      },
-    ],
-    [t],
-  );
+  const { data: userMarkets = [], isLoading } = useQuery({
+    queryKey: ["me/markets"],
+    queryFn: fetchUserMarkets,
+  });
 
   return (
     <div className="space-y-8">
       <PageHeader title={t("billing.title")} subtitle={t("billing.subtitle")} />
 
-      <SectionCard title={t("billing.currentPlan")}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <PlanBadge label={t("billing.plans.free.name")} variant="default" />
-            <div>
-              <p className="font-medium">{t("billing.freePlan")}</p>
-              <p className="text-sm text-text-secondary">
-                {t("billing.nextBilling")}
-              </p>
-            </div>
-          </div>
-          <Button>{t("billing.upgradePlan")}</Button>
-        </div>
-      </SectionCard>
-
       <SectionCard
-        title={t("billing.comparePlans")}
-        subtitle={t("billing.comparePlansSubtitle")}
+        title={t("billing.myMarkets")}
+        subtitle={t("billing.myMarketsSubtitle")}
       >
-        <div className="grid gap-4 md:grid-cols-3">
-          {mockPlans.map((plan) => {
-            const features = t(`billing.plans.${plan.code}.features`, {
-              returnObjects: true,
-            }) as string[];
-            return (
+        {isLoading ? (
+          <p className="py-8 text-center text-sm text-text-secondary">
+            {t("common.loading")}
+          </p>
+        ) : userMarkets.length === 0 ? (
+          <p className="py-8 text-center text-sm text-text-secondary">
+            {t("billing.noSubscriptions")}
+          </p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {userMarkets.map((market) => (
               <div
-                key={plan.code}
-                className={`rounded-card border p-6 ${
-                  plan.current
-                    ? "border-brand-primary bg-brand-primary/5"
-                    : "border-surface-border"
-                }`}
+                key={market.code}
+                className="rounded-lg border border-surface-border bg-surface-card p-5"
               >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">
-                    {t(`billing.plans.${plan.code}.name`)}
-                  </h3>
-                  {plan.current && (
-                    <PlanBadge
-                      label={t("billing.cta.current")}
-                      variant="default"
-                    />
-                  )}
+                {/* Header */}
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <h3 className="font-semibold text-text-primary">
+                      {market.name}
+                    </h3>
+                    <p className="text-xs text-text-secondary">
+                      {t("billing.planLabel", { plan: capitalize(market.plan) })}
+                    </p>
+                  </div>
+                  <PlanBadge label={capitalize(market.plan)} variant="default" />
                 </div>
-                <p className="mt-2 text-2xl font-bold text-text-primary">
-                  {plan.price}
-                </p>
-                <ul className="mt-4 space-y-2">
-                  {features.map((f, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-2 text-sm text-text-secondary"
-                    >
-                      <Check className="h-4 w-4 text-brand-primary" />
-                      {f}
+
+                {/* Feature list */}
+                <ul className="mt-4 space-y-2.5">
+                  {market.features.map((feature) => (
+                    <li key={feature.code} className="flex items-center gap-2">
+                      {feature.accessible ? (
+                        <Check className="h-4 w-4 shrink-0 text-brand-primary" />
+                      ) : (
+                        <Check className="h-4 w-4 shrink-0 opacity-0" />
+                      )}
+                      <span className={`flex-1 text-sm ${feature.accessible ? "text-text-primary" : "text-text-secondary/50"}`}>
+                        {feature.name}
+                      </span>
+                      {!feature.accessible && (
+                        <>
+                          <PlanBadge
+                            label={capitalize(feature.required_plan)}
+                            variant={feature.required_plan === "pro" ? "pro" : "premium"}
+                          />
+                          <Lock className="h-3.5 w-3.5 shrink-0 text-text-secondary/50" />
+                        </>
+                      )}
                     </li>
                   ))}
                 </ul>
-                {!plan.current && (
+
+                {/* Upgrade button if not on premium */}
+                {market.plan !== "premium" && (
                   <Button
+                    size="sm"
                     className="mt-4 w-full"
-                    variant={plan.current ? "outline" : "default"}
+                    onClick={() =>
+                      openUpgradeModal({
+                        market: market.name,
+                        marketCode: market.code,
+                        reasonKey: "featureRequired",
+                      })
+                    }
                   >
-                    {plan.code === "free"
-                      ? t("billing.cta.current")
-                      : t("billing.cta.upgrade")}
+                    {t("billing.cta.upgrade")}
                   </Button>
                 )}
               </div>
-            );
-          })}
-        </div>
-      </SectionCard>
-
-      <SectionCard title={t("billing.invoiceHistory")}>
-        <DataTable columns={invoiceColumns} data={mockInvoices} />
+            ))}
+          </div>
+        )}
       </SectionCard>
     </div>
   );

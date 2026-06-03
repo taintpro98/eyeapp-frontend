@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
+import { fetchAllMarkets, fetchUserMarkets } from "@/api/markets";
 import { getSidebarNavItems } from "@/config/navigation";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -12,24 +13,29 @@ import { UpgradeModal } from "@/components/UpgradeModal";
 
 export function AppShell() {
   const { t } = useTranslation();
-  const { data: bootstrap, isLoading } = useQuery({
+  const { data: bootstrap, isLoading: bootstrapLoading } = useQuery({
     queryKey: ["bootstrap"],
     queryFn: fetchBootstrap,
+  });
+  const { data: allMarkets = [] } = useQuery({
+    queryKey: ["markets"],
+    queryFn: fetchAllMarkets,
+  });
+  const { data: userMarkets = [] } = useQuery({
+    queryKey: ["me/markets"],
+    queryFn: fetchUserMarkets,
   });
 
   const { selectedMarket, setSelectedMarket } = useAppStore();
   const authUser = useAuthStore((s) => s.user);
 
   useEffect(() => {
-    if (bootstrap) {
-      const selected = bootstrap.navigation.marketToggle.find(
-        (m) => m.selected,
-      );
-      if (selected) setSelectedMarket(selected.code);
-    }
-  }, [bootstrap, setSelectedMarket]);
+    if (userMarkets.length === 0) return;
+    const isValid = userMarkets.some((m) => m.code === selectedMarket);
+    if (!isValid) setSelectedMarket(userMarkets[0].code);
+  }, [userMarkets, selectedMarket, setSelectedMarket]);
 
-  if (isLoading || !bootstrap) {
+  if (bootstrapLoading || !bootstrap) {
     return (
       <div className="flex h-screen items-center justify-center bg-surface-bg">
         <div className="flex flex-col items-center gap-4">
@@ -40,15 +46,41 @@ export function AppShell() {
     );
   }
 
-  const { sidebar, marketToggle } = bootstrap.navigation;
-  const sidebarNavItems = getSidebarNavItems(sidebar).map((item) => ({
-    ...item,
-    label: t(`nav.${item.key}`),
-  }));
-  const marketItems = marketToggle.map((m) => ({
-    ...m,
-    label: t(`marketToggle.${m.code}`),
+  // Map sidebar nav keys to feature codes in the subscription system
+  const SIDEBAR_FEATURE_MAP: Record<string, string> = {
+    signals:     "signals",
+    positions:   "positions",
+    "ai-insights": "ai_insights",
+  };
+
+  // Features accessible in the currently selected market
+  const currentMarket = userMarkets.find((m) => m.code === selectedMarket);
+  const accessibleFeatures = new Set(
+    (currentMarket?.features ?? [])
+      .filter((f) => f.accessible)
+      .map((f) => f.code),
+  );
+
+  const { sidebar } = bootstrap.navigation;
+  const sidebarNavItems = getSidebarNavItems(sidebar).map((item) => {
+    const featureCode = SIDEBAR_FEATURE_MAP[item.key];
+    const accessible = featureCode
+      ? accessibleFeatures.has(featureCode)
+      : item.accessible; // dashboard, market, watchlist etc — keep mock value
+    return {
+      ...item,
+      label: t(`nav.${item.key}`),
+      accessible,
+    };
+  });
+
+  const accessibleCodes = new Set(userMarkets.map((m) => m.code));
+  const marketItems = allMarkets.map((m) => ({
+    code: m.code,
+    label: t(`marketToggle.${m.code}`, { defaultValue: m.name }),
+    accessible: accessibleCodes.has(m.code),
     selected: m.code === selectedMarket,
+    reason: null,
   }));
 
   return (

@@ -1,6 +1,6 @@
-// import { Lock } from "lucide-react";
+import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-// import { useAppStore } from "@/store/useAppStore";
+import { useAppStore } from "@/store/useAppStore";
 import type { MarketToggleItem } from "@/types";
 
 type MarketToggleProps = {
@@ -14,26 +14,32 @@ export function MarketToggle({
   selectedMarket,
   onSelect,
 }: MarketToggleProps) {
-  // const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
+  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
+
+  const sorted = [...items].sort((a, b) => {
+    if (a.code === selectedMarket) return -1;
+    if (b.code === selectedMarket) return 1;
+    if (a.accessible && !b.accessible) return -1;
+    if (!a.accessible && b.accessible) return 1;
+    return 0;
+  });
 
   return (
     <div className="flex items-center gap-1 rounded-lg border border-surface-border bg-surface-card p-1">
-      {items.map((item) => {
+      {sorted.map((item) => {
         const isSelected = item.code === selectedMarket;
-        // const isLocked = !item.accessible;
-        const isLocked = false;
+        const isLocked = !item.accessible;
 
         const handleClick = () => {
-          // if (isLocked) {
-          //   openUpgradeModal({
-          //     market: item.label,
-          //     marketCode: item.code,
-          //     reason: item.reason ?? undefined,
-          //     reasonKey: item.code === "crypto" ? "upgradeToPro" : undefined,
-          //   });
-          // } else {
-          onSelect(item.code);
-          // }
+          if (isLocked) {
+            openUpgradeModal({
+              market: item.label,
+              marketCode: item.code,
+              reason: item.reason ?? undefined,
+            });
+          } else {
+            onSelect(item.code);
+          }
         };
 
         return (
@@ -41,19 +47,14 @@ export function MarketToggle({
             key={item.code}
             onClick={handleClick}
             className={cn(
-              "flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
-              isSelected &&
-                !isLocked &&
-                "bg-brand-primary text-white shadow-sm",
-              !isSelected &&
-                !isLocked &&
-                "text-text-secondary hover:bg-surface-border/50 hover:text-text-primary",
-              // isLocked &&
-              //   "cursor-not-allowed text-text-secondary opacity-75 hover:opacity-100",
+              "flex shrink-0 items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+              isSelected && "bg-brand-primary text-white shadow-sm",
+              !isSelected && !isLocked && "text-text-secondary hover:bg-surface-border/50 hover:text-text-primary",
+              isLocked && "cursor-not-allowed select-none text-text-secondary/40",
             )}
           >
+            {isLocked && <Lock className="h-3 w-3 shrink-0" />}
             {item.label}
-            {/* {isLocked && <Lock className="h-3.5 w-3.5" />} */}
           </button>
         );
       })}

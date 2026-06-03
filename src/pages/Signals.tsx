@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Lock, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
@@ -32,6 +34,7 @@ export function SignalsPage() {
   const { t } = useTranslation();
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const accessToken = useAuthStore((s) => s.accessToken);
+  const handleApiError = useApiErrorHandler();
 
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
@@ -42,6 +45,7 @@ export function SignalsPage() {
   const [symbolInput, setSymbolInput] = useState("");
   const [symbolFilter, setSymbolFilter] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -61,8 +65,11 @@ export function SignalsPage() {
         );
         setSignals(res.items);
         setTotal(res.total);
-      } catch {
-        // keep existing data on error
+        setAccessDenied(false);
+      } catch (err) {
+        const code = (err as { code?: string })?.code;
+        if (code === 'feature_required' || code === 'subscription_required') setAccessDenied(true);
+        handleApiError(err);
       } finally {
         setLoading(false);
       }
@@ -74,6 +81,7 @@ export function SignalsPage() {
   useEffect(() => {
     setPage(0);
     setSignals([]);
+    setAccessDenied(false);
   }, [marketId]);
 
   useEffect(() => {
@@ -198,6 +206,8 @@ export function SignalsPage() {
           <p className="py-8 text-center text-sm text-text-secondary">
             {t("common.loading")}
           </p>
+        ) : accessDenied ? (
+          <AccessDeniedState titleKey="signals.accessDenied" hintKey="signals.accessDeniedHint" />
         ) : rows.length === 0 ? (
           <p className="py-8 text-center text-sm text-text-secondary">
             {t("signals.noSignals", { defaultValue: "No signals found." })}

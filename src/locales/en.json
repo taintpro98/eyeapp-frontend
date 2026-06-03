@@ -35,6 +35,7 @@
     "portfolio": "Portfolio",
     "ai-insights": "AI Insights",
     "billing": "Billing",
+    "profile": "Profile",
     "settings": "Settings",
     "badges": {
       "pro": "Pro",
@@ -43,10 +44,26 @@
   },
   "account": {
     "planBilling": "Plan & Billing",
+    "profile": "Profile",
     "settings": "Settings",
     "myAccount": "My Account",
     "currentPlan": "Current plan: {{plan}}",
     "signOut": "Sign out"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Your account and active subscriptions",
+    "identity": "Account",
+    "email": "Email",
+    "role": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "subscriptions": "Active Subscriptions",
+    "subscriptionsSubtitle": "Your current market plans",
+    "noSubscriptions": "You have no active subscriptions.",
+    "expires": "Expires",
+    "never": "Never",
+    "upgrade": "Upgrade plan"
   },
   "marketToggle": {
     "stocks": "Stock",
@@ -114,6 +131,8 @@
     "filterPlaceholder": "Filter by symbol...",
     "filters": "Filters",
     "activeSignals": "Active Signals",
+    "accessDenied": "Upgrade required to view signals",
+    "accessDeniedHint": "Your current plan does not include signals. Upgrade to access.",
     "activeSignalsSubtitle": "Market-aware signals",
     "noSignals": "No signals found.",
     "total": "total",
@@ -266,7 +285,13 @@
     "cta": {
       "current": "Current",
       "upgrade": "Upgrade"
-    }
+    },
+    "myMarkets": "Your Markets",
+    "myMarketsSubtitle": "Features included in your current subscriptions",
+    "planLabel": "{{plan}} plan",
+    "upgradeToUnlock": "Upgrade to {{plan}}",
+    "noSubscriptions": "You have no active subscriptions.",
+    "availableIn": "Available in {{plan}}"
   },
   "auth": {
     "signInSubtitle": "Sign in to your account",
@@ -323,6 +348,8 @@
     "listTitle": "Position List",
     "listSubtitle": "All positions for the selected market",
     "noPositions": "No positions found.",
+    "accessDenied": "Upgrade required to view positions",
+    "accessDeniedHint": "Your current plan does not include positions. Upgrade to access.",
     "total": "positions",
     "filter": {
       "all": "All",
@@ -462,8 +489,11 @@
     },
     "reasons": {
       "upgradeToPro": "Upgrade to Pro to unlock this market.",
+      "upgradeToProFeature": "Upgrade to Pro to unlock this feature.",
       "freeWatchlistLimit": "Free plan limited to 3 items. Upgrade to add more.",
-      "proPlan": "This feature is included in the Pro plan. Upgrade to continue."
+      "proPlan": "This feature is included in the Pro plan. Upgrade to continue.",
+      "subscriptionRequired": "You don't have an active subscription for this market. Subscribe to access.",
+      "featureRequired": "Your current plan doesn't include this feature. Upgrade to unlock it."
     }
   }
 }

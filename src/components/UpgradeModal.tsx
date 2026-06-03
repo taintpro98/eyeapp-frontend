@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -54,26 +53,24 @@ export function UpgradeModal() {
       open={upgradeModalOpen}
       onOpenChange={(open) => !open && closeUpgradeModal()}
     >
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10">
-              <Lock className="h-6 w-6 text-brand-primary" />
-            </div>
-            <div>
-              <DialogTitle>{title}</DialogTitle>
-              <DialogDescription className="mt-1">
-                {description}
-              </DialogDescription>
-            </div>
+      <DialogContent className="max-w-xs rounded-2xl sm:max-w-sm">
+        <DialogHeader className="items-center text-center">
+          <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary/10">
+            <Lock className="h-7 w-7 text-brand-primary" />
           </div>
+          <DialogTitle className="text-lg">{title}</DialogTitle>
+          <DialogDescription className="text-sm">
+            {description}
+          </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={closeUpgradeModal}>
+        <div className="mt-2 flex gap-2">
+          <Button variant="outline" className="flex-1" onClick={closeUpgradeModal}>
             {t("upgrade.maybeLater")}
           </Button>
-          <Button onClick={handleUpgrade}>{t("upgrade.upgradeNow")}</Button>
-        </DialogFooter>
+          <Button className="flex-1" onClick={handleUpgrade}>
+            {t("upgrade.upgradeNow")}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

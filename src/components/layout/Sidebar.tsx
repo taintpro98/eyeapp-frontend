@@ -106,11 +106,8 @@ export function Sidebar({ items }: SidebarProps) {
                   key={item.key}
                   onClick={() => {
                     openUpgradeModal({
-                      featureKey:
-                        item.key === "ai-insights" ? "aiInsights" : undefined,
                       feature: item.label,
-                      reason: item.reason ?? undefined,
-                      reasonKey: "upgradeToPro",
+                      reasonKey: "upgradeToProFeature",
                     });
                     setSidebarOpen(false);
                   }}

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
@@ -68,12 +70,14 @@ export function PositionsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const handleApiError = useApiErrorHandler();
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
 
   const [positions, setPositions] = useState<Position[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
   const [page, setPage] = useState(0);
   const [symbolInput, setSymbolInput] = useState("");
   const [symbolFilter, setSymbolFilter] = useState("");
@@ -104,8 +108,13 @@ export function PositionsPage() {
         );
         setPositions(res.items);
         setTotal(res.total);
-      } catch {
-        // keep existing data on error
+        setAccessDenied(false);
+      } catch (err) {
+        const code = (err as { code?: string })?.code;
+        if (code === "feature_required" || code === "subscription_required") {
+          setAccessDenied(true);
+        }
+        handleApiError(err);
       } finally {
         setLoading(false);
       }
@@ -118,6 +127,7 @@ export function PositionsPage() {
     setPositions([]);
     setLiveMap(new Map());
     setLiveLoadingSet(new Set());
+    setAccessDenied(false);
   }, [marketId]);
 
   useEffect(() => {
@@ -155,8 +165,8 @@ export function PositionsPage() {
           next.set(row.id, { price: live.current_price, pnl: live.current_pnl, positionReturn: live.position_return });
           return next;
         });
-      } catch {
-        // keep existing live data on error
+      } catch (err) {
+        handleApiError(err);
       } finally {
         setLiveLoadingSet((prev) => {
           const next = new Set(prev);
@@ -398,6 +408,8 @@ export function PositionsPage() {
       >
         {loading ? (
           <p className="py-8 text-center text-sm text-text-secondary">{t("common.loading")}</p>
+        ) : accessDenied ? (
+          <AccessDeniedState titleKey="positions.accessDenied" hintKey="positions.accessDeniedHint" />
         ) : positions.length === 0 ? (
           <p className="py-8 text-center text-sm text-text-secondary">{t("positions.noPositions")}</p>
         ) : (

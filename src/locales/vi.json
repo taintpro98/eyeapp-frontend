@@ -35,6 +35,7 @@
     "portfolio": "Danh mục",
     "ai-insights": "Phân tích AI",
     "billing": "Thanh toán",
+    "profile": "Hồ sơ",
     "settings": "Cài đặt",
     "badges": {
       "pro": "Pro",
@@ -43,10 +44,26 @@
   },
   "account": {
     "planBilling": "Gói & Thanh toán",
+    "profile": "Hồ sơ",
     "settings": "Cài đặt",
     "myAccount": "Tài khoản của tôi",
     "currentPlan": "Gói hiện tại: {{plan}}",
     "signOut": "Đăng xuất"
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "subtitle": "Tài khoản và gói đăng ký của bạn",
+    "identity": "Tài khoản",
+    "email": "Email",
+    "role": "Vai trò",
+    "roleUser": "Người dùng",
+    "roleAdmin": "Quản trị viên",
+    "subscriptions": "Gói đang hoạt động",
+    "subscriptionsSubtitle": "Gói thị trường hiện tại của bạn",
+    "noSubscriptions": "Bạn chưa có gói đăng ký nào.",
+    "expires": "Hết hạn",
+    "never": "Không giới hạn",
+    "upgrade": "Nâng cấp gói"
   },
   "marketToggle": {
     "stocks": "Cổ phiếu",
@@ -114,6 +131,8 @@
     "filterPlaceholder": "Lọc theo mã...",
     "filters": "Bộ lọc",
     "activeSignals": "Tín hiệu đang hoạt động",
+    "accessDenied": "Cần nâng cấp để xem tín hiệu",
+    "accessDeniedHint": "Gói hiện tại của bạn chưa bao gồm tính năng tín hiệu. Nâng cấp để truy cập.",
     "activeSignalsSubtitle": "Tín hiệu theo thị trường",
     "noSignals": "Không có tín hiệu nào.",
     "total": "tín hiệu",
@@ -266,7 +285,13 @@
     "cta": {
       "current": "Hiện tại",
       "upgrade": "Nâng cấp"
-    }
+    },
+    "myMarkets": "Thị trường của bạn",
+    "myMarketsSubtitle": "Tính năng trong gói đăng ký hiện tại",
+    "planLabel": "Gói {{plan}}",
+    "upgradeToUnlock": "Nâng cấp lên {{plan}}",
+    "noSubscriptions": "Bạn chưa có gói đăng ký nào.",
+    "availableIn": "Có trong gói {{plan}}"
   },
   "auth": {
     "signInSubtitle": "Đăng nhập vào tài khoản",
@@ -329,6 +354,8 @@
     "listTitle": "Danh sách vị thế",
     "listSubtitle": "Tất cả vị thế theo thị trường đang chọn",
     "noPositions": "Không có vị thế nào.",
+    "accessDenied": "Cần nâng cấp để xem vị thế",
+    "accessDeniedHint": "Gói hiện tại của bạn chưa bao gồm tính năng vị thế. Nâng cấp để truy cập.",
     "total": "vị thế",
     "filter": {
       "all": "Tất cả",
@@ -462,8 +489,11 @@
     },
     "reasons": {
       "upgradeToPro": "Nâng cấp Pro để mở khóa thị trường này.",
+      "upgradeToProFeature": "Nâng cấp Pro để mở khóa tính năng này.",
       "freeWatchlistLimit": "Gói miễn phí giới hạn 3 mục. Nâng cấp để thêm.",
-      "proPlan": "Tính năng này nằm trong gói Pro. Nâng cấp để tiếp tục."
+      "proPlan": "Tính năng này nằm trong gói Pro. Nâng cấp để tiếp tục.",
+      "subscriptionRequired": "Bạn chưa đăng ký thị trường này. Đăng ký để truy cập.",
+      "featureRequired": "Gói hiện tại của bạn chưa bao gồm tính năng này. Nâng cấp để mở khóa."
     }
   }
 }
