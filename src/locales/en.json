@@ -194,15 +194,13 @@
   },
   "watchlist": {
     "title": "Watchlist",
-    "subtitle": "{{count}} of {{max}} slots used (Free plan)",
-    "addAsset": "Add asset",
-    "upgradeToAdd": "Upgrade to add more",
+    "subtitle": "{{count}} assets tracked",
     "trackedAssets": "Tracked Assets",
-    "limitBanner": "You've reached the free plan limit. Upgrade to add more assets to your watchlist.",
-    "upgradeToPro": "Upgrade to Pro",
     "emptyTitle": "No assets in watchlist",
-    "emptyDescription": "Add assets to track their performance and get signals.",
-    "addFirst": "Add first asset"
+    "emptyDescription": "The watchlist for this market is currently empty.",
+    "accessDenied": "Watchlist Unavailable",
+    "accessDeniedHint": "Your current plan does not include watchlist access for this market.",
+    "priceUnavailable": "—"
   },
   "aiInsights": {
     "title": "AI Insights",

@@ -194,15 +194,13 @@
   },
   "watchlist": {
     "title": "Danh sách theo dõi",
-    "subtitle": "Đã dùng {{count}}/{{max}} mục (gói miễn phí)",
-    "addAsset": "Thêm mã",
-    "upgradeToAdd": "Nâng cấp để thêm",
+    "subtitle": "{{count}} tài sản đang theo dõi",
     "trackedAssets": "Tài sản theo dõi",
-    "limitBanner": "Bạn đã đạt giới hạn gói miễn phí. Nâng cấp để thêm mã vào danh sách.",
-    "upgradeToPro": "Nâng cấp Pro",
     "emptyTitle": "Chưa có mã trong danh sách",
-    "emptyDescription": "Thêm mã để theo dõi hiệu suất và nhận tín hiệu.",
-    "addFirst": "Thêm mã đầu tiên"
+    "emptyDescription": "Danh sách theo dõi của thị trường này hiện đang trống.",
+    "accessDenied": "Không có quyền truy cập",
+    "accessDeniedHint": "Gói hiện tại của bạn không bao gồm tính năng danh sách theo dõi cho thị trường này.",
+    "priceUnavailable": "—"
   },
   "aiInsights": {
     "title": "Phân tích AI",
