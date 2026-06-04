@@ -36,7 +36,20 @@ export async function fetchAllMarkets(): Promise<Market[]> {
   return apiFetch<Market[]>("/markets");
 }
 
+export async function fetchOnboardingMarkets(): Promise<Market[]> {
+  return apiFetch<Market[]>("/markets/onboarding");
+}
+
 export async function fetchUserMarkets(): Promise<UserMarket[]> {
   const accessToken = useAuthStore.getState().getAccessToken();
   return apiFetch<UserMarket[]>("/me/markets", { accessToken: accessToken ?? undefined });
+}
+
+export async function subscribeFreeMarket(marketId: number): Promise<void> {
+  const accessToken = useAuthStore.getState().getAccessToken();
+  return apiFetch<void>("/me/subscriptions", {
+    method: "POST",
+    body: JSON.stringify({ market_id: marketId }),
+    accessToken: accessToken ?? undefined,
+  });
 }

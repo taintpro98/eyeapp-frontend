@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
@@ -21,13 +21,20 @@ export function AppShell() {
     queryKey: ["markets"],
     queryFn: fetchAllMarkets,
   });
-  const { data: userMarkets = [] } = useQuery({
+  const { data: userMarkets = [], isSuccess: marketsLoaded } = useQuery({
     queryKey: ["me/markets"],
     queryFn: fetchUserMarkets,
   });
 
   const { selectedMarket, setSelectedMarket } = useAppStore();
   const authUser = useAuthStore((s) => s.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (marketsLoaded && userMarkets.length === 0) {
+      navigate("/onboarding", { replace: true });
+    }
+  }, [marketsLoaded, userMarkets, navigate]);
 
   useEffect(() => {
     if (userMarkets.length === 0) return;

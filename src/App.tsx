@@ -18,6 +18,7 @@ import { ProfilePage } from "@/pages/Profile";
 import { SettingsPage } from "@/pages/Settings";
 import { PositionsPage } from "@/pages/Positions";
 import { PositionDetailPage } from "@/pages/PositionDetail";
+import { OnboardingPage } from "@/pages/Onboarding";
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
           }
         />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/app"
           element={
