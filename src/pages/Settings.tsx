@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useThemeStore } from "@/store/useThemeStore";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBootstrap } from "@/api/bootstrap";
+import { fetchUserMarkets } from "@/api/markets";
+import { useAppStore } from "@/store/useAppStore";
 
 export function SettingsPage() {
   const { t } = useTranslation();
@@ -18,6 +20,12 @@ export function SettingsPage() {
     queryKey: ["bootstrap"],
     queryFn: fetchBootstrap,
   });
+  const selectedMarket = useAppStore((s) => s.selectedMarket);
+  const { data: userMarkets = [] } = useQuery({
+    queryKey: ["me/markets"],
+    queryFn: fetchUserMarkets,
+  });
+  const currentPlan = userMarkets.find((m) => m.code === selectedMarket)?.plan ?? "free";
 
   return (
     <div className="space-y-8">
@@ -120,11 +128,11 @@ export function SettingsPage() {
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <PlanBadge
-            label={bootstrap?.subscription.planCode ?? "free"}
+            label={currentPlan}
             variant={
-              bootstrap?.subscription.planCode === "pro"
+              currentPlan === "pro"
                 ? "pro"
-                : bootstrap?.subscription.planCode === "premium"
+                : currentPlan === "premium"
                   ? "premium"
                   : "default"
             }

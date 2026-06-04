@@ -101,7 +101,7 @@ export function AppShell() {
           selectedMarket={selectedMarket}
           onMarketSelect={setSelectedMarket}
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
-          planCode={bootstrap.subscription.planCode}
+          planCode={currentMarket?.plan ?? "free"}
         />
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           <Outlet />

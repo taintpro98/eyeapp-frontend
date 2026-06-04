@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
+import { fetchUserMarkets } from "@/api/markets";
 import { TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { StatCard } from "@/components/StatCard";
@@ -23,8 +24,12 @@ export function DashboardPage() {
   });
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
+  const { data: userMarkets = [] } = useQuery({
+    queryKey: ["me/markets"],
+    queryFn: fetchUserMarkets,
+  });
 
-  const plan = bootstrap?.subscription.planCode ?? "free";
+  const plan = userMarkets.find((m) => m.code === selectedMarket)?.plan ?? "free";
   const signals = mockSignals.filter((s) => s.market === selectedMarket);
   const displayName = bootstrap?.user.displayName ?? t("common.trader");
 
