@@ -187,67 +187,109 @@ export function PositionDetailPage() {
                 {t("positions.detail.refreshLive")}
               </Button>
             </div>
-            {/* Metrics grid */}
-            <div className={cn(
-              "grid divide-x divide-surface-border",
-              detail.stop_loss != null ? "grid-cols-4" : "grid-cols-3",
-            )}>
-              <div className="min-w-0 overflow-hidden px-4 py-3.5">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                  {t("positions.detail.currentPrice")}
-                </p>
-                <p className="mt-1.5 tabular-nums text-lg font-bold text-text-primary">
-                  {livePrice != null ? fmt2(livePrice) : <span className="text-sm font-normal text-text-secondary/40">—</span>}
-                </p>
+            {/* Metrics grid — 2×2 on mobile, single row on sm+ */}
+            {detail.stop_loss != null ? (
+              <div className="grid grid-cols-2 sm:grid-cols-4">
+                {/* top-left */}
+                <div className="min-w-0 overflow-hidden px-4 py-3.5 border-r border-b border-surface-border sm:border-b-0">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.currentPrice")}
+                  </p>
+                  <p className="mt-1.5 tabular-nums text-lg font-bold text-text-primary">
+                    {livePrice != null ? fmt2(livePrice) : <span className="text-sm font-normal text-text-secondary/40">—</span>}
+                  </p>
+                </div>
+                {/* top-right */}
+                <div className="min-w-0 overflow-hidden px-4 py-3.5 border-b border-surface-border sm:border-r sm:border-b-0">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.unrealizedPnl")}
+                  </p>
+                  <p className={cn(
+                    "mt-1.5 tabular-nums text-lg font-bold",
+                    livePnl == null ? "text-sm font-normal text-text-secondary/40"
+                      : livePnl > 0 ? "text-green-500"
+                      : livePnl < 0 ? "text-red-500"
+                      : "text-text-secondary",
+                  )}>
+                    {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${fmt2(livePnl)}%`}
+                  </p>
+                </div>
+                {/* bottom-left */}
+                <div className="min-w-0 overflow-hidden px-4 py-3.5 border-r border-surface-border">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.positionReturn")}
+                  </p>
+                  <p className={cn(
+                    "mt-1.5 tabular-nums text-lg font-bold",
+                    livePositionReturn == null ? "text-sm font-normal text-text-secondary/40"
+                      : livePositionReturn > 0 ? "text-green-500"
+                      : livePositionReturn < 0 ? "text-red-500"
+                      : "text-text-secondary",
+                  )}>
+                    {livePositionReturn == null ? "—" : `${livePositionReturn > 0 ? "+" : ""}${fmt2(livePositionReturn)}%`}
+                  </p>
+                </div>
+                {/* bottom-right */}
+                {(() => {
+                  const dist = livePrice != null && detail.avg_price !== 0
+                    ? (Math.abs(livePrice - detail.stop_loss) / detail.avg_price) * 100
+                    : null;
+                  const distCls = dist == null ? "text-sm font-normal text-text-secondary/40"
+                    : dist > 5 ? "text-green-500"
+                    : dist >= 2 ? "text-amber-500"
+                    : "text-red-500";
+                  return (
+                    <div className="min-w-0 overflow-hidden px-4 py-3.5">
+                      <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                        {t("positions.detail.distToStop")}
+                      </p>
+                      <p className={cn("mt-1.5 tabular-nums text-lg font-bold", distCls)}>
+                        {dist == null ? "—" : `${fmt2(dist)}%`}
+                      </p>
+                    </div>
+                  );
+                })()}
               </div>
-              <div className="min-w-0 overflow-hidden px-4 py-3.5">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                  {t("positions.detail.unrealizedPnl")}
-                </p>
-                <p className={cn(
-                  "mt-1.5 tabular-nums text-lg font-bold",
-                  livePnl == null ? "text-sm font-normal text-text-secondary/40"
-                    : livePnl > 0 ? "text-green-500"
-                    : livePnl < 0 ? "text-red-500"
-                    : "text-text-secondary",
-                )}>
-                  {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${fmt2(livePnl)}%`}
-                </p>
+            ) : (
+              <div className="grid grid-cols-3 divide-x divide-surface-border">
+                <div className="min-w-0 overflow-hidden px-4 py-3.5">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.currentPrice")}
+                  </p>
+                  <p className="mt-1.5 tabular-nums text-lg font-bold text-text-primary">
+                    {livePrice != null ? fmt2(livePrice) : <span className="text-sm font-normal text-text-secondary/40">—</span>}
+                  </p>
+                </div>
+                <div className="min-w-0 overflow-hidden px-4 py-3.5">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.unrealizedPnl")}
+                  </p>
+                  <p className={cn(
+                    "mt-1.5 tabular-nums text-lg font-bold",
+                    livePnl == null ? "text-sm font-normal text-text-secondary/40"
+                      : livePnl > 0 ? "text-green-500"
+                      : livePnl < 0 ? "text-red-500"
+                      : "text-text-secondary",
+                  )}>
+                    {livePnl == null ? "—" : `${livePnl > 0 ? "+" : ""}${fmt2(livePnl)}%`}
+                  </p>
+                </div>
+                <div className="min-w-0 overflow-hidden px-4 py-3.5">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.positionReturn")}
+                  </p>
+                  <p className={cn(
+                    "mt-1.5 tabular-nums text-lg font-bold",
+                    livePositionReturn == null ? "text-sm font-normal text-text-secondary/40"
+                      : livePositionReturn > 0 ? "text-green-500"
+                      : livePositionReturn < 0 ? "text-red-500"
+                      : "text-text-secondary",
+                  )}>
+                    {livePositionReturn == null ? "—" : `${livePositionReturn > 0 ? "+" : ""}${fmt2(livePositionReturn)}%`}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 overflow-hidden px-4 py-3.5">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                  {t("positions.detail.positionReturn")}
-                </p>
-                <p className={cn(
-                  "mt-1.5 tabular-nums text-lg font-bold",
-                  livePositionReturn == null ? "text-sm font-normal text-text-secondary/40"
-                    : livePositionReturn > 0 ? "text-green-500"
-                    : livePositionReturn < 0 ? "text-red-500"
-                    : "text-text-secondary",
-                )}>
-                  {livePositionReturn == null ? "—" : `${livePositionReturn > 0 ? "+" : ""}${fmt2(livePositionReturn)}%`}
-                </p>
-              </div>
-              {detail.stop_loss != null && (() => {
-                const dist = livePrice != null && detail.avg_price !== 0
-                  ? (Math.abs(livePrice - detail.stop_loss) / detail.avg_price) * 100
-                  : null;
-                const distCls = dist == null ? "text-sm font-normal text-text-secondary/40"
-                  : dist > 5 ? "text-green-500"
-                  : dist >= 2 ? "text-amber-500"
-                  : "text-red-500";
-                return (
-                  <div className="min-w-0 overflow-hidden px-4 py-3.5">
-                    <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                      {t("positions.detail.distToStop")}
-                    </p>
-                    <p className={cn("mt-1.5 tabular-nums text-lg font-bold", distCls)}>
-                      {dist == null ? "—" : `${fmt2(dist)}%`}
-                    </p>
-                  </div>
-                );
-              })()}
-            </div>
+            )}
           </div>
 
           {/* Stats row */}
