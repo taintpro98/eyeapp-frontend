@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { formatVnd } from "@/lib/formatVnd";
@@ -22,6 +23,7 @@ export function PortfolioAllocation({
   className,
 }: PortfolioAllocationProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const assetLabel = (s: PortfolioSlice) =>
     t(`portfolio.assets.${s.key}`, { defaultValue: s.label });
 
@@ -132,8 +134,11 @@ export function PortfolioAllocation({
                   hasSlice
                     ? "bg-surface-card/80 dark:bg-zinc-800/50"
                     : "bg-surface-warm/40 opacity-95 dark:bg-zinc-900/30",
+                  s.href && "cursor-pointer transition-colors hover:border-brand-primary/40 hover:bg-brand-primary/[0.04]",
                 )}
                 style={{ animationDelay: `${i * 40}ms` }}
+                onClick={s.href ? () => navigate(s.href!) : undefined}
+                role={s.href ? "button" : undefined}
               >
                 <div className="mb-2 flex items-center justify-between gap-2 border-b border-surface-border/40 pb-2">
                   <div className="flex min-w-0 items-center gap-2">
@@ -221,8 +226,10 @@ export function PortfolioAllocation({
                       hasSlice
                         ? "bg-surface-card/50 hover:bg-brand-primary/[0.04] dark:bg-zinc-800/40 dark:hover:bg-zinc-800/70"
                         : "opacity-90 hover:bg-surface-warm/40 dark:hover:bg-zinc-800/30",
+                      s.href && "cursor-pointer",
                     )}
                     style={{ animationDelay: `${i * 40}ms` }}
+                    onClick={s.href ? () => navigate(s.href!) : undefined}
                   >
                     <td className="px-2 py-2.5">
                       <div className="flex items-center gap-2">

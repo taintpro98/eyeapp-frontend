@@ -8,6 +8,7 @@ export type PortfolioSlice = {
   entryPrice: number | null;
   currentPrice: number | null;
   returnPct: number | null;
+  href?: string;
 };
 
 export const mockPortfolioSlices: PortfolioSlice[] = [

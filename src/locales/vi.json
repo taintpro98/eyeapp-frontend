@@ -123,6 +123,11 @@
       "entry": "Vào",
       "current": "Hiện tại",
       "return": "Lợi nhuận"
+    },
+    "stats": {
+      "totalValue": "Tổng giá trị",
+      "cash": "Tiền mặt",
+      "positions": "Vị thế"
     }
   },
   "signals": {

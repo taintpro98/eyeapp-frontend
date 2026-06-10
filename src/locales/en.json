@@ -123,6 +123,11 @@
       "entry": "Entry",
       "current": "Current",
       "return": "Return"
+    },
+    "stats": {
+      "totalValue": "Total Value",
+      "cash": "Cash",
+      "positions": "Positions"
     }
   },
   "signals": {
