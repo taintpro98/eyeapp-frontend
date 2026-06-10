@@ -361,6 +361,7 @@
       "opening": "Đang mở",
       "opened": "Đã mở",
       "closing": "Đang đóng",
+      "cancelling": "Cắt lỗ",
       "closed": "Đã đóng",
       "activeOnly": "Chỉ đang hoạt động"
     },
@@ -375,7 +376,8 @@
       "capacity": "Tỷ trọng",
       "currentPrice": "Giá TT",
       "currentPnl": "Lãi/lỗ TT",
-      "positionReturn": "Lãi/lỗ"
+      "positionReturn": "Lãi/lỗ",
+      "distToStop": "Cách SL"
     },
     "detail": {
       "back": "Quay lại",
@@ -391,6 +393,8 @@
       "currentPrice": "Giá hiện tại",
       "unrealizedPnl": "Lãi/lỗ chưa chốt",
       "positionReturn": "Lãi/lỗ vị thế",
+      "stopLoss": "Cắt lỗ",
+      "distToStop": "Cách SL",
       "refreshLive": "Làm mới",
       "col": {
         "no": "STT",
@@ -418,6 +422,7 @@
       "opening": "Đang mở",
       "opened": "Đã mở",
       "closing": "Đang đóng",
+      "cancelling": "Cắt lỗ",
       "closed": "Đã đóng"
     },
     "term": {

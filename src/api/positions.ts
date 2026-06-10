@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api";
 
-export type PositionStatus = "running" | "opening" | "opened" | "closing" | "closed";
+export type PositionStatus = "running" | "opening" | "opened" | "closing" | "cancelling" | "closed";
 export type PositionTerm = "short_term" | "mid_term";
 export type PositionSide = "buy" | "sell";
 
@@ -15,6 +15,7 @@ export type Position = {
   timestamp: number;
   timestamp_str: string;
   avg_price: number;
+  stop_loss: number | null;
   size: number;
   capacity: number;
   realized_pnl: number | null;

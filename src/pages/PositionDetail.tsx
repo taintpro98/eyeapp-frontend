@@ -14,11 +14,12 @@ import type { PositionDetail, PositionStatus, PositionSide } from "@/api/positio
 
 function statusClass(status: PositionStatus) {
   switch (status) {
-    case "running":  return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
-    case "opening":  return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
-    case "opened":   return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
-    case "closing":  return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400";
-    case "closed":   return "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400";
+    case "running":    return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
+    case "opening":    return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
+    case "opened":     return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
+    case "closing":    return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400";
+    case "cancelling": return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
+    case "closed":     return "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400";
   }
 }
 
@@ -187,7 +188,10 @@ export function PositionDetailPage() {
               </Button>
             </div>
             {/* Metrics grid */}
-            <div className="grid grid-cols-3 divide-x divide-surface-border">
+            <div className={cn(
+              "grid divide-x divide-surface-border",
+              detail.stop_loss != null ? "grid-cols-4" : "grid-cols-3",
+            )}>
               <div className="min-w-0 overflow-hidden px-4 py-3.5">
                 <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {t("positions.detail.currentPrice")}
@@ -224,63 +228,89 @@ export function PositionDetailPage() {
                   {livePositionReturn == null ? "—" : `${livePositionReturn > 0 ? "+" : ""}${fmt2(livePositionReturn)}%`}
                 </p>
               </div>
+              {detail.stop_loss != null && (() => {
+                const dist = livePrice != null && detail.avg_price !== 0
+                  ? (Math.abs(livePrice - detail.stop_loss) / detail.avg_price) * 100
+                  : null;
+                const distCls = dist == null ? "text-sm font-normal text-text-secondary/40"
+                  : dist > 5 ? "text-green-500"
+                  : dist >= 2 ? "text-amber-500"
+                  : "text-red-500";
+                return (
+                  <div className="min-w-0 overflow-hidden px-4 py-3.5">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                      {t("positions.detail.distToStop")}
+                    </p>
+                    <p className={cn("mt-1.5 tabular-nums text-lg font-bold", distCls)}>
+                      {dist == null ? "—" : `${fmt2(dist)}%`}
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
           {/* Stats row */}
           <div className="overflow-hidden rounded-xl border border-surface-border">
-            <div className="flex flex-wrap">
-              {/* Stat items grouped — equal-width columns */}
-              <div className="flex flex-1 divide-x divide-surface-border">
-                {/* Avg price */}
-                <div className="flex-1 px-4 py-3">
-                  <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                    {t("positions.columns.avgPrice")}
-                  </p>
-                  <p className="mt-1 tabular-nums font-semibold text-text-primary">
-                    {fmt2(detail.avg_price)}
-                  </p>
-                </div>
-
-                {/* Booked PnL */}
-                {detail.booked_pnl !== 0 && (
-                  <div className="flex-1 px-4 py-3">
-                    <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                      {t("positions.detail.bookedPnl")}
-                    </p>
-                    <p className={cn(
-                      "mt-1 tabular-nums font-semibold",
-                      detail.booked_pnl > 0 ? "text-green-500" : detail.booked_pnl < 0 ? "text-red-500" : "text-text-secondary",
-                    )}>
-                      {detail.booked_pnl > 0 ? "+" : ""}{fmt2(detail.booked_pnl)}%
-                    </p>
-                  </div>
-                )}
-
-                {/* Realized PnL */}
-                {detail.realized_pnl != null && (
-                  <div className="flex-1 px-4 py-3">
-                    <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                      {t("positions.detail.realizedPnl")}
-                    </p>
-                    <p className={cn(
-                      "mt-1 tabular-nums font-semibold",
-                      detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
-                    )}>
-                      {detail.realized_pnl > 0 ? "+" : ""}{fmt2(detail.realized_pnl)}%
-                    </p>
-                  </div>
-                )}
+            {/* Top row: Avg Price | Stop Loss | Booked P&L [| Realized P&L] */}
+            <div className="flex divide-x divide-surface-border">
+              {/* Avg Price */}
+              <div className="flex-1 px-4 py-3">
+                <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  {t("positions.columns.avgPrice")}
+                </p>
+                <p className="mt-1 tabular-nums font-semibold text-text-primary">
+                  {fmt2(detail.avg_price)}
+                </p>
               </div>
 
-              {/* Capacity — own row on mobile, inline on sm+ */}
-              {(() => {
+              {/* Stop Loss */}
+              <div className="flex-1 px-4 py-3">
+                <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  {t("positions.detail.stopLoss")}
+                </p>
+                <p className="mt-1 tabular-nums font-semibold text-red-500">
+                  {detail.stop_loss != null ? fmt2(detail.stop_loss) : "—"}
+                </p>
+              </div>
+
+              {/* Booked PnL */}
+              <div className="flex-1 px-4 py-3">
+                <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                  {t("positions.detail.bookedPnl")}
+                </p>
+                <p className={cn(
+                  "mt-1 tabular-nums font-semibold",
+                  detail.booked_pnl > 0 ? "text-green-500" : detail.booked_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                )}>
+                  {detail.booked_pnl !== 0 ? `${detail.booked_pnl > 0 ? "+" : ""}${fmt2(detail.booked_pnl)}%` : "—"}
+                </p>
+              </div>
+
+              {/* Realized PnL — only when present */}
+              {detail.realized_pnl != null && (
+                <div className="flex-1 px-4 py-3">
+                  <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
+                    {t("positions.detail.realizedPnl")}
+                  </p>
+                  <p className={cn(
+                    "mt-1 tabular-nums font-semibold",
+                    detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
+                  )}>
+                    {detail.realized_pnl > 0 ? "+" : ""}{fmt2(detail.realized_pnl)}%
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Capacity — always full width below */}
+            {(() => {
                 const scaleMax = Math.max(detail.capacity, detail.size, 100);
                 const sizePct = (detail.size / scaleMax) * 100;
                 const capPct = (detail.capacity / scaleMax) * 100;
                 const marker = scaleMax > 100 ? (100 / scaleMax) * 100 : null;
                 return (
-                  <div className="w-full border-t border-surface-border px-4 py-3 sm:w-auto sm:flex-1 sm:border-l sm:border-t-0">
+                  <div className="w-full border-t border-surface-border px-4 py-3">
                     <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                       {t("positions.columns.capacity")}
                     </p>
@@ -332,7 +362,6 @@ export function PositionDetailPage() {
                   </div>
                 );
               })()}
-            </div>
           </div>
 
 
