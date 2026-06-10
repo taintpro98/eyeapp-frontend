@@ -115,7 +115,12 @@ export function PortfolioPage() {
   );
 
   if (accessDenied) {
-    return <AccessDeniedState />;
+    return (
+      <AccessDeniedState
+        titleKey="positions.accessDenied"
+        hintKey="positions.accessDeniedHint"
+      />
+    );
   }
 
   return (
