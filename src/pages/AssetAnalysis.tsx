@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -105,6 +106,7 @@ function ScoreBar({ value }: { value: number }) {
 
 export function AssetAnalysisPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const handleApiError = useApiErrorHandler();
@@ -323,8 +325,12 @@ export function AssetAnalysisPage() {
                 {positions.map((p) => (
                   <div
                     key={p.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/app/positions/${p.id}`, { state: { marketId } })}
+                    onKeyDown={(e) => e.key === "Enter" && navigate(`/app/positions/${p.id}`, { state: { marketId } })}
                     className={cn(
-                      "rounded-xl border border-surface-border bg-surface-card p-4 shadow-card",
+                      "cursor-pointer rounded-xl border border-surface-border bg-surface-card p-4 shadow-card transition-colors hover:bg-surface-warm/40 active:scale-[0.99]",
                       p.side === "buy" ? "border-l-4 border-l-green-500" : "border-l-4 border-l-red-500",
                     )}
                   >
