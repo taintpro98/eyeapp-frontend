@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -107,13 +107,14 @@ function ScoreBar({ value }: { value: number }) {
 export function AssetAnalysisPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { symbol: symbolParam } = useParams<{ symbol?: string }>();
   const accessToken = useAuthStore((s) => s.accessToken);
   const selectedMarket = useAppStore((s) => s.selectedMarket);
   const handleApiError = useApiErrorHandler();
   const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
 
-  const [input, setInput]           = useState("");
-  const [symbol, setSymbol]         = useState<string | null>(null);
+  const [input, setInput]           = useState(symbolParam?.toUpperCase() ?? "");
+  const [symbol, setSymbol]         = useState<string | null>(symbolParam?.toUpperCase() ?? null);
 
   const [signals, setSignals]               = useState<Signal[]>([]);
   const [signalsTotal, setSignalsTotal]     = useState(0);
@@ -179,11 +180,17 @@ export function AssetAnalysisPage() {
     loadSignals(symbol, signalsPage);
   }, [symbol, signalsPage, loadSignals]);
 
+  useEffect(() => {
+    const upper = symbolParam?.toUpperCase() ?? null;
+    setSymbol(upper);
+    setInput(upper ?? "");
+    setSignalsPage(0);
+  }, [symbolParam]);
+
   const handleSearch = () => {
     const q = input.trim().toUpperCase();
     if (!q) return;
-    setSignalsPage(0);
-    setSymbol(q);
+    navigate(`/app/analysis/${q}`);
   };
 
   const meta = symbol ? getMockMeta(symbol) : null;

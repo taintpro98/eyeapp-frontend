@@ -68,6 +68,7 @@ function App() {
           <Route path="watchlist" element={<WatchlistPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
           <Route path="analysis" element={<AssetAnalysisPage />} />
+          <Route path="analysis/:symbol" element={<AssetAnalysisPage />} />
           <Route path="ai-insights" element={<AIInsightsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="billing" element={<BillingPage />} />
