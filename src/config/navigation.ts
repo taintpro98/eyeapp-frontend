@@ -8,6 +8,7 @@ export const SIDEBAR_NAV_KEYS = [
   "positions",
   "watchlist",
   "portfolio",
+  "analysis",
   "ai-insights",
 ] as const;
 

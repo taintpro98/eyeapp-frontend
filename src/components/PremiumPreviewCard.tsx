@@ -9,6 +9,8 @@ type PremiumPreviewCardProps = {
   description?: string;
   /** Passed to upgrade modal (key under `upgrade.features.*.title`) */
   upgradeFeatureKey?: string;
+  /** i18n key for the upgrade button label; defaults to "aiInsights.upgradePremium" */
+  upgradeLabelKey?: string;
   children?: React.ReactNode;
   className?: string;
 };
@@ -17,6 +19,7 @@ export function PremiumPreviewCard({
   title,
   description,
   upgradeFeatureKey,
+  upgradeLabelKey = "aiInsights.upgradePremium",
   children,
   className,
 }: PremiumPreviewCardProps) {
@@ -56,7 +59,7 @@ export function PremiumPreviewCard({
           }
         >
           <Lock className="mr-2 h-4 w-4" />
-          {t("aiInsights.upgradePremium")}
+          {t(upgradeLabelKey)}
         </Button>
       </div>
     </div>

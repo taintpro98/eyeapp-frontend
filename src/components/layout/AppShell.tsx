@@ -55,11 +55,12 @@ export function AppShell() {
 
   // Map sidebar nav keys to feature codes in the subscription system
   const SIDEBAR_FEATURE_MAP: Record<string, string> = {
-    signals:       "signals",
-    positions:     "positions",
-    watchlist:     "watchlist",
-    portfolio:     "portfolio",
-    "ai-insights": "ai_insights",
+    signals:          "signals",
+    positions:        "positions",
+    watchlist:        "watchlist",
+    portfolio:        "portfolio",
+    "analysis": "analysis",
+    "ai-insights":    "ai_insights",
   };
 
   // Features accessible in the currently selected market

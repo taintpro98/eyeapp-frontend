@@ -69,10 +69,6 @@ export function WatchlistPage() {
     setItems([]);
     setAccessDenied(false);
     load();
-  }, [marketId]);
-
-  useEffect(() => {
-    load();
   }, [load]);
 
   if (accessDenied) {

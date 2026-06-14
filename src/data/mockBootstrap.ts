@@ -69,6 +69,16 @@ export const mockBootstrap: BootstrapResponse = {
         badge: null,
       },
       {
+        key: "analysis",
+        label: "Analysis",
+        path: "/app/analysis",
+        icon: "BarChart2",
+        visible: true,
+        accessible: false,
+        reason: "Upgrade to Pro",
+        badge: null,
+      },
+      {
         key: "ai-insights",
         label: "AI Insights",
         path: "/app/ai-insights",
