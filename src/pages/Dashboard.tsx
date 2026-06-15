@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useMarket } from "@/hooks/useMarket";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
@@ -22,7 +23,7 @@ export function DashboardPage() {
     queryKey: ["bootstrap"],
     queryFn: fetchBootstrap,
   });
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
+  const selectedMarket = useMarket();
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const { data: userMarkets = [] } = useQuery({
     queryKey: ["me/markets"],
@@ -166,7 +167,7 @@ export function DashboardPage() {
         <Button
           variant="ghost"
           className="mt-4 w-full"
-          onClick={() => navigate("/app/signals")}
+          onClick={() => navigate(`/app/${selectedMarket}/signals`)}
         >
           {t("dashboard.viewAllSignals")}{" "}
           <ArrowRight className="ml-2 h-4 w-4" />

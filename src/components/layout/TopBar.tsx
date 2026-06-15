@@ -40,12 +40,17 @@ export function TopBar({
   const logout = useAuthStore((s) => s.logout);
   const setSidebarOpen = useAppStore((s) => s.setSidebarOpen);
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
-  // For nested detail routes (/app/positions/42) use the parent segment as the nav key
-  const isPositionDetail = /^\/app\/positions\/\d+/.test(location.pathname);
-  const routeSegment = isPositionDetail
-    ? "positions"
-    : (location.pathname.split("/").pop() ?? "dashboard");
-  const pageTitle = t(`nav.${routeSegment}`, { defaultValue: routeSegment });
+  // Path shape: /app/:market/:page[/:id]  or  /app/:account-page
+  // parts: ["", "app", market-or-page, page-or-id, ...]
+  const parts = location.pathname.split("/");
+  // Market-scoped: parts[3] is the page name; detect position detail by parts[4]
+  const isPositionDetail = /^\/app\/[^/]+\/positions\//.test(location.pathname);
+  // On market-agnostic pages (profile, billing, settings) parts[2] is the page name
+  const hasMarketSegment = parts.length >= 4 && !["profile", "billing", "settings"].includes(parts[2]);
+  const pageSegment = hasMarketSegment
+    ? (isPositionDetail ? "positions" : (parts[3] ?? "dashboard"))
+    : (parts[2] ?? "dashboard");
+  const pageTitle = t(`nav.${pageSegment}`, { defaultValue: pageSegment });
   // Hide market toggle on pages where the market context is fixed (e.g. position detail)
   const hideMarketToggle = isPositionDetail;
 

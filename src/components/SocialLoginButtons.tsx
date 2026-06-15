@@ -12,7 +12,7 @@ export function SocialLoginButtons() {
       email: "demo@gmail.com",
       name: "Google Demo User",
     });
-    navigate("/app/dashboard");
+    navigate("/app/stocks/dashboard");
   };
 
   return (

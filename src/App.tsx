@@ -26,7 +26,11 @@ function App() {
     <ThemeProvider>
       <AuthInit />
       <Routes>
-        <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
+        {/* Redirect root to a default market. AppShell will redirect to the
+            user's first accessible market if "stocks" is not in their plan. */}
+        <Route path="/" element={<Navigate to="/app/stocks/dashboard" replace />} />
+
+        {/* Public auth pages */}
         <Route
           path="/sign-in"
           element={
@@ -44,6 +48,8 @@ function App() {
           }
         />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+
+        {/* Onboarding (protected, no AppShell) */}
         <Route
           path="/onboarding"
           element={
@@ -52,6 +58,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Protected app shell */}
         <Route
           path="/app"
           element={
@@ -60,21 +68,32 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="market" element={<MarketPage />} />
-          <Route path="signals" element={<SignalsPage />} />
-          <Route path="positions" element={<PositionsPage />} />
-          <Route path="positions/:positionId" element={<PositionDetailPage />} />
-          <Route path="watchlist" element={<WatchlistPage />} />
-          <Route path="portfolio" element={<PortfolioPage />} />
-          <Route path="analysis" element={<AssetAnalysisPage />} />
-          <Route path="analysis/:symbol" element={<AssetAnalysisPage />} />
-          <Route path="ai-insights" element={<AIInsightsPage />} />
+          {/* Market-agnostic account pages — static segments take priority over :market */}
           <Route path="profile" element={<ProfilePage />} />
           <Route path="billing" element={<BillingPage />} />
           <Route path="settings" element={<SettingsPage />} />
+
+          {/* Market-scoped pages under /app/:market/... */}
+          <Route path=":market">
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="market" element={<MarketPage />} />
+            <Route path="signals" element={<SignalsPage />} />
+            <Route path="positions" element={<PositionsPage />} />
+            <Route path="positions/:positionId" element={<PositionDetailPage />} />
+            <Route path="watchlist" element={<WatchlistPage />} />
+            <Route path="portfolio" element={<PortfolioPage />} />
+            <Route path="analysis" element={<AssetAnalysisPage />} />
+            <Route path="analysis/:symbol" element={<AssetAnalysisPage />} />
+            <Route path="ai-insights" element={<AIInsightsPage />} />
+          </Route>
+
+          {/* Fallback inside /app → redirect to default market */}
+          <Route index element={<Navigate to="stocks/dashboard" replace />} />
         </Route>
-        <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
+
+        {/* Global 404 fallback */}
+        <Route path="*" element={<Navigate to="/app/stocks/dashboard" replace />} />
       </Routes>
     </ThemeProvider>
   );

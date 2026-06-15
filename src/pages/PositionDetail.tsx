@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -61,14 +61,10 @@ function fmt2(n: number) {
 export function PositionDetailPage() {
   const { t } = useTranslation();
   const { positionId } = useParams<{ positionId: string }>();
-  const location = useLocation();
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
-  const marketId = useMarketId();
-
-  const stateMarketId: 1 | 2 | undefined = (location.state as { marketId?: 1 | 2 })?.marketId;
-  const resolvedMarketId = stateMarketId ?? marketId;
+  const resolvedMarketId = useMarketId();
 
   const [detail, setDetail] = useState<PositionDetail | null>(null);
   const [loading, setLoading] = useState(true);

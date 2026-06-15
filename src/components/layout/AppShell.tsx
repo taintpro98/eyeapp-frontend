@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
@@ -13,6 +13,10 @@ import { UpgradeModal } from "@/components/UpgradeModal";
 
 export function AppShell() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { market: urlMarket } = useParams<{ market?: string }>();
+
   const { data: bootstrap, isLoading: bootstrapLoading } = useQuery({
     queryKey: ["bootstrap"],
     queryFn: fetchBootstrap,
@@ -28,19 +32,29 @@ export function AppShell() {
 
   const { selectedMarket, setSelectedMarket } = useAppStore();
   const authUser = useAuthStore((s) => s.user);
-  const navigate = useNavigate();
 
+  // Redirect to onboarding if user has no markets yet.
   useEffect(() => {
     if (marketsLoaded && userMarkets.length === 0) {
       navigate("/onboarding", { replace: true });
     }
   }, [marketsLoaded, userMarkets, navigate]);
 
+  // Keep the Zustand store in sync with the URL market param.
+  // When on market-agnostic pages (profile, billing) the param is absent —
+  // in that case we leave the store as-is so it retains the last known market.
   useEffect(() => {
-    if (userMarkets.length === 0) return;
-    const isValid = userMarkets.some((m) => m.code === selectedMarket);
-    if (!isValid) setSelectedMarket(userMarkets[0].code);
-  }, [userMarkets, selectedMarket, setSelectedMarket]);
+    if (!urlMarket) return;
+    const isValid = userMarkets.some((m) => m.code === urlMarket);
+    if (isValid) {
+      if (urlMarket !== selectedMarket) setSelectedMarket(urlMarket);
+    } else if (userMarkets.length > 0) {
+      // URL has an invalid/inaccessible market → redirect to the first valid one
+      const fallback = userMarkets[0].code;
+      const pageParts = location.pathname.split("/").slice(3).join("/");
+      navigate(`/app/${fallback}/${pageParts || "dashboard"}`, { replace: true });
+    }
+  }, [urlMarket, userMarkets, selectedMarket, setSelectedMarket, navigate, location.pathname]);
 
   if (bootstrapLoading || !bootstrap) {
     return (
@@ -55,15 +69,14 @@ export function AppShell() {
 
   // Map sidebar nav keys to feature codes in the subscription system
   const SIDEBAR_FEATURE_MAP: Record<string, string> = {
-    signals:          "signals",
-    positions:        "positions",
-    watchlist:        "watchlist",
-    portfolio:        "portfolio",
-    "analysis": "analysis",
-    "ai-insights":    "ai_insights",
+    signals:       "signals",
+    positions:     "positions",
+    watchlist:     "watchlist",
+    portfolio:     "portfolio",
+    analysis:      "analysis",
+    "ai-insights": "ai_insights",
   };
 
-  // Features accessible in the currently selected market
   const currentMarket = userMarkets.find((m) => m.code === selectedMarket);
   const accessibleFeatures = new Set(
     (currentMarket?.features ?? [])
@@ -76,9 +89,17 @@ export function AppShell() {
     const featureCode = SIDEBAR_FEATURE_MAP[item.key];
     const accessible = featureCode
       ? accessibleFeatures.has(featureCode)
-      : item.accessible; // dashboard, market, watchlist etc — keep mock value
+      : item.accessible;
+
+    // Inject the current market into paths that start with /app/.
+    // e.g. "/app/positions" → "/app/stocks/positions"
+    // Market-agnostic paths (profile, billing, settings) don't go through
+    // this sidebar so they keep their /app/<page> form unchanged.
+    const path = item.path.replace(/^\/app\//, `/app/${selectedMarket}/`);
+
     return {
       ...item,
+      path,
       label: t(`nav.${item.key}`),
       accessible,
     };
@@ -93,6 +114,16 @@ export function AppShell() {
     reason: null,
   }));
 
+  // Switching markets: navigate to the same page under the new market.
+  const handleMarketSelect = (code: string) => {
+    if (code === selectedMarket) return;
+    // Extract page path after /app/<market>/ (or fall back to "dashboard")
+    const parts = location.pathname.split("/");
+    // parts: ["", "app", "<market>", "<page>", ...]
+    const pageParts = parts.slice(3).join("/");
+    navigate(`/app/${code}/${pageParts || "dashboard"}`, { replace: false });
+  };
+
   return (
     <div className="flex h-screen bg-surface-bg">
       <Sidebar items={sidebarNavItems} />
@@ -100,7 +131,7 @@ export function AppShell() {
         <TopBar
           marketToggleItems={marketItems}
           selectedMarket={selectedMarket}
-          onMarketSelect={setSelectedMarket}
+          onMarketSelect={handleMarketSelect}
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
           planCode={currentMarket?.plan ?? "free"}
         />

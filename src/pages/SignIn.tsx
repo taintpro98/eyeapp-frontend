@@ -46,7 +46,7 @@ export function SignInPage() {
     clearError();
     const success = await login(email, password);
     if (success) {
-      navigate("/app/dashboard");
+      navigate("/app/stocks/dashboard");
     }
   };
 

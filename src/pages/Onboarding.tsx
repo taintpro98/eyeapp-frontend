@@ -70,7 +70,7 @@ export function OnboardingPage() {
 
   useEffect(() => {
     if (marketsLoaded && userMarkets.length > 0) {
-      navigate("/app/dashboard", { replace: true });
+      navigate(`/app/${userMarkets[0].code}/dashboard`, { replace: true });
     }
   }, [marketsLoaded, userMarkets, navigate]);
 
@@ -78,9 +78,10 @@ export function OnboardingPage() {
     setSubscribing(marketId);
     setError("");
     try {
+      const market = allMarkets.find((m) => m.market_id === marketId);
       await subscribeFreeMarket(marketId);
       await queryClient.invalidateQueries({ queryKey: ["me/markets"] });
-      navigate("/app/dashboard", { replace: true });
+      navigate(`/app/${market?.code ?? "stocks"}/dashboard`, { replace: true });
     } catch {
       setError("Something went wrong. Please try again.");
       setSubscribing(null);

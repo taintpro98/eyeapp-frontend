@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarket } from "@/hooks/useMarket";
 import { useMarketId } from "@/hooks/useMarketId";
 import { usePaginatedList } from "@/hooks/usePaginatedList";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
@@ -74,6 +75,7 @@ export function PositionsPage() {
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
+  const market = useMarket();
   const marketId = useMarketId();
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -123,9 +125,9 @@ export function PositionsPage() {
   const handleRowClick = useCallback(
     (row: Position) => {
       setSelectedId(row.id);
-      navigate(`/app/positions/${row.id}`, { state: { marketId } });
+      navigate(`/app/${market}/positions/${row.id}`);
     },
-    [navigate, marketId],
+    [navigate, market],
   );
 
   const handleRefreshPositionLive = useCallback(

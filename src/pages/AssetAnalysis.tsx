@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarket } from "@/hooks/useMarket";
 import { useMarketId } from "@/hooks/useMarketId";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
@@ -110,6 +111,7 @@ export function AssetAnalysisPage() {
   const { symbol: symbolParam } = useParams<{ symbol?: string }>();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
+  const market = useMarket();
   const marketId = useMarketId();
 
   const [input, setInput]           = useState(symbolParam?.toUpperCase() ?? "");
@@ -189,7 +191,7 @@ export function AssetAnalysisPage() {
   const handleSearch = () => {
     const q = input.trim().toUpperCase();
     if (!q) return;
-    navigate(`/app/analysis/${q}`);
+    navigate(`/app/${market}/analysis/${q}`);
   };
 
   const meta = symbol ? getMockMeta(symbol) : null;
@@ -333,8 +335,8 @@ export function AssetAnalysisPage() {
                     key={p.id}
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/app/positions/${p.id}`, { state: { marketId } })}
-                    onKeyDown={(e) => e.key === "Enter" && navigate(`/app/positions/${p.id}`, { state: { marketId } })}
+                    onClick={() => navigate(`/app/${market}/positions/${p.id}`)}
+                    onKeyDown={(e) => e.key === "Enter" && navigate(`/app/${market}/positions/${p.id}`)}
                     className={cn(
                       "cursor-pointer rounded-xl border border-surface-border bg-surface-card p-4 shadow-card transition-colors hover:bg-surface-warm/40 active:scale-[0.99]",
                       p.side === "buy" ? "border-l-4 border-l-green-500" : "border-l-4 border-l-red-500",
