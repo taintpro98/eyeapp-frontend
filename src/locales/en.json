@@ -215,6 +215,7 @@
     "searchButton": "Analyze",
     "emptyState": "Search for an asset to begin analysis",
     "marketCap": "Market Cap",
+    "livePrice": "Live Price",
     "signals": "Signals",
     "signalsSubtitle": "Recent signals for {{symbol}}",
     "noSignals": "No signals found for {{symbol}}",
@@ -237,7 +238,30 @@
     "fundamentalSnapshotDesc": "Key ratios: P/E, P/B, EPS growth, and dividend yield",
     "riskMetrics": "Risk Metrics",
     "riskMetricsDesc": "Beta, annualized volatility, and max drawdown",
-    "upgradePro": "Upgrade to Pro"
+    "upgradePro": "Upgrade to Pro",
+    "trendAnalysis": "Trend Analysis",
+    "trendAnalysisSubtitle": "Multi-timeframe breakdown for {{symbol}}",
+    "trendAnalysisLoading": "Analyzing...",
+    "trendAnalysisError": "Analysis unavailable",
+    "rating": "Rating",
+    "trend": "Trend",
+    "signal": "Signal",
+    "strength": "Strength",
+    "trendEnum": {
+      "uptrend": "Uptrend",
+      "downtrend": "Downtrend",
+      "sideway": "Sideways"
+    },
+    "signalEnum": {
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "neutral": "Neutral"
+    },
+    "strengthEnum": {
+      "strong": "Strong",
+      "moderate": "Moderate",
+      "weak": "Weak"
+    }
   },
   "aiInsights": {
     "title": "AI Insights",

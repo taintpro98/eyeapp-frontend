@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarket } from "@/hooks/useMarket";
@@ -14,36 +14,11 @@ import { RelativeTime } from "@/components/RelativeTime";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { fetchSignals } from "@/api/signals";
 import { fetchPositions } from "@/api/positions";
+import { fetchAnalysis } from "@/api/analysis";
 import { cn } from "@/lib/utils";
 import type { Signal } from "@/api/signals";
 import type { Position } from "@/api/positions";
-
-// ---------------------------------------------------------------------------
-// Mock data for static sections — replace with real APIs later
-// ---------------------------------------------------------------------------
-
-const MOCK_DB: Record<string, { name: string; price: number; change: number; marketCap: string; sector: string }> = {
-  VIC: { name: "Vingroup JSC",   price: 48_500, change:  2.34, marketCap: "156.2T VND", sector: "Real Estate" },
-  HPG: { name: "Hoa Phat Group", price: 27_150, change: -0.91, marketCap: "89.4T VND",  sector: "Steel" },
-  VNM: { name: "Vinamilk",       price: 71_800, change:  1.06, marketCap: "105.3T VND", sector: "Consumer" },
-  TCB: { name: "Techcombank",    price: 34_600, change: -1.43, marketCap: "123.7T VND", sector: "Banking" },
-  BTC: { name: "Bitcoin",        price: 67_420, change:  3.12, marketCap: "$1.32T",      sector: "Crypto" },
-};
-
-function getMockMeta(ticker: string) {
-  return MOCK_DB[ticker.toUpperCase()] ?? {
-    name: `${ticker.toUpperCase()} Corporation`,
-    price: 42_300,
-    change: 0.75,
-    marketCap: "—",
-    sector: "—",
-  };
-}
-
-const MOCK_TECHNICAL = { score: 74, trend: "Bullish" as const, rsi: 58.3, rsiLabel: "Neutral", macd: "Bullish crossover", bb: "Near upper band", ma20: "Price above MA20" };
-const MOCK_PERFORMANCE = { return30d: 12.4, returnBenchmark30d: 6.1, return90d: 18.7, return1y: 34.2, benchmark: "VN-Index" };
-const MOCK_FUNDAMENTAL = { pe: 18.2, pb: 2.1, epsGrowth: 8.3, dividendYield: 1.5, revenueGrowth: 11.4, debtToEquity: 0.62 };
-const MOCK_RISK = { beta: 1.12, volatility: 23.5, maxDrawdown: -18.0, sharpe: 1.4, var95: -3.2 };
+import type { AnalysisResult, TrendData } from "@/api/analysis";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -89,14 +64,50 @@ function termClass(term: string) {
     : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400";
 }
 
-function ScoreBar({ value }: { value: number }) {
-  const color = value >= 70 ? "bg-green-500" : value >= 40 ? "bg-amber-500" : "bg-red-500";
+function ratingClass(rating: string) {
+  if (rating === "A" || rating === "B+") return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300";
+  if (rating === "B" || rating === "C")  return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300";
+  return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300";
+}
+
+function trendIcon(trend: string) {
+  if (trend === "uptrend")   return <TrendingUp className="h-4 w-4 text-green-500" />;
+  if (trend === "downtrend") return <TrendingDown className="h-4 w-4 text-red-500" />;
+  return <Minus className="h-4 w-4 text-text-secondary" />;
+}
+
+function signalTextClass(signal: string) {
+  if (signal === "bullish") return "text-green-500";
+  if (signal === "bearish") return "text-red-500";
+  return "text-text-secondary";
+}
+
+// ---------------------------------------------------------------------------
+// Trend Card
+// ---------------------------------------------------------------------------
+
+function TrendCard({ label, data }: { label: string; data: TrendData }) {
+  const { t } = useTranslation();
   return (
-    <div className="flex items-center gap-3">
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-border">
-        <div className={cn("h-full rounded-full transition-all", color)} style={{ width: `${value}%` }} />
+    <div className="rounded-xl border border-surface-border bg-surface-warm/30 p-4">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-text-secondary">{label}</p>
+      <div className="flex items-center gap-2">
+        {trendIcon(data.trend)}
+        <span className="text-sm font-semibold text-text-primary">
+          {t(`assetAnalysis.trendEnum.${data.trend}`, data.trend)}
+        </span>
       </div>
-      <span className="w-10 text-right text-sm font-bold tabular-nums text-text-primary">{value}/100</span>
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <Stat
+          label={t("assetAnalysis.signal")}
+          value={t(`assetAnalysis.signalEnum.${data.signal}`, data.signal)}
+          className={signalTextClass(data.signal)}
+        />
+        <Stat
+          label={t("assetAnalysis.strength")}
+          value={t(`assetAnalysis.strengthEnum.${data.strength}`, data.strength)}
+        />
+      </dl>
     </div>
   );
 }
@@ -114,8 +125,12 @@ export function AssetAnalysisPage() {
   const market = useMarket();
   const marketId = useMarketId();
 
-  const [input, setInput]           = useState(symbolParam?.toUpperCase() ?? "");
-  const [symbol, setSymbol]         = useState<string | null>(symbolParam?.toUpperCase() ?? null);
+  const [input, setInput]   = useState(symbolParam?.toUpperCase() ?? "");
+  const [symbol, setSymbol] = useState<string | null>(symbolParam?.toUpperCase() ?? null);
+
+  const [analysis, setAnalysis]             = useState<AnalysisResult | null>(null);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisError, setAnalysisError]   = useState(false);
 
   const [signals, setSignals]               = useState<Signal[]>([]);
   const [signalsTotal, setSignalsTotal]     = useState(0);
@@ -128,6 +143,23 @@ export function AssetAnalysisPage() {
   const [positions, setPositions]               = useState<Position[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(false);
   const [positionsDenied, setPositionsDenied]   = useState(false);
+
+  const loadAnalysis = useCallback(
+    async (sym: string) => {
+      setAnalysisLoading(true);
+      setAnalysisError(false);
+      setAnalysis(null);
+      try {
+        const res = await fetchAnalysis(marketId as 1 | 2, sym);
+        setAnalysis(res);
+      } catch {
+        setAnalysisError(true);
+      } finally {
+        setAnalysisLoading(false);
+      }
+    },
+    [marketId],
+  );
 
   const loadSignals = useCallback(
     async (sym: string, page: number) => {
@@ -173,8 +205,9 @@ export function AssetAnalysisPage() {
 
   useEffect(() => {
     if (!symbol) return;
+    loadAnalysis(symbol);
     loadPositions(symbol);
-  }, [symbol, loadPositions]);
+  }, [symbol, loadAnalysis, loadPositions]);
 
   useEffect(() => {
     if (!symbol) return;
@@ -193,8 +226,6 @@ export function AssetAnalysisPage() {
     if (!q) return;
     navigate(`/app/${market}/analysis/${q}`);
   };
-
-  const meta = symbol ? getMockMeta(symbol) : null;
 
   return (
     <div className="space-y-6">
@@ -216,7 +247,7 @@ export function AssetAnalysisPage() {
         </div>
       </PageHeader>
 
-      {!symbol || !meta ? (
+      {!symbol ? (
         <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
           <Search className="h-10 w-10 text-text-secondary opacity-40" />
           <p className="text-sm text-text-secondary">{t("assetAnalysis.emptyState")}</p>
@@ -227,18 +258,57 @@ export function AssetAnalysisPage() {
           <div className="flex flex-wrap items-start justify-between gap-4 rounded-card border border-surface-border bg-surface-card p-4 shadow-card sm:p-6">
             <div>
               <h2 className="text-2xl font-bold text-text-primary">{symbol}</h2>
-              <p className="text-sm text-text-secondary">{meta.name}</p>
-              <p className="mt-0.5 text-xs text-text-secondary">{meta.sector}</p>
+              {analysisLoading ? (
+                <p className="mt-0.5 text-sm text-text-secondary">{t("assetAnalysis.trendAnalysisLoading")}</p>
+              ) : analysis ? (
+                <p className="mt-0.5 text-sm text-text-secondary">{analysis.name ?? symbol}</p>
+              ) : null}
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold tabular-nums text-text-primary">{meta.price.toLocaleString()}</p>
-              <div className={cn("flex items-center justify-end gap-1 text-sm font-semibold", meta.change >= 0 ? "text-green-500" : "text-red-500")}>
-                {meta.change >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                {meta.change >= 0 ? "+" : ""}{meta.change.toFixed(2)}%
-              </div>
-              <p className="mt-1 text-xs text-text-secondary">{t("assetAnalysis.marketCap")}: {meta.marketCap}</p>
+              {analysisLoading ? (
+                <p className="text-sm text-text-secondary">{t("assetAnalysis.trendAnalysisLoading")}</p>
+              ) : analysis ? (
+                <>
+                  <p className="text-2xl font-bold tabular-nums text-text-primary">
+                    {analysis.live_price.toLocaleString()}
+                  </p>
+                  <p className="mt-1 text-xs text-text-secondary">{t("assetAnalysis.livePrice")}</p>
+                </>
+              ) : analysisError ? (
+                <p className="text-sm text-text-secondary">{t("assetAnalysis.trendAnalysisError")}</p>
+              ) : null}
             </div>
           </div>
+
+          {/* Trend Analysis */}
+          <SectionCard className="p-4 sm:p-6">
+            {analysisLoading ? (
+              <p className="py-6 text-center text-sm text-text-secondary">{t("assetAnalysis.trendAnalysisLoading")}</p>
+            ) : analysisError || !analysis ? (
+              <p className="py-6 text-center text-sm text-text-secondary">{t("assetAnalysis.trendAnalysisError")}</p>
+            ) : (
+              <div className="space-y-4">
+                {/* Rating badge */}
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-semibold text-text-secondary">{t("assetAnalysis.rating")}</span>
+                  <span className={cn("rounded-full px-3 py-0.5 text-lg font-bold", ratingClass(analysis.rating))}>
+                    {analysis.rating}
+                  </span>
+                </div>
+                {/* Mid-term + Short-term cards */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <TrendCard
+                    label={t("assetAnalysis.midTerm")}
+                    data={analysis.mid_term}
+                  />
+                  <TrendCard
+                    label={t("assetAnalysis.shortTerm")}
+                    data={analysis.short_term}
+                  />
+                </div>
+              </div>
+            )}
+          </SectionCard>
 
           {/* Signals */}
           <SectionCard
@@ -381,54 +451,6 @@ export function AssetAnalysisPage() {
               </div>
             )}
           </SectionCard>
-
-          {/* Technical + Performance */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <SectionCard title={t("assetAnalysis.technicalScore")} subtitle={t("assetAnalysis.technicalScoreDesc")} className="p-4 sm:p-6">
-              <div className="mt-2 space-y-4">
-                <ScoreBar value={MOCK_TECHNICAL.score} />
-                <p className={cn("text-sm font-semibold", MOCK_TECHNICAL.trend === "Bullish" ? "text-green-500" : "text-red-500")}>
-                  {MOCK_TECHNICAL.trend}
-                </p>
-                <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
-                  <Stat label="RSI (14)" value={`${MOCK_TECHNICAL.rsi} · ${MOCK_TECHNICAL.rsiLabel}`} />
-                  <Stat label="MACD" value={MOCK_TECHNICAL.macd} />
-                  <Stat label="Bollinger" value={MOCK_TECHNICAL.bb} />
-                  <Stat label="MA20" value={MOCK_TECHNICAL.ma20} />
-                </dl>
-              </div>
-            </SectionCard>
-
-            <SectionCard title={t("assetAnalysis.pricePerformance")} subtitle={t("assetAnalysis.pricePerformanceDesc")} className="p-4 sm:p-6">
-              <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-4">
-                <Stat label="30d Return"                           value={`+${MOCK_PERFORMANCE.return30d}%`}          className="text-green-500" />
-                <Stat label={`vs ${MOCK_PERFORMANCE.benchmark} (30d)`} value={`+${MOCK_PERFORMANCE.returnBenchmark30d}%`} className="text-text-secondary" />
-                <Stat label="90d Return" value={`+${MOCK_PERFORMANCE.return90d}%`} className="text-green-500" />
-                <Stat label="1Y Return"  value={`+${MOCK_PERFORMANCE.return1y}%`}  className="text-green-500" />
-              </dl>
-            </SectionCard>
-
-            <SectionCard title={t("assetAnalysis.fundamentalSnapshot")} subtitle={t("assetAnalysis.fundamentalSnapshotDesc")} className="p-4 sm:p-6">
-              <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-4">
-                <Stat label="P/E"            value={MOCK_FUNDAMENTAL.pe.toFixed(1)} />
-                <Stat label="P/B"            value={MOCK_FUNDAMENTAL.pb.toFixed(1)} />
-                <Stat label="EPS Growth"     value={`+${MOCK_FUNDAMENTAL.epsGrowth}%`}     className="text-green-500" />
-                <Stat label="Dividend Yield" value={`${MOCK_FUNDAMENTAL.dividendYield}%`} />
-                <Stat label="Revenue Growth" value={`+${MOCK_FUNDAMENTAL.revenueGrowth}%`} className="text-green-500" />
-                <Stat label="Debt / Equity"  value={MOCK_FUNDAMENTAL.debtToEquity.toFixed(2)} />
-              </dl>
-            </SectionCard>
-
-            <SectionCard title={t("assetAnalysis.riskMetrics")} subtitle={t("assetAnalysis.riskMetricsDesc")} className="p-4 sm:p-6">
-              <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-4">
-                <Stat label="Beta"           value={MOCK_RISK.beta.toFixed(2)} />
-                <Stat label="Ann. Volatility" value={`${MOCK_RISK.volatility}%`} />
-                <Stat label="Max Drawdown"   value={`${MOCK_RISK.maxDrawdown}%`}  className="text-red-500" />
-                <Stat label="Sharpe Ratio"   value={MOCK_RISK.sharpe.toFixed(2)} />
-                <Stat label="VaR 95%"        value={`${MOCK_RISK.var95}%`}        className="text-red-500" />
-              </dl>
-            </SectionCard>
-          </div>
         </div>
       )}
     </div>

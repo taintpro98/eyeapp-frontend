@@ -215,6 +215,7 @@
     "searchButton": "Phân tích",
     "emptyState": "Tìm kiếm một tài sản để bắt đầu phân tích",
     "marketCap": "Vốn hóa",
+    "livePrice": "Giá hiện tại",
     "signals": "Tín hiệu",
     "signalsSubtitle": "Tín hiệu gần đây cho {{symbol}}",
     "noSignals": "Không tìm thấy tín hiệu cho {{symbol}}",
@@ -237,7 +238,30 @@
     "fundamentalSnapshotDesc": "Các chỉ số quan trọng: P/E, P/B, tăng trưởng EPS và tỷ suất cổ tức",
     "riskMetrics": "Chỉ số rủi ro",
     "riskMetricsDesc": "Beta, biến động hàng năm và mức sụt giảm tối đa",
-    "upgradePro": "Nâng cấp Pro"
+    "upgradePro": "Nâng cấp Pro",
+    "trendAnalysis": "Phân tích xu hướng",
+    "trendAnalysisSubtitle": "Phân tích theo khung thời gian cho {{symbol}}",
+    "trendAnalysisLoading": "Đang phân tích...",
+    "trendAnalysisError": "Không có dữ liệu phân tích",
+    "rating": "Xếp hạng",
+    "trend": "Xu hướng",
+    "signal": "Tín hiệu",
+    "strength": "Cường độ",
+    "trendEnum": {
+      "uptrend": "Tăng",
+      "downtrend": "Giảm",
+      "sideway": "Đi ngang"
+    },
+    "signalEnum": {
+      "bullish": "Tích cực",
+      "bearish": "Tiêu cực",
+      "neutral": "Trung lập"
+    },
+    "strengthEnum": {
+      "strong": "Mạnh",
+      "moderate": "Vừa",
+      "weak": "Yếu"
+    }
   },
   "aiInsights": {
     "title": "Phân tích AI",
