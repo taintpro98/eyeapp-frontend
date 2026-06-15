@@ -6,36 +6,14 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarketId } from "@/hooks/useMarketId";
 import { SectionCard } from "@/components/SectionCard";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/button";
 import { fetchPositionDetail, fetchPositionLive } from "@/api/positions";
 import { RelativeTime } from "@/components/RelativeTime";
+import { statusClass, sideClass } from "@/lib/positionColors";
+import { formatPricePrecise as formatPrice, fmt2 } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { PositionDetail, PositionStatus, PositionSide } from "@/api/positions";
-
-function statusClass(status: PositionStatus) {
-  switch (status) {
-    case "running":    return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
-    case "opening":    return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
-    case "opened":     return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
-    case "closing":    return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400";
-    case "cancelling": return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
-    case "closed":     return "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400";
-  }
-}
-
-function sideClass(side: PositionSide) {
-  return side === "buy"
-    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-    : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
-}
-
-function Badge({ className, children }: { className: string; children: React.ReactNode }) {
-  return (
-    <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold", className)}>
-      {children}
-    </span>
-  );
-}
+import type { PositionDetail } from "@/api/positions";
 
 function BackLink({ onBack, label }: { onBack: () => void; label: string }) {
   return (
@@ -47,15 +25,6 @@ function BackLink({ onBack, label }: { onBack: () => void; label: string }) {
       {label}
     </button>
   );
-}
-
-function formatPrice(n: number) {
-  if (n === 0) return "—";
-  return n.toLocaleString(undefined, { maximumFractionDigits: 6 });
-}
-
-function fmt2(n: number) {
-  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export function PositionDetailPage() {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { ChevronRight, RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarket } from "@/hooks/useMarket";
@@ -11,10 +11,13 @@ import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/Pagination";
+import { SymbolSearchBar } from "@/components/SymbolSearchBar";
+import { Badge } from "@/components/ui/Badge";
 import { fetchPositions, fetchPositionLive } from "@/api/positions";
 import { RelativeTime } from "@/components/RelativeTime";
+import { statusClass, sideClass, termClass } from "@/lib/positionColors";
+import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Position, PositionStatus } from "@/api/positions";
 
@@ -28,47 +31,6 @@ type StatusFilter = "all" | PositionStatus;
 
 const STATUS_FILTERS: StatusFilter[] = ["all", "running", "opening", "opened", "closing", "cancelling", "closed"];
 
-function statusClass(status: PositionStatus) {
-  switch (status) {
-    case "running":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400";
-    case "opening":
-      return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
-    case "opened":
-      return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
-    case "closing":
-      return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400";
-    case "cancelling":
-      return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
-    case "closed":
-      return "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400";
-  }
-}
-
-function sideClass(side: "buy" | "sell") {
-  return side === "buy"
-    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-    : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
-}
-
-function termClass(term: "short_term" | "mid_term") {
-  return term === "short_term"
-    ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
-    : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400";
-}
-
-function Badge({ className, children }: { className: string; children: React.ReactNode }) {
-  return (
-    <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold", className)}>
-      {children}
-    </span>
-  );
-}
-
-function formatPrice(n: number) {
-  if (n === 0) return "—";
-  return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
-}
 
 export function PositionsPage() {
   const { t } = useTranslation();
@@ -326,31 +288,14 @@ export function PositionsPage() {
   return (
     <div className="space-y-5 sm:space-y-8">
       <PageHeader title={t("positions.title")} subtitle={t("positions.subtitle")}>
-        <div className="flex w-full gap-2 sm:w-auto">
-          <Input
-            placeholder={t("positions.filterPlaceholder")}
-            className="min-w-0 flex-1 sm:w-48 sm:flex-none"
-            value={symbolInput}
-            onChange={(e) => setSymbolInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearchAction()}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSearchAction}
-            disabled={loading}
-            className="shrink-0 gap-2"
-          >
-            {isApplyMode ? (
-              t("common.apply")
-            ) : (
-              <>
-                <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
-                <span className="hidden sm:inline">{t("common.refresh")}</span>
-              </>
-            )}
-          </Button>
-        </div>
+        <SymbolSearchBar
+          value={symbolInput}
+          onChange={setSymbolInput}
+          onAction={handleSearchAction}
+          isApplyMode={isApplyMode}
+          loading={loading}
+          placeholder={t("positions.filterPlaceholder")}
+        />
       </PageHeader>
 
       {/* Filters row: scrollable pills + pinned checkbox */}
@@ -565,20 +510,13 @@ export function PositionsPage() {
               )}
             />
 
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <p className="text-sm text-text-secondary">
-                {total} {t("positions.total")}
-              </p>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm text-text-secondary">{page + 1} / {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage((p) => p + 1)}>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              totalLabel={t("positions.total")}
+              setPage={setPage}
+            />
           </>
         )}
       </SectionCard>

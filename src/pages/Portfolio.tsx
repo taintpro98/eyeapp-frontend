@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarket } from "@/hooks/useMarket";
 import { useMarketId } from "@/hooks/useMarketId";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
@@ -30,7 +31,7 @@ const PALETTE = [
 const CASH_COLOR = "#22c55e";
 const POLL_INTERVAL = 30_000;
 
-function toSlices(data: PortfolioResponse, marketId: 1 | 2): PortfolioSlice[] {
+function toSlices(data: PortfolioResponse, marketId: 1 | 2, market: string): PortfolioSlice[] {
   const priceScale = marketId === 2 ? 1000 : 1;
   const slices: PortfolioSlice[] = data.holdings.map((h, i) => ({
     key: String(h.position_id),
@@ -40,7 +41,7 @@ function toSlices(data: PortfolioResponse, marketId: 1 | 2): PortfolioSlice[] {
     entryPrice: h.avg_price * priceScale,
     currentPrice: h.current_price != null ? h.current_price * priceScale : null,
     returnPct: h.position_return,
-    href: `/app/positions/${h.position_id}`,
+    href: `/app/${market}/positions/${h.position_id}`,
   }));
 
   slices.push({
@@ -64,6 +65,7 @@ export function PortfolioPage() {
   const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
+  const market = useMarket();
   const marketId = useMarketId();
 
   const [portfolio, setPortfolio] = useState<PortfolioResponse | null>(null);
@@ -109,8 +111,8 @@ export function PortfolioPage() {
   }, [load]);
 
   const slices = useMemo(
-    () => (portfolio ? toSlices(portfolio, marketId) : []),
-    [portfolio, marketId],
+    () => (portfolio ? toSlices(portfolio, marketId, market) : []),
+    [portfolio, marketId, market],
   );
 
   if (accessDenied) {

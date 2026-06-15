@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Lock, RefreshCw } from "lucide-react";
+import { Lock } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMarketId } from "@/hooks/useMarketId";
@@ -9,7 +9,9 @@ import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
-import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/Pagination";
+import { SymbolSearchBar } from "@/components/SymbolSearchBar";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/button";
 import { fetchSignals } from "@/api/signals";
 import { cn } from "@/lib/utils";
@@ -82,16 +84,15 @@ export function SignalsPage() {
         key: "type",
         header: t("signals.columns.type"),
         render: (row: SignalRow) => (
-          <span
-            className={cn(
-              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+          <Badge
+            className={
               row.type === "Buy"
                 ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-                : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
-            )}
+                : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
+            }
           >
             {t(`signalsEnum.type.${row.type}` as never)}
-          </span>
+          </Badge>
         ),
       },
       {
@@ -138,31 +139,14 @@ export function SignalsPage() {
         title={t("signals.title")}
         subtitle={t("signals.subtitle")}
       >
-        <div className="flex w-full gap-2 sm:w-auto">
-          <Input
-            placeholder={t("signals.filterPlaceholder")}
-            className="min-w-0 flex-1 sm:w-48 sm:flex-none"
-            value={symbolInput}
-            onChange={(e) => setSymbolInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAction()}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleAction}
-            disabled={loading}
-            className="shrink-0 gap-2"
-          >
-            {isApplyMode ? (
-              t("common.apply")
-            ) : (
-              <>
-                <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
-                <span className="hidden sm:inline">{t("common.refresh")}</span>
-              </>
-            )}
-          </Button>
-        </div>
+        <SymbolSearchBar
+          value={symbolInput}
+          onChange={setSymbolInput}
+          onAction={handleAction}
+          isApplyMode={isApplyMode}
+          loading={loading}
+          placeholder={t("signals.filterPlaceholder")}
+        />
       </PageHeader>
 
       <SectionCard
@@ -199,16 +183,15 @@ export function SignalsPage() {
                     <span className="text-lg font-bold text-text-primary">
                       {row.symbol}
                     </span>
-                    <span
-                      className={cn(
-                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                    <Badge
+                      className={
                         row.type === "Buy"
                           ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
-                      )}
+                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
+                      }
                     >
                       {t(`signalsEnum.type.${row.type}` as never)}
-                    </span>
+                    </Badge>
                   </div>
                   <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
                     <div>
@@ -252,33 +235,13 @@ export function SignalsPage() {
               )}
             />
 
-            {/* Pagination */}
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <p className="text-sm text-text-secondary">
-                {total} {t("signals.total", { defaultValue: "total" })}
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page === 0}
-                  onClick={() => setPage((p) => p - 1)}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm text-text-secondary">
-                  {page + 1} / {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page >= totalPages - 1}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              totalLabel={t("signals.total", { defaultValue: "total" })}
+              setPage={setPage}
+            />
           </>
         )}
       </SectionCard>
