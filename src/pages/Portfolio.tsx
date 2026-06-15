@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RefreshCw } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
@@ -64,8 +64,7 @@ export function PortfolioPage() {
   const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
+  const marketId = useMarketId();
 
   const [portfolio, setPortfolio] = useState<PortfolioResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,7 +110,7 @@ export function PortfolioPage() {
 
   const slices = useMemo(
     () => (portfolio ? toSlices(portfolio, marketId) : []),
-    [portfolio],
+    [portfolio, marketId],
   );
 
   if (accessDenied) {

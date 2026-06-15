@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Lock, RefreshCw } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
+import { usePaginatedList } from "@/hooks/usePaginatedList";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
@@ -34,70 +35,37 @@ export function SignalsPage() {
   const { t } = useTranslation();
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const accessToken = useAuthStore((s) => s.accessToken);
-  const handleApiError = useApiErrorHandler();
+  const marketId = useMarketId();
 
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [symbolInput, setSymbolInput] = useState("");
-  const [symbolFilter, setSymbolFilter] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [accessDenied, setAccessDenied] = useState(false);
-
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  const load = useCallback(
+  const fetchFn = useCallback(
     async (p: number, symbol: string) => {
-      if (!accessToken) return;
-      setLoading(true);
-      try {
-        const res = await fetchSignals(
-          {
-            market_id: marketId,
-            limit: PAGE_SIZE,
-            offset: p * PAGE_SIZE,
-            symbol: symbol || undefined,
-          },
-          accessToken,
-        );
-        setSignals(res.items);
-        setTotal(res.total);
-        setAccessDenied(false);
-      } catch (err) {
-        const code = (err as { code?: string })?.code;
-        if (code === 'feature_required' || code === 'subscription_required') setAccessDenied(true);
-        handleApiError(err);
-      } finally {
-        setLoading(false);
-      }
+      if (!accessToken) return { items: [] as Signal[], total: 0 };
+      return fetchSignals(
+        {
+          market_id: marketId,
+          limit: PAGE_SIZE,
+          offset: p * PAGE_SIZE,
+          symbol: symbol || undefined,
+        },
+        accessToken,
+      );
     },
     [accessToken, marketId],
   );
 
-  // Reset to first page when market changes
-  useEffect(() => {
-    setPage(0);
-    setSignals([]);
-    setAccessDenied(false);
-  }, [marketId]);
-
-  useEffect(() => {
-    load(page, symbolFilter);
-  }, [load, page, symbolFilter, refreshKey]);
-
-  const isApplyMode = symbolInput.trim() !== symbolFilter;
-
-  const handleAction = () => {
-    if (isApplyMode) {
-      setPage(0);
-      setSymbolFilter(symbolInput.trim());
-    } else {
-      setRefreshKey((k) => k + 1);
-    }
-  };
+  const {
+    items: signals,
+    total,
+    loading,
+    accessDenied,
+    page,
+    setPage,
+    totalPages,
+    symbolInput,
+    setSymbolInput,
+    isApplyMode,
+    handleSearchAction: handleAction,
+  } = usePaginatedList({ fetchFn, marketId, pageSize: PAGE_SIZE });
 
   const rows = useMemo(() => signals.map(toSignalRow), [signals]);
 

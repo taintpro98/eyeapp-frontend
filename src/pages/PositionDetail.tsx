@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, RefreshCw } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
 import { SectionCard } from "@/components/SectionCard";
 import { Button } from "@/components/ui/button";
 import { fetchPositionDetail, fetchPositionLive } from "@/api/positions";
@@ -65,8 +65,7 @@ export function PositionDetailPage() {
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
+  const marketId = useMarketId();
 
   const stateMarketId: 1 | 2 | undefined = (location.state as { marketId?: 1 | 2 })?.marketId;
   const resolvedMarketId = stateMarketId ?? marketId;
@@ -88,7 +87,7 @@ export function PositionDetailPage() {
       .then((d) => setDetail(d))
       .catch((err) => { handleApiError(err); setNotFound(true); })
       .finally(() => setLoading(false));
-  }, [accessToken, positionId, resolvedMarketId]);
+  }, [accessToken, positionId, resolvedMarketId, handleApiError]);
 
   const handleRefreshLive = useCallback(async () => {
     if (!accessToken || !positionId || liveLoading) return;
@@ -105,7 +104,7 @@ export function PositionDetailPage() {
     } finally {
       setLiveLoading(false);
     }
-  }, [accessToken, positionId, resolvedMarketId, liveLoading]);
+  }, [accessToken, positionId, resolvedMarketId, liveLoading, handleApiError]);
 
   if (loading) {
     return (

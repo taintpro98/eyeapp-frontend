@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { Input } from "@/components/ui/input";
@@ -109,9 +109,8 @@ export function AssetAnalysisPage() {
   const navigate = useNavigate();
   const { symbol: symbolParam } = useParams<{ symbol?: string }>();
   const accessToken = useAuthStore((s) => s.accessToken);
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
   const handleApiError = useApiErrorHandler();
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
+  const marketId = useMarketId();
 
   const [input, setInput]           = useState(symbolParam?.toUpperCase() ?? "");
   const [symbol, setSymbol]         = useState<string | null>(symbolParam?.toUpperCase() ?? null);
@@ -148,7 +147,7 @@ export function AssetAnalysisPage() {
         setSignalsLoading(false);
       }
     },
-    [accessToken, marketId],
+    [accessToken, marketId, handleApiError],
   );
 
   const loadPositions = useCallback(
@@ -167,7 +166,7 @@ export function AssetAnalysisPage() {
         setPositionsLoading(false);
       }
     },
-    [accessToken, marketId],
+    [accessToken, marketId, handleApiError],
   );
 
   useEffect(() => {

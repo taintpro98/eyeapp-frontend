@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
+import { usePaginatedList } from "@/hooks/usePaginatedList";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
@@ -73,68 +74,51 @@ export function PositionsPage() {
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
+  const marketId = useMarketId();
 
-  const [positions, setPositions] = useState<Position[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [accessDenied, setAccessDenied] = useState(false);
-  const [page, setPage] = useState(0);
-  const [symbolInput, setSymbolInput] = useState("");
-  const [symbolFilter, setSymbolFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [isActive, setIsActive] = useState<boolean>(true);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [liveMap, setLiveMap] = useState<LiveMap>(new Map());
   const [liveLoadingSet, setLiveLoadingSet] = useState<LoadingSet>(new Set());
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  const load = useCallback(
-    async (p: number, symbol: string, sf: StatusFilter, active: boolean | null) => {
-      if (!accessToken) return;
-      setLoading(true);
-      try {
-        const res = await fetchPositions(
-          {
-            market_id: marketId,
-            limit: PAGE_SIZE,
-            offset: p * PAGE_SIZE,
-            symbol: symbol || undefined,
-            is_active: active || undefined,
-            status: sf !== "all" ? (sf as PositionStatus) : undefined,
-          },
-          accessToken,
-        );
-        setPositions(res.items);
-        setTotal(res.total);
-        setAccessDenied(false);
-      } catch (err) {
-        const code = (err as { code?: string })?.code;
-        if (code === "feature_required" || code === "subscription_required") {
-          setAccessDenied(true);
-        }
-        handleApiError(err);
-      } finally {
-        setLoading(false);
-      }
+  const fetchFn = useCallback(
+    async (p: number, symbol: string) => {
+      if (!accessToken) return { items: [] as Position[], total: 0 };
+      return fetchPositions(
+        {
+          market_id: marketId,
+          limit: PAGE_SIZE,
+          offset: p * PAGE_SIZE,
+          symbol: symbol || undefined,
+          is_active: isActive !== null ? isActive : undefined,
+          status: statusFilter !== "all" ? (statusFilter as PositionStatus) : undefined,
+        },
+        accessToken,
+      );
     },
-    [accessToken, marketId],
+    [accessToken, marketId, isActive, statusFilter],
   );
 
+  const {
+    items: positions,
+    total,
+    loading,
+    accessDenied,
+    page,
+    setPage,
+    totalPages,
+    symbolInput,
+    setSymbolInput,
+    isApplyMode,
+    handleSearchAction,
+  } = usePaginatedList({ fetchFn, marketId, pageSize: PAGE_SIZE });
+
+  // Reset live-data caches when market changes.
   useEffect(() => {
-    setPage(0);
-    setPositions([]);
     setLiveMap(new Map());
     setLiveLoadingSet(new Set());
-    setAccessDenied(false);
   }, [marketId]);
-
-  useEffect(() => {
-    load(page, symbolFilter, statusFilter, isActive);
-  }, [load, page, symbolFilter, statusFilter, isActive, refreshKey]);
 
   const handleRowClick = useCallback(
     (row: Position) => {
@@ -143,17 +127,6 @@ export function PositionsPage() {
     },
     [navigate, marketId],
   );
-
-  const isApplyMode = symbolInput.trim() !== symbolFilter;
-
-  const handleSearchAction = () => {
-    if (isApplyMode) {
-      setPage(0);
-      setSymbolFilter(symbolInput.trim());
-    } else {
-      setRefreshKey((k) => k + 1);
-    }
-  };
 
   const handleRefreshPositionLive = useCallback(
     async (e: React.MouseEvent, row: Position) => {
@@ -177,7 +150,7 @@ export function PositionsPage() {
         });
       }
     },
-    [accessToken, marketId, liveLoadingSet],
+    [accessToken, marketId, liveLoadingSet, handleApiError],
   );
 
   const columns = useMemo(

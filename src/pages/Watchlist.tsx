@@ -5,9 +5,9 @@ import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { EmptyState } from "@/components/EmptyState";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
-import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
+import { useMarketId } from "@/hooks/useMarketId";
 import { fetchWatchlist, type WatchlistItem } from "@/api/watchlist";
 
 function PriceCell({ price }: { price: number | null }) {
@@ -35,11 +35,9 @@ function SkeletonRow() {
 
 export function WatchlistPage() {
   const { t } = useTranslation();
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
   const accessToken = useAuthStore((s) => s.accessToken);
   const handleApiError = useApiErrorHandler();
-
-  const marketId = (selectedMarket === "crypto" ? 1 : 2) as 1 | 2;
+  const marketId = useMarketId();
 
   const [items, setItems] = useState<WatchlistItem[]>([]);
   const [total, setTotal] = useState(0);
