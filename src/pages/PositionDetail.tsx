@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, RefreshCw } from "lucide-react";
@@ -42,6 +42,7 @@ export function PositionDetailPage() {
   const [livePnl, setLivePnl] = useState<number | null>(null);
   const [livePositionReturn, setLivePositionReturn] = useState<number | null>(null);
   const [liveLoading, setLiveLoading] = useState(false);
+  const autoFetchedRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!accessToken || !positionId) return;
@@ -70,6 +71,14 @@ export function PositionDetailPage() {
       setLiveLoading(false);
     }
   }, [accessToken, positionId, resolvedMarketId, liveLoading, handleApiError]);
+
+  // For closed positions, auto-load the current market price once (no manual refresh needed).
+  useEffect(() => {
+    if (detail && !detail.active && autoFetchedRef.current !== detail.id) {
+      autoFetchedRef.current = detail.id;
+      handleRefreshLive();
+    }
+  }, [detail, handleRefreshLive]);
 
   if (loading) {
     return (
@@ -129,7 +138,8 @@ export function PositionDetailPage() {
             </p>
           </div>
 
-          {/* Live price & PnL refresh */}
+          {/* Live tracking card — only for open positions */}
+          {detail.active ? (
           <div className="overflow-hidden rounded-xl border border-surface-border">
             {/* Header bar */}
             <div className="flex items-center justify-between border-b border-surface-border bg-surface-warm/50 px-4 py-2">
@@ -255,10 +265,36 @@ export function PositionDetailPage() {
               </div>
             )}
           </div>
+          ) : (
+            /* Closed position — no live tracking, just the current market price */
+            <div className="flex items-center justify-between rounded-xl border border-surface-border px-4 py-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-text-secondary/40" />
+                <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-widest text-text-secondary">
+                  {t("positions.detail.currentPrice")}
+                </span>
+                <span className="tabular-nums text-lg font-bold text-text-primary">
+                  {livePrice != null
+                    ? fmt2(livePrice)
+                    : <span className="text-sm font-normal text-text-secondary/40">{liveLoading ? "…" : "—"}</span>}
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefreshLive}
+                disabled={liveLoading}
+                className="h-7 shrink-0 gap-1.5 px-2.5 text-xs text-text-secondary hover:text-text-primary"
+              >
+                <RefreshCw className={cn("h-3.5 w-3.5", liveLoading && "animate-spin")} />
+                {t("positions.detail.refreshLive")}
+              </Button>
+            </div>
+          )}
 
           {/* Stats row */}
           <div className="overflow-hidden rounded-xl border border-surface-border">
-            {/* Top row: Avg Price | Stop Loss | Booked P&L [| Realized P&L] */}
+            {/* Top row: Avg Price | Stop Loss | Booked P&L */}
             <div className="flex divide-x divide-surface-border">
               {/* Avg Price */}
               <div className="flex-1 px-4 py-3">
@@ -292,21 +328,6 @@ export function PositionDetailPage() {
                   {detail.booked_pnl !== 0 ? `${detail.booked_pnl > 0 ? "+" : ""}${fmt2(detail.booked_pnl)}%` : "—"}
                 </p>
               </div>
-
-              {/* Realized PnL — only when present */}
-              {detail.realized_pnl != null && (
-                <div className="flex-1 px-4 py-3">
-                  <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-text-secondary">
-                    {t("positions.detail.realizedPnl")}
-                  </p>
-                  <p className={cn(
-                    "mt-1 tabular-nums font-semibold",
-                    detail.realized_pnl > 0 ? "text-green-500" : detail.realized_pnl < 0 ? "text-red-500" : "text-text-secondary",
-                  )}>
-                    {detail.realized_pnl > 0 ? "+" : ""}{fmt2(detail.realized_pnl)}%
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Capacity — always full width below */}
