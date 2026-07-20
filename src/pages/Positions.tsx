@@ -252,19 +252,6 @@ export function PositionsPage() {
         },
       },
       {
-        key: "dist_to_stop",
-        header: t("positions.columns.distToStop"),
-        render: (row: Position) => {
-          const live = liveMap.get(row.id);
-          if (!live || live.price == null || row.stop_loss == null || row.avg_price === 0) {
-            return <span className="text-text-secondary">—</span>;
-          }
-          const dist = (Math.abs(live.price - row.stop_loss) / row.avg_price) * 100;
-          const cls = dist > 5 ? "text-green-500" : dist >= 2 ? "text-amber-500" : "text-red-500";
-          return <span className={cn("tabular-nums text-xs font-semibold", cls)}>{dist.toFixed(2)}%</span>;
-        },
-      },
-      {
         key: "refresh_live",
         header: "",
         render: (row: Position) => {
@@ -488,20 +475,6 @@ export function PositionsPage() {
                               {live.positionReturn == null ? "—" : `${live.positionReturn > 0 ? "+" : ""}${formatPrice(live.positionReturn)}%`}
                             </dd>
                           </div>
-                          {row.stop_loss != null && live.price != null && row.avg_price !== 0 && (() => {
-                            const dist = (Math.abs(live.price - row.stop_loss) / row.avg_price) * 100;
-                            const cls = dist > 5 ? "text-green-500" : dist >= 2 ? "text-amber-500" : "text-red-500";
-                            return (
-                              <div>
-                                <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
-                                  {t("positions.columns.distToStop")}
-                                </dt>
-                                <dd className={cn("mt-0.5 tabular-nums font-semibold", cls)}>
-                                  {dist.toFixed(2)}%
-                                </dd>
-                              </div>
-                            );
-                          })()}
                         </>
                       );
                     })()}

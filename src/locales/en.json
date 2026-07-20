@@ -431,8 +431,7 @@
       "capacity": "Capacity",
       "currentPrice": "Cur. Price",
       "currentPnl": "Unr. P&L",
-      "positionReturn": "P&L",
-      "distToStop": "Dist. to SL"
+      "positionReturn": "P&L"
     },
     "detail": {
       "back": "Back",
