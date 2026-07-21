@@ -252,6 +252,25 @@ export function PositionsPage() {
         },
       },
       {
+        key: "realized_pnl",
+        header: t("positions.columns.realizedPnl"),
+        render: (row: Position) => {
+          // Only closed positions carry a realized (booked) result.
+          if (row.status !== "closed" || row.realized_pnl == null || row.realized_pnl === 0) {
+            return <span className="text-text-secondary">—</span>;
+          }
+          const rp = row.realized_pnl;
+          return (
+            <span className={cn(
+              "tabular-nums",
+              rp > 0 ? "text-green-500" : "text-red-500",
+            )}>
+              {rp > 0 ? "+" : ""}{formatPrice(rp)}%
+            </span>
+          );
+        },
+      },
+      {
         key: "refresh_live",
         header: "",
         render: (row: Position) => {
@@ -434,6 +453,19 @@ export function PositionsPage() {
                         </span>
                       </dd>
                     </div>
+                    {row.status === "closed" && row.realized_pnl != null && row.realized_pnl !== 0 && (
+                      <div>
+                        <dt className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
+                          {t("positions.columns.realizedPnl")}
+                        </dt>
+                        <dd className={cn(
+                          "mt-0.5 tabular-nums font-medium",
+                          row.realized_pnl > 0 ? "text-green-500" : "text-red-500",
+                        )}>
+                          {row.realized_pnl > 0 ? "+" : ""}{formatPrice(row.realized_pnl)}%
+                        </dd>
+                      </div>
+                    )}
                     {(() => {
                       const live = liveMap.get(row.id);
                       if (!live) return null;

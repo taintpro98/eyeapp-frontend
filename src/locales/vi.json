@@ -437,7 +437,8 @@
       "capacity": "Tỷ trọng",
       "currentPrice": "Giá TT",
       "currentPnl": "Lãi/lỗ TT",
-      "positionReturn": "Lãi/lỗ"
+      "positionReturn": "Lãi/lỗ",
+      "realizedPnl": "Lãi/lỗ đã chốt"
     },
     "detail": {
       "back": "Quay lại",
