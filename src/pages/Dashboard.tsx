@@ -82,7 +82,7 @@ export function DashboardPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary/10">
-                <span className="text-xl font-bold text-brand-primary">
+                <span className="text-xl font-bold text-brand-primary dark:text-brand-light">
                   {plan.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export function DashboardPage() {
               className="flex items-center justify-between rounded-lg border border-surface-border p-3"
             >
               <div className="flex items-center gap-3">
-                <Zap className="h-4 w-4 text-brand-primary" />
+                <Zap className="h-4 w-4 text-brand-primary dark:text-brand-light" />
                 <div>
                   <p className="font-medium">{s.symbol}</p>
                   <p className="text-sm text-text-secondary">

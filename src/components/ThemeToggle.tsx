@@ -16,7 +16,7 @@ export function ThemeToggle() {
       title={isDark ? t("theme.switchToLight") : t("theme.switchToDark")}
     >
       {isDark ? (
-        <Sun className="h-5 w-5 text-brand-primary" />
+        <Sun className="h-5 w-5 text-brand-primary dark:text-brand-light" />
       ) : (
         <Moon className="h-5 w-5 text-text-secondary" />
       )}

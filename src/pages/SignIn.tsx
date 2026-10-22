@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SocialLoginButtons } from "@/components/SocialLoginButtons";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useAuthStore } from "@/store/useAuthStore";
 import { resendVerificationEmail } from "@/api/auth";
 
@@ -57,11 +58,7 @@ export function SignInPage() {
       </div>
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center">
-          <img
-            src="/logo.png"
-            alt="ALumiEye"
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          <BrandLogo className="h-16 w-16" />
           <h1 className="mt-4 text-2xl font-semibold text-text-primary">
             ALumiEye
           </h1>
@@ -145,7 +142,7 @@ export function SignInPage() {
           {t("auth.noAccount")}{" "}
           <Link
             to="/sign-up"
-            className="font-medium text-brand-primary hover:underline"
+            className="font-medium text-brand-primary dark:text-brand-light hover:underline"
           >
             {t("auth.signUp")}
           </Link>

@@ -15,7 +15,7 @@ export function AccessDeniedState({ titleKey, hintKey }: Props) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-14 text-center">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10">
-        <Lock className="h-5 w-5 text-brand-primary" />
+        <Lock className="h-5 w-5 text-brand-primary dark:text-brand-light" />
       </div>
       <div className="space-y-1">
         <p className="text-sm font-medium text-text-primary">{t(titleKey)}</p>

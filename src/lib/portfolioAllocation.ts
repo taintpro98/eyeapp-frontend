@@ -10,7 +10,7 @@ export function orderSlicesForDisplay(
 }
 
 /** Neutral arc if weights don’t sum to 100% */
-const REMAINDER = "rgba(110, 100, 112, 0.35)";
+const REMAINDER = "rgba(107, 90, 109, 0.35)";
 
 export type DonutGradientResult = {
   /** CSS conic-gradient or null */

@@ -11,28 +11,40 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: "var(--brand-primary)",
-          dark: "var(--brand-dark)",
-          light: "var(--brand-light)",
+          primary: "rgb(var(--brand-primary) / <alpha-value>)",
+          dark: "rgb(var(--brand-dark) / <alpha-value>)",
+          light: "rgb(var(--brand-light) / <alpha-value>)",
+          cream: "rgb(var(--brand-cream) / <alpha-value>)",
+        },
+        lumi: {
+          orange: "rgb(var(--lumi-orange) / <alpha-value>)",
+          blush: "rgb(var(--lumi-blush) / <alpha-value>)",
+        },
+        /* Nền tối ánh Tím Mận — chỉ dùng ở dark mode (box chat Lumi) */
+        plum: {
+          800: "#2c2130",
+          850: "#28202d",
+          900: "#231b27",
+          950: "#1f1a23",
         },
         surface: {
-          bg: "var(--surface-bg)",
-          warm: "var(--surface-warm)",
-          card: "var(--surface-card)",
-          border: "var(--surface-border)",
+          bg: "rgb(var(--surface-bg) / <alpha-value>)",
+          warm: "rgb(var(--surface-warm) / <alpha-value>)",
+          card: "rgb(var(--surface-card) / <alpha-value>)",
+          border: "rgb(var(--surface-border) / <alpha-value>)",
         },
         text: {
-          primary: "var(--text-primary)",
-          secondary: "var(--text-secondary)",
+          primary: "rgb(var(--text-primary) / <alpha-value>)",
+          secondary: "rgb(var(--text-secondary) / <alpha-value>)",
         },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        "soft": "0 2px 8px rgba(46, 38, 48, 0.06)",
-        "card": "0 1px 3px rgba(46, 38, 48, 0.04)",
-        "glow": "0 0 20px rgba(111, 44, 145, 0.15)",
+        "soft": "0 2px 8px rgba(47, 29, 51, 0.06)",
+        "card": "0 1px 3px rgba(47, 29, 51, 0.04)",
+        "glow": "0 0 20px rgba(89, 50, 93, 0.15)",
       },
       borderRadius: {
         "card": "12px",

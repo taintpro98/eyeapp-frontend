@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fetchOnboardingMarkets, fetchUserMarkets, subscribeFreeMarket } from "@/api/markets";
 import type { Market } from "@/api/markets";
+import { BrandLogo } from "@/components/BrandLogo";
 
 function formatFeature(code: string): string {
   return code.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -27,7 +28,7 @@ function MarketCard({
     <div className="flex flex-col rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-text-primary">{market.name}</h2>
-        <span className="rounded-full bg-brand-primary/10 px-3 py-0.5 text-xs font-medium text-brand-primary">
+        <span className="rounded-full bg-brand-primary/10 px-3 py-0.5 text-xs font-medium text-brand-primary dark:text-brand-light">
           Free
         </span>
       </div>
@@ -35,7 +36,7 @@ function MarketCard({
       <ul className="mb-6 flex-1 space-y-2.5">
         {freePlan.features.map((code) => (
           <li key={code} className="flex items-center gap-2 text-sm text-text-primary">
-            <Check className="h-4 w-4 shrink-0 text-brand-primary" />
+            <Check className="h-4 w-4 shrink-0 text-brand-primary dark:text-brand-light" />
             {formatFeature(code)}
           </li>
         ))}
@@ -96,7 +97,7 @@ export function OnboardingPage() {
 
       <div className="w-full max-w-2xl space-y-8">
         <div className="flex flex-col items-center text-center">
-          <img src="/logo.png" alt="ALumiEye" className="mb-6 h-10 w-auto" />
+          <BrandLogo className="mb-6 h-14 w-14" />
           <h1 className="text-2xl font-bold text-text-primary">Choose your market</h1>
           <p className="mt-2 text-sm text-text-secondary">
             Pick one to get started for free. You can add more markets later from Billing.

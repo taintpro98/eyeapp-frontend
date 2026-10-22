@@ -20,5 +20,5 @@ export function sideClass(side: PositionSide): string {
 export function termClass(term: PositionTerm): string {
   return term === "short_term"
     ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
-    : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400";
+    : "bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20 dark:text-brand-light";
 }

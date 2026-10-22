@@ -62,7 +62,7 @@ export function BillingPage() {
                   {market.features.map((feature) => (
                     <li key={feature.code} className="flex items-center gap-2">
                       {feature.accessible ? (
-                        <Check className="h-4 w-4 shrink-0 text-brand-primary" />
+                        <Check className="h-4 w-4 shrink-0 text-brand-primary dark:text-brand-light" />
                       ) : (
                         <Check className="h-4 w-4 shrink-0 opacity-0" />
                       )}

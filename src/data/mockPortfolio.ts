@@ -33,7 +33,7 @@ export const mockPortfolioSlices: PortfolioSlice[] = [
   {
     key: "FPT",
     label: "FPT",
-    color: "#a855f7",
+    color: "#59325D",
     percent: 18,
     entryPrice: 138_000,
     currentPrice: 151_000,

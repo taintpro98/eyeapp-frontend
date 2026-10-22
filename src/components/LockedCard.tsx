@@ -37,13 +37,13 @@ export function LockedCard({
       <div className="relative">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-            <Lock className="h-5 w-5 text-brand-primary" />
+            <Lock className="h-5 w-5 text-brand-primary dark:text-brand-light" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-text-primary">{title}</h3>
               {badge && (
-                <span className="rounded bg-brand-primary/20 px-2 py-0.5 text-xs font-medium text-brand-primary">
+                <span className="rounded bg-brand-primary/20 px-2 py-0.5 text-xs font-medium text-brand-primary dark:text-brand-light">
                   {badge}
                 </span>
               )}

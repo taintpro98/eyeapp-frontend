@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { LumiChatWidget } from "@/components/chat/LumiChatWidget";
 
 export function AppShell() {
   const { t } = useTranslation();
@@ -140,6 +141,7 @@ export function AppShell() {
         </main>
       </div>
       <UpgradeModal />
+      <LumiChatWidget />
     </div>
   );
 }

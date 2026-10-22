@@ -497,6 +497,11 @@
       "Sell": "Bán",
       "Hold": "Giữ"
     },
+    "strength": {
+      "Strong": "Mạnh",
+      "Medium": "Trung bình",
+      "Weak": "Yếu"
+    },
     "signalType": {
       "increase": "Gia tăng",
       "decrease": "Hạ tỷ trọng",
@@ -558,6 +563,47 @@
       "proPlan": "Tính năng này nằm trong gói Pro. Nâng cấp để tiếp tục.",
       "subscriptionRequired": "Bạn chưa đăng ký thị trường này. Đăng ký để truy cập.",
       "featureRequired": "Gói hiện tại của bạn chưa bao gồm tính năng này. Nâng cấp để mở khóa."
+    }
+  },
+  "lumiChat": {
+    "title": "Lumi",
+    "demoBadge": "Demo",
+    "role": "Trợ lý định lượng",
+    "statusOnline": "Trực tuyến • Sẵn sàng hỗ trợ",
+    "statusThinking": "Lumi đang tính toán...",
+    "thinkingText": "Lumi đang bóc tách dữ liệu định lượng...",
+    "inputPlaceholder": "Hỏi Lumi về cổ phiếu, VN-Index, tín hiệu...",
+    "disclaimer": "Lumi • Phân tích định lượng tham khảo, không phải khuyến nghị đầu tư.",
+    "askLumi": "Hỏi Lumi",
+    "closePrompt": "Đóng gợi ý",
+    "openChatAria": "Mở box chat Lumi",
+    "resetChat": "Làm mới cuộc trò chuyện",
+    "expand": "Phóng to kích thước",
+    "collapse": "Thu gọn kích thước",
+    "close": "Đóng chat",
+    "sendAria": "Gửi tin nhắn",
+    "suggestionsLabel": "Gợi ý:",
+    "prompts": {
+      "vnindex": "Xu hướng VN-Index",
+      "fptHpg": "Tín hiệu FPT & HPG",
+      "breakout": "Top cổ phiếu Breakout",
+      "risk": "Quản trị rủi ro",
+      "alumiscore": "Chỉ số AlumiScore",
+      "banks": "Dòng tiền Ngân hàng"
+    },
+    "metrics": {
+      "symbol": "Mã",
+      "score": "AlumiScore",
+      "trend": "Xu hướng",
+      "support": "Hỗ trợ",
+      "resistance": "Kháng cự",
+      "action": "Hành động"
+    },
+    "banner": {
+      "title": "Trợ lý định lượng Lumi",
+      "online": "Trực tuyến",
+      "desc": "Lumi đồng hành cùng bạn bóc tách thị trường, tính toán chỉ số AlumiScore, giải thích tín hiệu kỹ thuật và kiểm tra rủi ro danh mục 24/7.",
+      "cta": "Trò chuyện cùng Lumi"
     }
   }
 }

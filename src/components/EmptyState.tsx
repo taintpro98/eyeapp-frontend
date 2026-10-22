@@ -1,8 +1,11 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Lumi } from "@/components/Lumi";
 
 type EmptyStateProps = {
   icon?: LucideIcon;
+  /** Hiển thị linh vật Lumi thay cho icon */
+  mascot?: "thinking" | "happy";
   title: string;
   description?: string;
   action?: React.ReactNode;
@@ -11,6 +14,7 @@ type EmptyStateProps = {
 
 export function EmptyState({
   icon: Icon,
+  mascot,
   title,
   description,
   action,
@@ -23,7 +27,9 @@ export function EmptyState({
         className,
       )}
     >
-      {Icon && (
+      {mascot ? (
+        <Lumi mood={mascot} className="h-24 w-24" />
+      ) : Icon && (
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-border/50">
           <Icon className="h-7 w-7 text-text-secondary" />
         </div>
