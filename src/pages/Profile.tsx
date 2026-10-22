@@ -53,7 +53,7 @@ export function ProfilePage() {
               {user?.display_name}
             </p>
             <p className="truncate text-sm text-text-secondary">{user?.email}</p>
-            <span className="mt-1 inline-block rounded-full bg-brand-primary/10 px-2 py-0.5 text-xs font-medium text-brand-primary">
+            <span className="mt-1 inline-block rounded-full bg-brand-primary/10 px-2 py-0.5 text-xs font-medium text-brand-primary dark:text-brand-light">
               {user?.role === "admin" ? t("profile.roleAdmin") : t("profile.roleUser")}
             </span>
           </div>
@@ -103,7 +103,7 @@ export function ProfilePage() {
                           reasonKey: "featureRequired",
                         })
                       }
-                      className="text-xs font-medium text-brand-primary hover:underline"
+                      className="text-xs font-medium text-brand-primary dark:text-brand-light hover:underline"
                     >
                       {t("profile.upgrade")}
                     </button>

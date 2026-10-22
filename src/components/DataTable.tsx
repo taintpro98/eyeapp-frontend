@@ -54,7 +54,7 @@ export function DataTable<T extends Record<string, unknown>>({
             className={cn(
               "group border-b border-surface-border last:border-0 transition-colors duration-150",
               "even:bg-surface-warm/20",
-              onRowClick && "cursor-pointer hover:bg-surface-warm/60 hover:shadow-[inset_3px_0_0_var(--brand-primary)]",
+              onRowClick && "cursor-pointer hover:bg-surface-warm/60 hover:shadow-[inset_3px_0_0_rgb(var(--brand-primary))]",
               onRowClick && "row-hint",
             )}
             style={onRowClick ? { ["--row-delay" as string]: `${i * 80}ms` } : undefined}

@@ -18,12 +18,12 @@ import { cn } from "@/lib/utils";
 const PALETTE = [
   "#3b82f6",
   "#14b8a6",
-  "#a855f7",
+  "#59325D",
   "#f97316",
   "#ef4444",
   "#eab308",
   "#06b6d4",
-  "#8b5cf6",
+  "#8A5A90",
   "#ec4899",
   "#84cc16",
 ];

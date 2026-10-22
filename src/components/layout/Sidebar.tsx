@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getIcon } from "@/lib/icons";
 import { PlanBadge } from "@/components/PlanBadge";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useAppStore } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
 import type { SidebarItem } from "@/types";
@@ -50,13 +51,9 @@ export function Sidebar({ items }: SidebarProps) {
               !showLabels && "justify-center w-full",
             )}
           >
-            <img
-              src="/logo.png"
-              alt="ALumiEye"
-              className="h-9 w-9 shrink-0 rounded-full object-cover"
-            />
+            <BrandLogo className="h-9 w-9" />
             {showLabels && (
-              <span className="font-semibold text-text-primary">ALumiEye</span>
+              <span className="font-semibold tracking-tight text-brand-primary dark:text-text-primary">ALumiEye</span>
             )}
           </div>
           <Button
@@ -131,7 +128,7 @@ export function Sidebar({ items }: SidebarProps) {
                   cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-brand-primary/10 text-brand-primary"
+                      ? "bg-brand-primary/10 text-brand-primary dark:text-brand-light"
                       : "text-text-secondary hover:bg-surface-border/50 hover:text-text-primary",
                     !showLabels && "justify-center px-0",
                   )

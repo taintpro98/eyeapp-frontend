@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/button";
 import { fetchPositionDetail, fetchPositionLive } from "@/api/positions";
 import { RelativeTime } from "@/components/RelativeTime";
-import { statusClass, sideClass } from "@/lib/positionColors";
+import { statusClass, sideClass, termClass } from "@/lib/positionColors";
 import { formatPricePrecise as formatPrice, fmt2 } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { PositionDetail } from "@/api/positions";
@@ -123,11 +123,7 @@ export function PositionDetailPage() {
               <Badge className={statusClass(detail.status)}>
                 {t(`positionsEnum.status.${detail.status}`)}
               </Badge>
-              <Badge className={
-                detail.term === "short_term"
-                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
-                  : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400"
-              }>
+              <Badge className={termClass(detail.term)}>
                 {t(`positionsEnum.term.${detail.term}`)}
               </Badge>
             </div>

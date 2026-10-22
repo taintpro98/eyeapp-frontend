@@ -3,32 +3,40 @@
 @tailwind utilities;
 
 @layer base {
+  /* Màu khai báo dạng kênh RGB để Tailwind hỗ trợ modifier độ mờ (vd: bg-brand-primary/10) */
   :root {
-    /* Brand colors — same in light and dark */
-    --brand-primary: #6F2C91;
-    --brand-dark: #4B1F63;
-    --brand-light: #8B5FBF;
-    /* Light theme */
-    --surface-bg: #F4F0EA;
-    --surface-warm: #F7F4EF;
-    --surface-card: #FFFFFF;
-    --surface-border: #E7DFD6;
-    --text-primary: #2E2630;
-    --text-secondary: #6E6470;
+    /* Màu thương hiệu (bộ nhận diện ALumiEye): Tím Mận #59325D + Warm Cream #EFE3CC */
+    --brand-primary: 89 50 93;
+    --brand-dark: 67 36 74;
+    --brand-light: 138 90 144;
+    --brand-cream: 239 227 204;
+    /* Màu phụ của linh vật Lumi — chỉ dùng điểm nhấn */
+    --lumi-orange: 235 169 107;
+    --lumi-blush: 242 179 174;
+    /* Light theme — nền kem ấm */
+    --surface-bg: 239 227 204;
+    --surface-warm: 239 227 204;
+    --surface-card: 255 251 245;
+    --surface-border: 228 213 188;
+    --text-primary: 47 29 51;
+    --text-secondary: 107 90 109;
   }
 
   .dark {
-    /* Brand colors unchanged */
-    --brand-primary: #6F2C91;
-    --brand-dark: #4B1F63;
-    --brand-light: #8B5FBF;
+    /* Tím Mận sáng hơn để đủ tương phản trên nền tối */
+    --brand-primary: 138 90 144;
+    --brand-dark: 110 68 116;
+    --brand-light: 201 163 205;
+    --brand-cream: 239 227 204;
+    --lumi-orange: 235 169 107;
+    --lumi-blush: 242 179 174;
     /* Dark theme surfaces */
-    --surface-bg: #18181b;
-    --surface-warm: #1e1e21;
-    --surface-card: #27272a;
-    --surface-border: #3f3f46;
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
+    --surface-bg: 24 24 27;
+    --surface-warm: 30 30 33;
+    --surface-card: 39 39 42;
+    --surface-border: 63 63 70;
+    --text-primary: 250 250 250;
+    --text-secondary: 161 161 170;
   }
 
   body {
@@ -48,7 +56,7 @@
 /* desktop table rows: background pulse */
 @keyframes row-hint {
   0%, 100% { background-color: transparent; }
-  50%       { background-color: rgba(111, 44, 145, 0.12); }
+  50%       { background-color: rgba(89, 50, 93, 0.12); }
 }
 .row-hint {
   animation: row-hint 0.8s ease-in-out var(--row-delay, 0s) 3;
@@ -56,9 +64,9 @@
 
 /* mobile cards: ring pulse (doesn't touch background) */
 @keyframes card-hint {
-  0%   { box-shadow: 0 0 0 0   rgba(111, 44, 145, 0.6); }
-  60%  { box-shadow: 0 0 0 5px rgba(111, 44, 145, 0.15); }
-  100% { box-shadow: 0 0 0 0   rgba(111, 44, 145, 0); }
+  0%   { box-shadow: 0 0 0 0   rgba(89, 50, 93, 0.6); }
+  60%  { box-shadow: 0 0 0 5px rgba(89, 50, 93, 0.15); }
+  100% { box-shadow: 0 0 0 0   rgba(89, 50, 93, 0); }
 }
 .card-hint {
   animation: card-hint 0.8s ease-in-out var(--row-delay, 0s) 3;

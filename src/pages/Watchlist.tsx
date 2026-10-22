@@ -103,7 +103,7 @@ export function WatchlistPage() {
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-                    <Star className="h-5 w-5 text-brand-primary" />
+                    <Star className="h-5 w-5 text-brand-primary dark:text-brand-light" />
                   </div>
                   <div>
                     <p className="font-medium">{item.symbol}</p>
@@ -125,6 +125,7 @@ export function WatchlistPage() {
       ) : (
         <EmptyState
           icon={Star}
+          mascot="thinking"
           title={t("watchlist.emptyTitle")}
           description={t("watchlist.emptyDescription")}
         />

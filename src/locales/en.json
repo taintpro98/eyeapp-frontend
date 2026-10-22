@@ -497,6 +497,11 @@
       "Sell": "Sell",
       "Hold": "Hold"
     },
+    "strength": {
+      "Strong": "Strong",
+      "Medium": "Medium",
+      "Weak": "Weak"
+    },
     "signalType": {
       "increase": "Accumulate",
       "decrease": "Reduce",
@@ -558,6 +563,47 @@
       "proPlan": "This feature is included in the Pro plan. Upgrade to continue.",
       "subscriptionRequired": "You don't have an active subscription for this market. Subscribe to access.",
       "featureRequired": "Your current plan doesn't include this feature. Upgrade to unlock it."
+    }
+  },
+  "lumiChat": {
+    "title": "Lumi",
+    "demoBadge": "Demo",
+    "role": "Quant Assistant",
+    "statusOnline": "Online • Ready to assist",
+    "statusThinking": "Lumi is calculating...",
+    "thinkingText": "Lumi is analyzing quantitative market data...",
+    "inputPlaceholder": "Ask Lumi about stocks, VN-Index, signals...",
+    "disclaimer": "Lumi • Quantitative analysis for reference, not investment advice.",
+    "askLumi": "Ask Lumi",
+    "closePrompt": "Close suggestion",
+    "openChatAria": "Open Lumi chatbox",
+    "resetChat": "Reset conversation",
+    "expand": "Maximize window",
+    "collapse": "Minimize window",
+    "close": "Close chat",
+    "sendAria": "Send message",
+    "suggestionsLabel": "Suggestions:",
+    "prompts": {
+      "vnindex": "VN-Index Trend",
+      "fptHpg": "FPT & HPG Signals",
+      "breakout": "Top Breakout Stocks",
+      "risk": "Risk Management",
+      "alumiscore": "About AlumiScore",
+      "banks": "Banking Inflows"
+    },
+    "metrics": {
+      "symbol": "Symbol",
+      "score": "AlumiScore",
+      "trend": "Trend",
+      "support": "Support",
+      "resistance": "Resistance",
+      "action": "Action"
+    },
+    "banner": {
+      "title": "Lumi Quant Assistant",
+      "online": "Online",
+      "desc": "Lumi assists you in market breadth analysis, AlumiScore calculation, technical signal interpretation, and 24/7 portfolio risk audits.",
+      "cta": "Chat with Lumi"
     }
   }
 }

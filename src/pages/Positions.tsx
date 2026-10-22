@@ -372,7 +372,7 @@ export function PositionsPage() {
                     "group relative overflow-hidden rounded-xl border bg-surface-card p-4 shadow-card transition-all duration-150 card-hint",
                     "group-active/card:scale-[0.98]",
                     row.id === selectedId
-                      ? "border-l-4 border-l-[var(--brand-primary)] bg-brand-primary/5 shadow-[inset_3px_0_0_var(--brand-primary)]"
+                      ? "border-l-4 border-l-brand-primary bg-brand-primary/5 shadow-[inset_3px_0_0_rgb(var(--brand-primary))]"
                       : cn(
                           "border-surface-border",
                           row.side === "buy" ? "border-l-4 border-l-green-500" : "border-l-4 border-l-red-500",
@@ -395,7 +395,7 @@ export function PositionsPage() {
                       <button
                         onClick={(e) => handleRefreshPositionLive(e, row)}
                         disabled={liveLoadingSet.has(row.id)}
-                        className="rounded p-1 text-text-secondary transition-colors hover:text-brand-primary disabled:opacity-50"
+                        className="rounded p-1 text-text-secondary transition-colors hover:text-brand-primary dark:hover:text-brand-light disabled:opacity-50"
                         title={t("positions.detail.refreshLive")}
                       >
                         <RefreshCw className={cn("h-3.5 w-3.5", liveLoadingSet.has(row.id) && "animate-spin")} />

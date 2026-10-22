@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export function SignUpPage() {
@@ -55,11 +56,7 @@ export function SignUpPage() {
       </div>
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center">
-          <img
-            src="/logo.png"
-            alt="ALumiEye"
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          <BrandLogo className="h-16 w-16" />
           <h1 className="mt-4 text-2xl font-semibold text-text-primary">
             ALumiEye
           </h1>
@@ -136,7 +133,7 @@ export function SignUpPage() {
           {t("auth.haveAccount")}{" "}
           <Link
             to="/sign-in"
-            className="font-medium text-brand-primary hover:underline"
+            className="font-medium text-brand-primary dark:text-brand-light hover:underline"
           >
             {t("auth.signIn")}
           </Link>

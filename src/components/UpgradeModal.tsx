@@ -56,7 +56,7 @@ export function UpgradeModal() {
       <DialogContent className="max-w-xs rounded-2xl sm:max-w-sm">
         <DialogHeader className="items-center text-center">
           <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary/10">
-            <Lock className="h-7 w-7 text-brand-primary" />
+            <Lock className="h-7 w-7 text-brand-primary dark:text-brand-light" />
           </div>
           <DialogTitle className="text-lg">{title}</DialogTitle>
           <DialogDescription className="text-sm">

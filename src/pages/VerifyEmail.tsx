@@ -4,8 +4,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
+import { Lumi } from "@/components/Lumi";
 import { verifyEmail, resendVerificationEmail } from "@/api/auth";
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { XCircle, Loader2 } from "lucide-react";
 
 type Status = "idle" | "loading" | "success" | "error";
 type ResendStatus = "idle" | "loading" | "sent" | "error";
@@ -91,11 +93,7 @@ export function VerifyEmailPage() {
       </div>
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center">
-          <img
-            src="/logo.png"
-            alt="ALumiEye"
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          <BrandLogo className="h-16 w-16" />
           <h1 className="mt-4 text-2xl font-semibold text-text-primary">
             ALumiEye
           </h1>
@@ -107,7 +105,7 @@ export function VerifyEmailPage() {
         <div className="flex flex-col items-center gap-6 rounded-lg border border-surface-border bg-surface-card p-8">
           {status === "loading" && (
             <>
-              <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
+              <Loader2 className="h-12 w-12 animate-spin text-brand-primary dark:text-brand-light" />
               <p className="text-center text-sm text-text-secondary">
                 {t("verify.loading")}
               </p>
@@ -116,7 +114,7 @@ export function VerifyEmailPage() {
 
           {status === "success" && (
             <>
-              <CheckCircle2 className="h-12 w-12 text-green-600" />
+              <Lumi mood="happy" className="h-24 w-24" />
               <p className="text-center text-sm text-text-primary">
                 {t("verify.success")}
               </p>

@@ -38,7 +38,7 @@ export function PremiumPreviewCard({
       <div className="relative">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-light/20">
-            <Sparkles className="h-5 w-5 text-brand-primary" />
+            <Sparkles className="h-5 w-5 text-brand-primary dark:text-brand-light" />
           </div>
           <div>
             <h3 className="font-semibold text-text-primary">{title}</h3>
