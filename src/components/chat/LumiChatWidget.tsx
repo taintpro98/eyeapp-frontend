@@ -19,6 +19,9 @@ import {
   getMockLumiReply,
 } from "@/data/mockLumiChat";
 
+const LUMI_WORKER_URL =
+  import.meta.env.VITE_LUMI_WORKER_URL || "https://eyeapp-lumi.taideptrai02.workers.dev";
+
 export function LumiChatWidget() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -82,7 +85,7 @@ export function LumiChatWidget() {
   }, [isOpen]);
 
   const handleSendMessage = useCallback(
-    (textToSend?: string) => {
+    async (textToSend?: string) => {
       const text = (textToSend ?? input).trim();
       if (!text || isThinking) return;
 
@@ -96,20 +99,72 @@ export function LumiChatWidget() {
         timestamp: timeStr,
       };
 
-      setMessages((prev) => [...prev, userMsg]);
+      const currentMessages = [...messages, userMsg];
+      setMessages(currentMessages);
       setInput("");
       setIsThinking(true);
       setLumiMood("thinking");
 
-      // Giả lập độ trễ suy nghĩ & phân tích định lượng của Lumi (khoảng 800 - 1100ms)
-      replyTimerRef.current = setTimeout(() => {
-        const reply = getMockLumiReply(text);
+      try {
+        // Gửi tối đa 8 tin nhắn gần nhất để giữ mạch trò chuyện
+        const history = currentMessages.slice(-8).map((m) => ({
+          role: m.sender === "user" ? ("user" as const) : ("assistant" as const),
+          content: m.text,
+        }));
+
+        const res = await fetch(LUMI_WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content:
+                  "Bạn là Lumi — Trợ lý AI Phân tích Chứng khoán & Định lượng thông minh của ALumiEye tại thị trường Việt Nam (HOSE, HNX, UPCOM). Hãy phân tích sắc bén, súc tích, chuyên nghiệp bằng tiếng Việt, dùng định dạng markdown đẹp mắt.",
+              },
+              ...history,
+            ],
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Worker status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        const aiText =
+          data.response ||
+          data.choices?.[0]?.message?.content ||
+          "Lumi đã nhận được tin nhắn của bạn. Bạn muốn phân tích thêm mã hay chỉ số nào?";
+
+        const replyNow = new Date();
+        const replyTimeStr = `${String(replyNow.getHours()).padStart(2, "0")}:${String(replyNow.getMinutes()).padStart(2, "0")}`;
+
+        const reply: ChatMessage = {
+          id: `msg-lumi-${Date.now()}`,
+          sender: "lumi",
+          text: aiText,
+          timestamp: replyTimeStr,
+          mood: "happy",
+          highlightBadge: {
+            label: "Lumi AI",
+            variant: "brand",
+          },
+        };
+
         setMessages((prev) => [...prev, reply]);
+      } catch (err) {
+        console.warn("[Lumi] Gọi Worker thất bại, chuyển sang chế độ dự phòng:", err);
+        const fallbackReply = getMockLumiReply(text);
+        setMessages((prev) => [...prev, fallbackReply]);
+      } finally {
         setIsThinking(false);
         setLumiMood("happy");
-      }, 900);
+      }
     },
-    [input, isThinking]
+    [input, isThinking, messages]
   );
 
   // Hỗ trợ mở chat box từ bất kỳ nơi nào trong app qua event `open-lumi-chat`
@@ -283,8 +338,8 @@ export function LumiChatWidget() {
                   <span className="inline-flex items-center rounded-md bg-brand-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-brand-primary dark:text-brand-light">
                     {t("lumiChat.role")}
                   </span>
-                  <span className="inline-flex items-center rounded-md border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-700 dark:text-amber-400">
-                    {t("lumiChat.demoBadge")}
+                  <span className="inline-flex items-center rounded-md border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-emerald-700 dark:text-emerald-400">
+                    AI Live
                   </span>
                 </div>
                 <p className="mt-1 flex items-center gap-1 text-[11px] text-text-secondary">

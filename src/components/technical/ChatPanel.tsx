@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
+import type { UIMessage } from "ai";
 import { AlertTriangle, BarChart3, Check, Loader2, Send, Sparkles, Trash2, TrendingUp, Wrench, X } from "lucide-react";
-import { refreshAccessToken } from "@/lib/api";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MarkdownMessage } from "./MarkdownMessage";
 import { TradeSetupCard, type TradeSetup } from "./TradeSetupCard";
 import { dispatchChartCommands, dispatchChartIndicators, type ChartCommand, type ChartIndicator } from "./chartBridge";
+
+const LUMI_WORKER_URL =
+  import.meta.env.VITE_LUMI_WORKER_URL || "https://eyeapp-lumi.taideptrai02.workers.dev";
 
 // --- Per-ticker history (text only, to keep localStorage small) ---
 const HISTORY_PREFIX = "alumieye-chat-";
@@ -60,30 +60,6 @@ const isToolPart = (part: { type: string }) => part.type.startsWith("tool-") || 
 const toolName = (part: ToolPart & { toolName?: string }) =>
   part.type === "dynamic-tool" ? (part.toolName ?? "unknown") : part.type.slice(5);
 
-/** Adds the eyeapp token and retries once after a silent refresh — the chat stream bypasses apiFetch. */
-const authFetch: typeof fetch = async (input, init) => {
-  const withToken = (token: string | null) => {
-    const headers = new Headers(init?.headers);
-    if (token) headers.set("Authorization", `Bearer ${token}`);
-    return { ...init, headers };
-  };
-  const res = await fetch(input, withToken(useAuthStore.getState().getAccessToken()));
-  if (res.status !== 401) return res;
-  const fresh = await refreshAccessToken();
-  return fresh ? fetch(input, withToken(fresh)) : res;
-};
-
-/** Error code from the function / backend JSON body, or from the stream's error text. */
-function errorCode(error: Error): string {
-  try {
-    const parsed = JSON.parse(error.message) as { error?: { code?: string } };
-    if (parsed.error?.code) return parsed.error.code;
-  } catch {
-    // not JSON: stream errors are plain codes
-  }
-  return error.message;
-}
-
 const KNOWN_ERRORS = new Set([
   "feature_required",
   "subscription_required",
@@ -100,7 +76,7 @@ type ChatPanelProps = {
   activeClassName?: string;
 };
 
-/** Lumi chat for the Technical tab: streams from /api/agent and drives the Vela chart through tool calls. */
+/** Lumi chat for the Technical tab: kết nối trực tiếp với Cloudflare Workers AI. */
 export function ChatPanel({ ticker, className, activeClassName }: ChatPanelProps) {
   const { t } = useTranslation();
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
@@ -111,39 +87,29 @@ export function ChatPanel({ ticker, className, activeClassName }: ChatPanelProps
     setLumiDocked(true);
     return () => setLumiDocked(false);
   }, [setLumiDocked]);
+
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
   const dispatched = useRef(new Set<string>());
 
-  const tickerRef = useRef(ticker);
-  tickerRef.current = ticker;
-
-  const transportRef = useRef<DefaultChatTransport<UIMessage> | null>(null);
-  transportRef.current ??= new DefaultChatTransport({
-    api: "/api/agent",
-    fetch: authFetch,
-    body: () => ({ ticker: tickerRef.current }),
-  });
-
-  const { messages, status, sendMessage, setMessages, error, stop, clearError } = useChat({
-    transport: transportRef.current,
-  });
-  const busy = status === "submitted" || status === "streaming";
+  const [messages, setMessages] = useState<UIMessage[]>(() => loadHistory(ticker));
+  const [status, setStatus] = useState<"ready" | "submitted">("ready");
+  const [error, setError] = useState<string | null>(null);
+  const busy = status === "submitted";
 
   // Load this ticker's conversation when the ticker changes (and on mount).
   const loadedFor = useRef<string | null>(null);
   useEffect(() => {
     if (loadedFor.current === ticker) return;
     loadedFor.current = ticker;
-    stop();
-    clearError();
+    setError(null);
     dispatched.current.clear();
     // Messages restored from storage must not replay their chart drawings.
     const saved = loadHistory(ticker);
     for (const m of saved) dispatched.current.add(m.id);
     setMessages(saved);
-  }, [ticker, setMessages, stop, clearError]);
+  }, [ticker]);
 
   useEffect(() => {
     if (!messages.length || loadedFor.current !== ticker) return;
@@ -182,21 +148,83 @@ export function ChatPanel({ ticker, className, activeClassName }: ChatPanelProps
   };
 
   const send = useCallback(
-    (text: string) => {
+    async (text: string) => {
       const clean = text.trim();
       if (!clean || busy) return;
       stickToBottom.current = true;
-      clearError();
-      sendMessage({ text: clean });
+      setError(null);
+
+      const userMsg: UIMessage = {
+        id: `msg-user-${Date.now()}`,
+        role: "user",
+        parts: [{ type: "text", text: clean }],
+      };
+
+      const nextMessages = [...messages, userMsg];
+      setMessages(nextMessages);
+      setStatus("submitted");
+
+      try {
+        // Lấy 8 tin nhắn gần nhất để làm ngữ cảnh
+        const history = nextMessages.slice(-8).map((m) => {
+          const textContent = m.parts
+            .filter((p) => p.type === "text")
+            .map((p) => (p as { type: "text"; text: string }).text)
+            .join("\n");
+          return {
+            role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+            content: textContent,
+          };
+        });
+
+        const res = await fetch(LUMI_WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content: `Bạn là Lumi — Trợ lý AI Phân tích Kỹ thuật và Chứng khoán của ALumiEye tại thị trường Việt Nam (HOSE, HNX, UPCOM). Người dùng đang xem biểu đồ cổ phiếu ${ticker}. Hãy phân tích kỹ thuật chuyên sâu, chỉ rõ xu hướng, các vùng giá hỗ trợ, kháng cự quan trọng và chiến lược hành động tham khảo. Trả lời bằng tiếng Việt, định dạng markdown rõ ràng, súc tích.`,
+              },
+              ...history,
+            ],
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Worker status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        const aiText =
+          data.response ||
+          data.choices?.[0]?.message?.content ||
+          "Lumi đã nhận tín hiệu nhưng chưa xử lý được câu trả lời. Bạn thử hỏi lại nhé!";
+
+        const assistantMsg: UIMessage = {
+          id: `msg-asst-${Date.now()}`,
+          role: "assistant",
+          parts: [{ type: "text", text: aiText }],
+        };
+
+        setMessages((prev) => [...prev, assistantMsg]);
+      } catch (err) {
+        console.error("[ChatPanel] Chat error:", err);
+        setError("service_unavailable");
+      } finally {
+        setStatus("ready");
+      }
     },
-    [busy, clearError, sendMessage],
+    [busy, messages, ticker]
   );
 
   const clearChat = () => {
-    stop();
     setMessages([]);
     clearHistory(ticker);
     dispatched.current.clear();
+    setError(null);
   };
 
   const quickActions = [
@@ -206,7 +234,7 @@ export function ChatPanel({ ticker, className, activeClassName }: ChatPanelProps
     { key: "faTa", Icon: AlertTriangle },
   ] as const;
 
-  const code = error ? errorCode(error) : null;
+  const code = error;
   const needsUpgrade = code === "feature_required" || code === "subscription_required";
 
   return (
