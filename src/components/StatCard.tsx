@@ -8,6 +8,8 @@ type StatCardProps = {
   icon?: LucideIcon;
   trend?: { value: number; label: string };
   className?: string;
+  /** Overrides the value's font size, e.g. for long figures in a dense grid. */
+  valueClassName?: string;
 };
 
 export function StatCard({
@@ -17,6 +19,7 @@ export function StatCard({
   icon: Icon,
   trend,
   className,
+  valueClassName,
 }: StatCardProps) {
   return (
     <div
@@ -30,7 +33,13 @@ export function StatCard({
           <p className="text-xs font-medium text-text-secondary sm:text-sm">
             {title}
           </p>
-          <p className="mt-0.5 truncate text-lg font-semibold text-text-primary sm:mt-1 sm:text-2xl">
+          <p
+            className={cn(
+              "mt-0.5 truncate text-lg font-semibold text-text-primary sm:mt-1 sm:text-2xl",
+              valueClassName,
+            )}
+            title={typeof value === "string" ? value : undefined}
+          >
             {value}
           </p>
           {subtitle && (

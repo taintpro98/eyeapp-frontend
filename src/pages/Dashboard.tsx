@@ -10,6 +10,9 @@ import { StatCard } from "@/components/StatCard";
 import { SectionCard } from "@/components/SectionCard";
 import { Button } from "@/components/ui/button";
 import { PlanBadge } from "@/components/PlanBadge";
+import { FaDashboardWidget } from "@/components/fundamental/FaDashboardWidget";
+import { VN_STOCK_MARKET_ID } from "@/api/fa";
+import { useMarketId } from "@/hooks/useMarketId";
 import { useAppStore } from "@/store/useAppStore";
 import { mockKpis, mockSignals, mockMarketSummary } from "@/data/mockDashboard";
 import { formatSignalMinutesAgo } from "@/lib/formatSignalTime";
@@ -24,6 +27,7 @@ export function DashboardPage() {
     queryFn: fetchBootstrap,
   });
   const selectedMarket = useMarket();
+  const marketId = useMarketId();
   const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const { data: userMarkets = [] } = useQuery({
     queryKey: ["me/markets"],
@@ -50,7 +54,7 @@ export function DashboardPage() {
         subtitle={t("dashboard.subtitle")}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {mockKpis.map((kpi, i) => (
           <StatCard
             key={i}
@@ -173,6 +177,8 @@ export function DashboardPage() {
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </SectionCard>
+
+      {marketId === VN_STOCK_MARKET_ID && <FaDashboardWidget />}
 
       <SectionCard
         title={t("dashboard.unlockPremium")}

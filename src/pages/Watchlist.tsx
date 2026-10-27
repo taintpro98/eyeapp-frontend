@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { SectionCard } from "@/components/SectionCard";
 import { EmptyState } from "@/components/EmptyState";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
+import { SymbolLink } from "@/components/SymbolLink";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarketId } from "@/hooks/useMarketId";
@@ -106,7 +107,9 @@ export function WatchlistPage() {
                     <Star className="h-5 w-5 text-brand-primary dark:text-brand-light" />
                   </div>
                   <div>
-                    <p className="font-medium">{item.symbol}</p>
+                    <p className="font-medium">
+                      <SymbolLink symbol={item.symbol} />
+                    </p>
                     <p className="text-sm text-text-secondary">
                       {item.name ??
                         (item.base_asset && item.quote_asset

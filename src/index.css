@@ -20,6 +20,18 @@
     --surface-border: 228 213 188;
     --text-primary: 47 29 51;
     --text-secondary: 107 90 109;
+    /* Thang xếp hạng FA (5 = Xuất sắc … 1 = Kém) — đủ tương phản để dùng làm chữ trên nền card */
+    --rating-5: 21 128 61;
+    --rating-4: 77 124 15;
+    --rating-3: 161 98 7;
+    --rating-2: 194 65 12;
+    --rating-1: 185 28 28;
+    /* Màu series biểu đồ, mở đầu bằng Tím Mận (≥3:1 trên nền card) */
+    --chart-1: 89 50 93;
+    --chart-2: 196 120 40;
+    --chart-3: 13 128 118;
+    --chart-4: 52 100 186;
+    --chart-5: 200 55 85;
   }
 
   .dark {
@@ -37,6 +49,16 @@
     --surface-border: 63 63 70;
     --text-primary: 250 250 250;
     --text-secondary: 161 161 170;
+    --rating-5: 74 222 128;
+    --rating-4: 163 230 53;
+    --rating-3: 250 204 21;
+    --rating-2: 251 146 60;
+    --rating-1: 248 113 113;
+    --chart-1: 201 163 205;
+    --chart-2: 240 178 110;
+    --chart-3: 45 212 191;
+    --chart-4: 130 168 240;
+    --chart-5: 244 114 140;
   }
 
   body {

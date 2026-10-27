@@ -1,4 +1,5 @@
 import type { PositionStatus, PositionSide, PositionTerm } from "@/api/positions";
+import { SIGNAL_BADGE_CLASS } from "@/lib/signalColors";
 
 export function statusClass(status: PositionStatus): string {
   switch (status) {
@@ -12,9 +13,7 @@ export function statusClass(status: PositionStatus): string {
 }
 
 export function sideClass(side: PositionSide): string {
-  return side === "buy"
-    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-    : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
+  return SIGNAL_BADGE_CLASS[side];
 }
 
 export function termClass(term: PositionTerm): string {

@@ -15,6 +15,21 @@ export function registerRefresh(fn: RefreshFn) {
   _onRefresh = fn;
 }
 
+/**
+ * Silently refresh the access token (one shared request however many callers
+ * hit a 401 at once). Returns the new token, or null when the session is over.
+ * Exported for callers that do not go through apiFetch (e.g. the chat stream).
+ */
+export async function refreshAccessToken(): Promise<string | null> {
+  if (!_onRefresh) return null;
+  if (!_refreshPromise) {
+    _refreshPromise = _onRefresh().finally(() => {
+      _refreshPromise = null;
+    });
+  }
+  return _refreshPromise;
+}
+
 async function doRequest(
   path: string,
   init: RequestInit,
@@ -37,13 +52,8 @@ export async function apiFetch<T>(
   let res = await doRequest(path, init, accessToken);
 
   // On 401 with a bearer token in play, attempt one silent token refresh then retry.
-  if (res.status === 401 && accessToken && _onRefresh) {
-    if (!_refreshPromise) {
-      _refreshPromise = _onRefresh().finally(() => {
-        _refreshPromise = null;
-      });
-    }
-    const newToken = await _refreshPromise;
+  if (res.status === 401 && accessToken) {
+    const newToken = await refreshAccessToken();
     if (newToken) {
       res = await doRequest(path, init, newToken);
     }

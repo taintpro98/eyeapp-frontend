@@ -23,8 +23,8 @@ export function SectionCard({
       )}
     >
       {(title || subtitle || headerAction) && (
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <div className="flex-1">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+          <div className="min-w-0 flex-1 basis-56">
             {title && (
               <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
             )}

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthInit } from "@/components/AuthInit";
@@ -20,6 +21,20 @@ import { SettingsPage } from "@/pages/Settings";
 import { PositionsPage } from "@/pages/Positions";
 import { PositionDetailPage } from "@/pages/PositionDetail";
 import { OnboardingPage } from "@/pages/Onboarding";
+
+// Fundamental analysis pages pull in recharts — load them on demand.
+const FundamentalPage = lazy(() => import("@/pages/Fundamental").then((m) => ({ default: m.FundamentalPage })));
+const FundamentalTickerPage = lazy(() =>
+  import("@/pages/FundamentalTicker").then((m) => ({ default: m.FundamentalTickerPage })),
+);
+
+function PageFallback() {
+  return (
+    <div className="flex justify-center py-24">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -86,6 +101,22 @@ function App() {
             <Route path="analysis" element={<AssetAnalysisPage />} />
             <Route path="analysis/:symbol" element={<AssetAnalysisPage />} />
             <Route path="ai-insights" element={<AIInsightsPage />} />
+            <Route
+              path="fundamental"
+              element={
+                <Suspense fallback={<PageFallback />}>
+                  <FundamentalPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="fundamental/:ticker"
+              element={
+                <Suspense fallback={<PageFallback />}>
+                  <FundamentalTickerPage />
+                </Suspense>
+              }
+            />
           </Route>
 
           {/* Fallback inside /app → redirect to default market */}

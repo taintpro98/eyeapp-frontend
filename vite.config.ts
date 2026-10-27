@@ -10,6 +10,13 @@ export default defineConfig({
     watch: {
       usePolling: true, // required for reliable file watching inside Docker
     },
+    // Serverless functions (api/*.ts) run in scripts/dev-api.ts locally; Vercel serves them in production.
+    proxy: {
+      '/api': {
+        target: process.env.DEV_API_URL || 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   resolve: {
     alias: {

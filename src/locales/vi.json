@@ -23,7 +23,8 @@
       "yesterday": "Hôm qua {{time}}",
       "thisWeek": "{{day}} {{time}}",
       "days": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
-    }
+    },
+    "viewAnalysis": "Xem phân tích {{symbol}}"
   },
   "nav": {
     "dashboard": "Bảng điều khiển",
@@ -41,7 +42,8 @@
     "badges": {
       "pro": "Pro",
       "premium": "Cao cấp"
-    }
+    },
+    "fundamental": "Phân tích cơ bản"
   },
   "account": {
     "planBilling": "Gói & Thanh toán",
@@ -216,8 +218,8 @@
     "emptyState": "Tìm kiếm một tài sản để bắt đầu phân tích",
     "marketCap": "Vốn hóa",
     "livePrice": "Giá hiện tại",
-    "signals": "Tín hiệu",
-    "signalsSubtitle": "Tín hiệu gần đây cho {{symbol}}",
+    "signals": "Tín hiệu ALumiEye",
+    "signalsSubtitle": "Tín hiệu giao dịch cho {{symbol}} từ thuật toán độc quyền của ALumiEye",
     "noSignals": "Không tìm thấy tín hiệu cho {{symbol}}",
     "positions": "Vị thế đang mở",
     "positionsSubtitle": "Các vị thế đang mở cho {{symbol}}",
@@ -261,7 +263,15 @@
       "strong": "Mạnh",
       "moderate": "Vừa",
       "weak": "Yếu"
-    }
+    },
+    "tabs": {
+      "label": "Nguồn tín hiệu",
+      "technical": "Tín hiệu chỉ báo kỹ thuật",
+      "algo": "Tín hiệu ALumiEye"
+    },
+    "signalsTotal": "{{count}} tín hiệu",
+    "trendTitle": "Xu hướng",
+    "volume": "KL"
   },
   "aiInsights": {
     "title": "Phân tích AI",
@@ -604,6 +614,402 @@
       "online": "Trực tuyến",
       "desc": "Lumi đồng hành cùng bạn bóc tách thị trường, tính toán chỉ số AlumiScore, giải thích tín hiệu kỹ thuật và kiểm tra rủi ro danh mục 24/7.",
       "cta": "Trò chuyện cùng Lumi"
+    }
+  },
+  "fa": {
+    "page": {
+      "title": "Phân tích cơ bản",
+      "subtitle": "Điểm FA, bộ lọc và chỉ số ngành cho cổ phiếu niêm yết Việt Nam",
+      "tabsLabel": "Phân tích cơ bản",
+      "tabs": {
+        "screener": "Bộ lọc cổ phiếu",
+        "industry": "Chỉ số ngành"
+      }
+    },
+    "search": {
+      "placeholder": "Mã cổ phiếu (VD: FPT)",
+      "button": "Xem"
+    },
+    "guard": {
+      "title": "Chỉ có cho cổ phiếu Việt Nam",
+      "description": "Dữ liệu phân tích cơ bản hiện chỉ có cho cổ phiếu niêm yết trên HOSE, HNX và UPCOM.",
+      "cta": "Chuyển sang VN Stock"
+    },
+    "common": {
+      "retry": "Thử lại",
+      "refresh": "Làm mới"
+    },
+    "disclaimer": "Dữ liệu phân tích cơ bản chỉ mang tính tham khảo, không phải khuyến nghị đầu tư.",
+    "rating": {
+      "STRONG_FA": "Xuất sắc",
+      "GOOD_FA": "Tốt",
+      "FAIR_FA": "Khá",
+      "WEAK_FA": "Yếu",
+      "POOR_FA": "Kém",
+      "unknown": "Chưa xếp hạng"
+    },
+    "group": {
+      "overall": "Điểm FA tổng",
+      "growth": "Tăng trưởng",
+      "profitability": "Sinh lời",
+      "valuation": "Định giá",
+      "solvency": "Khả năng trả nợ",
+      "cashflow": "Dòng tiền",
+      "stability": "Ổn định",
+      "dataQuality": "Chất lượng dữ liệu"
+    },
+    "dataQuality": {
+      "OK": "Đầy đủ",
+      "PARTIAL": "Thiếu một phần",
+      "POOR": "Kém",
+      "NO_DATA": "Chưa có",
+      "unknown": "Chưa rõ"
+    },
+    "unit": {
+      "billion": "tỷ",
+      "thousandBillion": "nghìn tỷ"
+    },
+    "error": {
+      "unauthorized": {
+        "title": "Phiên đăng nhập đã hết hạn",
+        "description": "Vui lòng đăng nhập lại để xem dữ liệu phân tích cơ bản."
+      },
+      "forbidden": {
+        "title": "Gói của bạn chưa bao gồm thị trường này",
+        "description": "Đăng ký gói thị trường Cổ phiếu VN để xem dữ liệu phân tích cơ bản."
+      },
+      "unreachable": {
+        "title": "Không kết nối được dịch vụ dữ liệu FA",
+        "description": "Dịch vụ phân tích cơ bản đang tạm thời không phản hồi. Vui lòng thử lại sau ít phút."
+      },
+      "http": {
+        "title": "Không tải được dữ liệu phân tích cơ bản",
+        "description": "Đã có lỗi khi tải dữ liệu. Vui lòng thử lại."
+      }
+    },
+    "overview": {
+      "tracked": "Mã đang theo dõi",
+      "average": "Điểm FA trung bình",
+      "outOf100": "Thang 100 điểm",
+      "goodShare": "Tỷ lệ Tốt trở lên",
+      "goodShareHint": "Xếp hạng Tốt hoặc Xuất sắc",
+      "strongCount": "Số mã Xuất sắc",
+      "distribution": "Phân bố xếp hạng FA",
+      "distributionHint": "Trên toàn bộ danh sách theo dõi",
+      "unrated": "{{count}} mã chưa có xếp hạng",
+      "top": "Top {{count}} điểm FA cao nhất"
+    },
+    "screener": {
+      "period": "Kỳ dữ liệu: {{period}}",
+      "totalLabel": "mã",
+      "open": "Xem phân tích {{ticker}}",
+      "empty": {
+        "title": "Không có mã nào khớp bộ lọc",
+        "description": "Thử nới điều kiện lọc hoặc bỏ chọn \"Chỉ danh sách theo dõi\"."
+      },
+      "columns": {
+        "ticker": "Mã",
+        "score": "Điểm FA",
+        "rating": "Xếp hạng",
+        "pe": "P/E",
+        "pb": "P/B",
+        "roe": "ROE",
+        "revenueYoy": "DT YoY"
+      },
+      "filters": {
+        "exchange": "Sàn",
+        "allExchanges": "Tất cả sàn",
+        "rating": "Xếp hạng FA",
+        "allRatings": "Tất cả xếp hạng",
+        "minScore": "Điểm FA tối thiểu",
+        "anyScore": "Mọi mức điểm",
+        "pageSize": "Số dòng",
+        "perPage": "{{count}} dòng / trang",
+        "watchedOnly": "Chỉ danh sách theo dõi (VN100+)",
+        "reset": "Xoá bộ lọc",
+        "query": "Tìm theo mã hoặc tên công ty"
+      }
+    },
+    "benchmark": {
+      "summary": "{{count}} ngành · kỳ {{period}} · giá trị trung vị",
+      "tickerCount": "{{count}} mã",
+      "empty": {
+        "title": "Chưa có dữ liệu chỉ số ngành",
+        "description": "Các mã chưa được phân loại ngành nên chưa tính được chỉ số trung vị theo ngành. Bạn vẫn có thể so sánh từng mã ở tab Bộ lọc cổ phiếu."
+      },
+      "columns": {
+        "industry": "Ngành",
+        "tickers": "Số mã",
+        "score": "Điểm FA",
+        "pe": "P/E",
+        "pb": "P/B",
+        "roe": "ROE",
+        "netMargin": "Biên ròng",
+        "revenueYoy": "DT YoY"
+      }
+    },
+    "ticker": {
+      "title": "Phân tích cơ bản",
+      "subtitle": "Sức khoẻ tài chính, định giá và lịch sử điểm FA",
+      "back": "Phân tích cơ bản",
+      "notFound": {
+        "title": "Không có dữ liệu cho mã {{ticker}}",
+        "description": "Mã này chưa có trong dữ liệu phân tích cơ bản hoặc chưa đúng. Kiểm tra lại mã cổ phiếu."
+      }
+    },
+    "header": {
+      "period": "Kỳ {{period}}",
+      "unknownCompany": "Chưa có tên công ty",
+      "price": "Thị giá",
+      "faScore": "Điểm FA",
+      "dataQuality": "Dữ liệu",
+      "priceSource": {
+        "realtime": "Giá khớp lệnh gần nhất",
+        "statement": "Giá đóng cửa theo kỳ báo cáo"
+      }
+    },
+    "metrics": {
+      "title": "Chỉ số then chốt",
+      "noData": "Chưa có dữ liệu",
+      "pe": {
+        "title": "P/E (TTM)",
+        "cheap": "Định giá thấp (<10x)",
+        "rich": "Định giá cao (>25x)",
+        "default": "Giá / LNST 4 quý"
+      },
+      "pb": {
+        "title": "P/B",
+        "good": "Dưới giá trị sổ sách",
+        "default": "Giá / giá trị sổ sách"
+      },
+      "marketCap": {
+        "title": "Vốn hoá",
+        "default": "Giá × số CP lưu hành"
+      },
+      "roe": {
+        "title": "ROE",
+        "good": "Hiệu quả cao (≥15%)",
+        "default": "LNST / vốn chủ sở hữu"
+      },
+      "roa": {
+        "title": "ROA",
+        "good": "Hiệu quả tốt (≥10%)",
+        "default": "LNST / tổng tài sản"
+      },
+      "de": {
+        "title": "Nợ / Vốn CSH",
+        "good": "Đòn bẩy an toàn (≤1x)",
+        "high": "Đòn bẩy cao (>2x)",
+        "default": "Nợ vay / vốn CSH"
+      },
+      "netMargin": {
+        "title": "Biên lãi ròng",
+        "default": "LNST / doanh thu"
+      },
+      "revenueYoy": {
+        "title": "Doanh thu YoY",
+        "default": "So với cùng kỳ năm trước"
+      },
+      "cash": {
+        "title": "Tiền mặt",
+        "default": "Tiền & tương đương tiền"
+      },
+      "cfo": {
+        "title": "Dòng tiền HĐKD",
+        "good": "Dòng tiền dương",
+        "negative": "Dòng tiền âm"
+      },
+      "notApplicable": "Không áp dụng cho ngân hàng, bảo hiểm"
+    },
+    "breakdown": {
+      "title": "Cấu trúc điểm FA",
+      "subtitle": "7 nhóm tiêu chí, mỗi nhóm có thang điểm riêng",
+      "footnote": "Tổng 100 điểm: Tăng trưởng 20 · Sinh lời 20 · Định giá 20 · Trả nợ 15 · Dòng tiền 10 · Ổn định 5 · Dữ liệu 10"
+    },
+    "history": {
+      "title": "Lịch sử điểm FA",
+      "subtitle": "Điểm tổng và 3 nhóm cốt lõi qua các kỳ",
+      "periods": "{{count}} kỳ",
+      "empty": "Chưa có lịch sử điểm FA",
+      "axesNote": "Trục trái: điểm tổng (0–100), đường đứt là ngưỡng Khá / Tốt / Xuất sắc. Trục phải: điểm nhóm (0–20)."
+    },
+    "insights": {
+      "strengths": "Điểm mạnh",
+      "risks": "Lưu ý & rủi ro",
+      "count": "{{count}} mục",
+      "noStrengths": "Chưa ghi nhận điểm mạnh nổi bật trong kỳ này.",
+      "noRisks": "Không phát hiện rủi ro tài chính trọng yếu"
+    },
+    "charts": {
+      "sectionTitle": "Biểu đồ tài chính",
+      "sectionSubtitle": "{{count}} kỳ báo cáo · bấm vào chú thích để ẩn/hiện",
+      "rangeLabel": "Khoảng thời gian",
+      "rangeQuarters": "{{count}} quý",
+      "rangeAll": "Tất cả ({{count}})",
+      "period": "Kỳ",
+      "empty": "Chưa có dữ liệu cho biểu đồ này",
+      "show": "Hiện {{name}}",
+      "hide": "Ẩn {{name}}",
+      "revenueProfit": {
+        "title": "Doanh thu & lợi nhuận",
+        "subtitle": "Doanh thu, LN gộp và LNST theo quý"
+      },
+      "margins": {
+        "title": "Biên lợi nhuận",
+        "subtitle": "Biên gộp, biên HĐKD và biên ròng (%)"
+      },
+      "assets": {
+        "title": "Cơ cấu tài sản",
+        "subtitle": "Tài sản ngắn hạn và dài hạn"
+      },
+      "capital": {
+        "title": "Cơ cấu nguồn vốn",
+        "subtitle": "Nợ ngắn hạn, nợ dài hạn và vốn chủ sở hữu"
+      },
+      "cashflow": {
+        "title": "Dòng tiền",
+        "subtitle": "Hoạt động kinh doanh, đầu tư và tài chính"
+      },
+      "leverage": {
+        "title": "Đòn bẩy & thanh khoản",
+        "subtitle": "Nợ/Vốn CSH và hệ số thanh toán hiện hành (lần)",
+        "reference": "Mốc 1x"
+      },
+      "valuation": {
+        "title": "Định giá",
+        "subtitle": "Giá cổ phiếu (trục trái) và P/B (trục phải)"
+      },
+      "efficiency": {
+        "title": "Hiệu quả sử dụng vốn",
+        "subtitle": "ROE và ROA 4 quý gần nhất (TTM, %)"
+      }
+    },
+    "metric": {
+      "REVENUE": "Doanh thu thuần",
+      "GROSS_PROFIT": "Lợi nhuận gộp",
+      "NPAT": "LN sau thuế",
+      "GROSS_MARGIN": "Biên gộp",
+      "OPERATING_MARGIN": "Biên HĐKD",
+      "NET_MARGIN": "Biên ròng",
+      "CURRENT_ASSETS": "TS ngắn hạn",
+      "NON_CURRENT_ASSETS": "TS dài hạn",
+      "CURRENT_LIABILITIES": "Nợ ngắn hạn",
+      "LONG_TERM_LIABILITIES": "Nợ dài hạn",
+      "TOTAL_EQUITY": "Vốn CSH",
+      "CFO": "Dòng tiền HĐKD",
+      "CFI": "Dòng tiền đầu tư",
+      "CFF": "Dòng tiền tài chính",
+      "DEBT_TO_EQUITY": "Nợ / Vốn CSH",
+      "CURRENT_RATIO": "Thanh toán hiện hành",
+      "CLOSE_PRICE": "Giá đóng cửa",
+      "PB": "P/B",
+      "ROE": "ROE",
+      "ROA": "ROA"
+    },
+    "summary": {
+      "title": "Điểm phân tích cơ bản",
+      "cta": "Xem phân tích cơ bản"
+    },
+    "dashboard": {
+      "title": "Phân tích cơ bản",
+      "subtitle": "{{count}} mã · kỳ {{period}} · điểm FA trung bình {{average}}",
+      "cta": "Mở bộ lọc phân tích cơ bản"
+    }
+  },
+  "technical": {
+    "chart": {
+      "reset": "Mặc định",
+      "resetHint": "Xoá hình vẽ, đặt lại chỉ báo mặc định (EMA 10/50, Bollinger, RSI, MACD, khối lượng + MA20)",
+      "fullscreen": "Toàn màn hình",
+      "exitFullscreen": "Thu nhỏ",
+      "failed": "Không tải được biểu đồ. Vui lòng thử lại sau.",
+      "title": "Biểu đồ kỹ thuật {{ticker}}"
+    },
+    "signals": {
+      "title": "Tín hiệu chỉ báo kỹ thuật",
+      "subtitle": "Tự động phát hiện theo các quy tắc phân tích kỹ thuật phổ biến (RSI, MACD, Ichimoku, Bollinger…) trong {{days}} ngày gần nhất — không phải thuật toán của ALumiEye",
+      "empty": "Chưa có tín hiệu nào cho {{ticker}} trong thời gian này",
+      "error": "Không tải được danh sách tín hiệu",
+      "kind": {
+        "buy": "Mua",
+        "sell": "Bán",
+        "watch": "Theo dõi"
+      }
+    },
+    "unsupported": {
+      "title": "Biểu đồ kỹ thuật chỉ có cho cổ phiếu Việt Nam",
+      "description": "Chuyển sang thị trường VN Stock để xem biểu đồ nến và chỉ báo kỹ thuật."
+    },
+    "disclaimer": "Tín hiệu chỉ báo được tạo tự động theo kiến thức phân tích kỹ thuật phổ thông, chỉ mang tính tham khảo, không phải khuyến nghị đầu tư.",
+    "chat": {
+      "title": "Hỏi Lumi",
+      "empty": "Chọn một gợi ý hoặc đặt câu hỏi về {{ticker}}",
+      "placeholder": "Hỏi về {{ticker}}… (VD: \"So sánh với VHM\", \"Vẽ hỗ trợ kháng cự\")",
+      "send": "Gửi",
+      "clear": "Xoá cuộc trò chuyện",
+      "thinking": "Lumi đang phân tích {{ticker}}…",
+      "quick": {
+        "overview": {
+          "label": "Tổng quan",
+          "question": "Phân tích kỹ thuật tổng quan {{ticker}}"
+        },
+        "trend": {
+          "label": "Xu hướng",
+          "question": "Xu hướng ngắn hạn {{ticker}} trong 1-2 tuần tới?"
+        },
+        "levels": {
+          "label": "Hỗ trợ/kháng cự",
+          "question": "Vẽ các vùng hỗ trợ và kháng cự quan trọng của {{ticker}}"
+        },
+        "faTa": {
+          "label": "FA + TA",
+          "question": "Kết hợp PTKT và PTCB {{ticker}}, xem ROE, P/E, biên lợi nhuận"
+        }
+      },
+      "tools": {
+        "getStockData": "Tra cứu dữ liệu",
+        "queryDatabase": "Truy vấn dữ liệu tài chính",
+        "compareStocks": "So sánh cổ phiếu",
+        "screenStocks": "Lọc thị trường",
+        "drawOnChart": "Vẽ lên biểu đồ",
+        "createTradeSetup": "Tạo kế hoạch giao dịch",
+        "addIndicator": "Thêm chỉ báo"
+      },
+      "trade": {
+        "buy": "Khuyến nghị mua",
+        "sell": "Khuyến nghị bán",
+        "watch": "Quan sát",
+        "entry": "Vào lệnh",
+        "stopLoss": "Cắt lỗ",
+        "tp1": "Chốt lời 1",
+        "tp2": "Chốt lời 2",
+        "riskReward": "Rủi ro : Lợi nhuận",
+        "draw": "Vẽ lên biểu đồ"
+      },
+      "errors": {
+        "feature_required": "Gói hiện tại chưa bao gồm trợ lý AI. Nâng cấp lên gói Cao cấp để dùng Lumi.",
+        "subscription_required": "Bạn cần đăng ký gói thị trường VN Stock để dùng Lumi.",
+        "unauthorized": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.",
+        "rate_limited": "Mô hình AI đang quá tải hoặc hết hạn mức. Vui lòng thử lại sau ít phút.",
+        "service_unavailable": "Trợ lý AI chưa được cấu hình. Vui lòng liên hệ hỗ trợ.",
+        "generation_failed": "Lumi chưa trả lời được câu này. Vui lòng thử lại.",
+        "generic": "Có lỗi khi gửi câu hỏi. Vui lòng thử lại."
+      },
+      "locked": {
+        "title": "Hỏi Lumi về biểu đồ này",
+        "description": "Trợ lý AI phân tích kỹ thuật và cơ bản, vẽ hỗ trợ/kháng cự và lập kế hoạch giao dịch ngay trên biểu đồ.",
+        "badge": "Cao cấp"
+      }
+    }
+  },
+  "signalSource": {
+    "proprietary": {
+      "label": "Thuật toán ALumiEye",
+      "hint": "Tín hiệu do hệ thống giao dịch riêng của ALumiEye tạo ra"
+    },
+    "standard": {
+      "label": "Chỉ báo phổ biến",
+      "hint": "Quy tắc chỉ báo kỹ thuật phổ thông, ai cũng có thể áp dụng — không phải thuật toán của ALumiEye"
     }
   }
 }

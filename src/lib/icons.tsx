@@ -10,6 +10,7 @@ import {
   Settings,
   ClipboardList,
   Target,
+  Landmark,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,6 +26,7 @@ const iconMap: Record<string, LucideIcon> = {
   Settings,
   ClipboardList,
   Target,
+  Landmark,
 };
 
 export function getIcon(name: string): LucideIcon {

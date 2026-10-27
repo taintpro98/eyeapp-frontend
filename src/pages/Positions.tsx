@@ -5,6 +5,7 @@ import { ChevronRight, RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarket } from "@/hooks/useMarket";
+import { SymbolLink } from "@/components/SymbolLink";
 import { useMarketId } from "@/hooks/useMarketId";
 import { usePaginatedList } from "@/hooks/usePaginatedList";
 import { AccessDeniedState } from "@/components/AccessDeniedState";
@@ -130,7 +131,7 @@ export function PositionsPage() {
         key: "symbol",
         header: t("positions.columns.symbol"),
         render: (row: Position) => (
-          <span className="font-bold text-text-primary">{row.symbol}</span>
+          <SymbolLink symbol={row.symbol} className="font-bold text-text-primary" />
         ),
       },
       {
@@ -305,9 +306,9 @@ export function PositionsPage() {
       </PageHeader>
 
       {/* Filters row: scrollable pills + pinned checkbox */}
-      <div className="flex items-center gap-0">
-        {/* Pills: horizontally scrollable on mobile, no line-break */}
-        <div className="flex flex-1 items-center gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:gap-0">
+        {/* Pills: horizontally scrollable on mobile (right-edge fade hints there is more), no line-break */}
+        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-0.5 [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
           {STATUS_FILTERS.map((sf) => (
             <button
               key={sf}
@@ -325,7 +326,7 @@ export function PositionsPage() {
         </div>
 
         {/* Active checkbox — always visible, pinned right */}
-        <label className="ml-3 flex shrink-0 cursor-pointer items-center gap-2 select-none border-l border-surface-border pl-3">
+        <label className="flex shrink-0 cursor-pointer items-center gap-2 select-none sm:ml-3 sm:border-l sm:border-surface-border sm:pl-3">
           <div
             role="checkbox"
             aria-checked={isActive}
@@ -383,7 +384,7 @@ export function PositionsPage() {
                   {/* header row */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-base font-bold text-text-primary">{row.symbol}</span>
+                      <SymbolLink symbol={row.symbol} className="text-base font-bold text-text-primary" />
                       <Badge className={sideClass(row.side)}>
                         {t(`positionsEnum.side.${row.side}`)}
                       </Badge>

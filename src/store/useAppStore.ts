@@ -19,11 +19,14 @@ type AppState = {
   sidebarOpen: boolean;
   upgradeModalOpen: boolean;
   upgradeModalContext: UpgradeModalContext | null;
+  /** True while the real Lumi chat is on screen (Technical tab); the floating demo widget hides. */
+  lumiDocked: boolean;
   setSelectedMarket: (market: string) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   setSidebarOpen: (open: boolean) => void;
   openUpgradeModal: (context?: UpgradeModalContext) => void;
   closeUpgradeModal: () => void;
+  setLumiDocked: (docked: boolean) => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
@@ -32,6 +35,7 @@ export const useAppStore = create<AppState>((set) => ({
   sidebarOpen: false,
   upgradeModalOpen: false,
   upgradeModalContext: null,
+  lumiDocked: false,
   setSelectedMarket: (market) => set({ selectedMarket: market }),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
@@ -39,4 +43,5 @@ export const useAppStore = create<AppState>((set) => ({
     set({ upgradeModalOpen: true, upgradeModalContext: context ?? null }),
   closeUpgradeModal: () =>
     set({ upgradeModalOpen: false, upgradeModalContext: null }),
+  setLumiDocked: (docked) => set({ lumiDocked: docked }),
 }));

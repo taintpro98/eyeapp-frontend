@@ -9,6 +9,7 @@ export const SIDEBAR_NAV_KEYS = [
   "watchlist",
   "portfolio",
   "analysis",
+  "fundamental",
   "ai-insights",
 ] as const;
 
@@ -41,6 +42,9 @@ export const accountMenuItems: AccountMenuLinkItem[] = [
     icon: "Settings",
   },
 ];
+
+/** Sidebar keys that only make sense on the VN stock market (FA data covers listed Vietnamese companies). */
+export const VN_STOCK_ONLY_NAV_KEYS = ["fundamental"] as const;
 
 /** Filter sidebar items to only include core nav (excludes billing, settings). */
 export function getSidebarNavItems(allItems: SidebarItem[]): SidebarItem[] {

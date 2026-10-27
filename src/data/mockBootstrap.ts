@@ -79,6 +79,15 @@ export const mockBootstrap: BootstrapResponse = {
         badge: null,
       },
       {
+        key: "fundamental",
+        label: "Fundamental",
+        path: "/app/fundamental",
+        icon: "Landmark",
+        visible: true,
+        accessible: true,
+        badge: null,
+      },
+      {
         key: "ai-insights",
         label: "AI Insights",
         path: "/app/ai-insights",

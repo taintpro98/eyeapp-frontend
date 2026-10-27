@@ -11,6 +11,8 @@ import { SectionCard } from "@/components/SectionCard";
 import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
 import { SymbolSearchBar } from "@/components/SymbolSearchBar";
+import { SymbolLink } from "@/components/SymbolLink";
+import { SignalRow } from "@/components/SignalRow";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/button";
 import { fetchSignals } from "@/api/signals";
@@ -32,6 +34,14 @@ function toSignalRow(s: Signal) {
 }
 
 type SignalRow = ReturnType<typeof toSignalRow>;
+
+/** Weight colour: larger allocations draw more attention. */
+function quantityClass(quantity: number): string {
+  if (quantity >= 20) return "text-red-500 dark:text-red-400";
+  if (quantity >= 10) return "text-orange-500 dark:text-orange-400";
+  if (quantity >= 2) return "text-blue-500 dark:text-blue-400";
+  return "text-text-secondary";
+}
 
 export function SignalsPage() {
   const { t } = useTranslation();
@@ -77,7 +87,7 @@ export function SignalsPage() {
         key: "symbol",
         header: t("signals.columns.symbol"),
         render: (row: SignalRow) => (
-          <span className="font-bold text-text-primary">{row.symbol}</span>
+          <SymbolLink symbol={row.symbol} className="font-bold text-text-primary" />
         ),
       },
       {
@@ -100,16 +110,7 @@ export function SignalsPage() {
         header: t("signals.columns.quantity"),
         render: (row: SignalRow) => (
           <span
-            className={cn(
-              "tabular-nums font-medium",
-              row.quantity >= 20
-                ? "text-red-500 dark:text-red-400"
-                : row.quantity >= 10
-                  ? "text-orange-500 dark:text-orange-400"
-                  : row.quantity >= 2
-                    ? "text-blue-500 dark:text-blue-400"
-                    : "text-text-secondary",
-            )}
+            className={cn("tabular-nums font-medium", quantityClass(row.quantity))}
           >
             {row.quantity.toFixed(2)}%
           </span>
@@ -170,68 +171,17 @@ export function SignalsPage() {
               columns={columns}
               data={rows}
               renderMobileCard={(row) => (
-                <div
-                  className={cn(
-                    "rounded-lg border-l-4 border-surface-border bg-surface-card p-3 sm:p-4",
-                    "dark:bg-zinc-900/40",
-                    row.type === "Buy"
-                      ? "border-l-green-500"
-                      : "border-l-red-500",
-                  )}
+                <SignalRow
+                  tone={row.type === "Buy" ? "buy" : "sell"}
+                  label={t(`signalsEnum.type.${row.type}` as never)}
+                  meta={<RelativeTime timestampMs={row.timestamp} />}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-lg font-bold text-text-primary">
-                      {row.symbol}
-                    </span>
-                    <Badge
-                      className={
-                        row.type === "Buy"
-                          ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
-                      }
-                    >
-                      {t(`signalsEnum.type.${row.type}` as never)}
-                    </Badge>
-                  </div>
-                  <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.columns.quantity")}
-                      </dt>
-                      <dd
-                        className={cn(
-                          "mt-0.5 font-medium tabular-nums",
-                          row.quantity >= 20
-                            ? "text-red-500 dark:text-red-400"
-                            : row.quantity >= 10
-                              ? "text-orange-500 dark:text-orange-400"
-                              : row.quantity >= 2
-                                ? "text-blue-500 dark:text-blue-400"
-                                : "text-text-secondary",
-                        )}
-                      >
-                        {row.quantity.toFixed(2)}%
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.columns.price")}
-                      </dt>
-                      <dd className="mt-0.5 tabular-nums text-text-primary">
-                        {row.price.toLocaleString()}
-                      </dd>
-                    </div>
-
-                    <div>
-                      <dt className="text-[11px] font-medium uppercase tracking-wide text-text-secondary">
-                        {t("signals.mobile.time")}
-                      </dt>
-                      <dd className="mt-0.5">
-                        <RelativeTime timestampMs={row.timestamp} />
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
+                  <SymbolLink symbol={row.symbol} className="font-bold text-text-primary" />
+                  <span className="tabular-nums text-sm text-text-primary">{row.price.toLocaleString()}</span>
+                  <span className={cn("tabular-nums text-sm font-semibold", quantityClass(row.quantity))}>
+                    {row.quantity.toFixed(2)}%
+                  </span>
+                </SignalRow>
               )}
             />
 

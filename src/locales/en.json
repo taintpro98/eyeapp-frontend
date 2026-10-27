@@ -23,7 +23,8 @@
       "yesterday": "Yesterday {{time}}",
       "thisWeek": "{{day}} {{time}}",
       "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    }
+    },
+    "viewAnalysis": "View {{symbol}} analysis"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -41,7 +42,8 @@
     "badges": {
       "pro": "Pro",
       "premium": "Premium"
-    }
+    },
+    "fundamental": "Fundamentals"
   },
   "account": {
     "planBilling": "Plan & Billing",
@@ -216,8 +218,8 @@
     "emptyState": "Search for an asset to begin analysis",
     "marketCap": "Market Cap",
     "livePrice": "Live Price",
-    "signals": "Signals",
-    "signalsSubtitle": "Recent signals for {{symbol}}",
+    "signals": "ALumiEye signals",
+    "signalsSubtitle": "Trading signals for {{symbol}} from ALumiEye's proprietary algorithm",
     "noSignals": "No signals found for {{symbol}}",
     "positions": "Active Positions",
     "positionsSubtitle": "Open positions for {{symbol}}",
@@ -261,7 +263,16 @@
       "strong": "Strong",
       "moderate": "Moderate",
       "weak": "Weak"
-    }
+    },
+    "tabs": {
+      "label": "Signal source",
+      "technical": "Indicator signals",
+      "algo": "ALumiEye signals"
+    },
+    "signalsTotal_one": "{{count}} signal",
+    "signalsTotal_other": "{{count}} signals",
+    "trendTitle": "Trend",
+    "volume": "Vol"
   },
   "aiInsights": {
     "title": "AI Insights",
@@ -604,6 +615,406 @@
       "online": "Online",
       "desc": "Lumi assists you in market breadth analysis, AlumiScore calculation, technical signal interpretation, and 24/7 portfolio risk audits.",
       "cta": "Chat with Lumi"
+    }
+  },
+  "fa": {
+    "page": {
+      "title": "Fundamentals",
+      "subtitle": "FA scores, screener and industry benchmarks for Vietnamese listed stocks",
+      "tabsLabel": "Fundamentals",
+      "tabs": {
+        "screener": "Stock screener",
+        "industry": "Industry benchmarks"
+      }
+    },
+    "search": {
+      "placeholder": "Ticker (e.g. FPT)",
+      "button": "View"
+    },
+    "guard": {
+      "title": "Vietnamese stocks only",
+      "description": "Fundamental data is currently available only for stocks listed on HOSE, HNX and UPCOM.",
+      "cta": "Switch to VN Stock"
+    },
+    "common": {
+      "retry": "Try again",
+      "refresh": "Refresh"
+    },
+    "disclaimer": "Fundamental data is for reference only and is not investment advice.",
+    "rating": {
+      "STRONG_FA": "Excellent",
+      "GOOD_FA": "Good",
+      "FAIR_FA": "Fair",
+      "WEAK_FA": "Weak",
+      "POOR_FA": "Poor",
+      "unknown": "Not rated"
+    },
+    "group": {
+      "overall": "Overall FA score",
+      "growth": "Growth",
+      "profitability": "Profitability",
+      "valuation": "Valuation",
+      "solvency": "Solvency",
+      "cashflow": "Cash flow",
+      "stability": "Stability",
+      "dataQuality": "Data quality"
+    },
+    "dataQuality": {
+      "OK": "Complete",
+      "PARTIAL": "Partial",
+      "POOR": "Poor",
+      "NO_DATA": "None",
+      "unknown": "Unknown"
+    },
+    "unit": {
+      "billion": "bn",
+      "thousandBillion": "tn"
+    },
+    "error": {
+      "unauthorized": {
+        "title": "Your session has expired",
+        "description": "Please sign in again to view fundamental data."
+      },
+      "forbidden": {
+        "title": "Your plan doesn't include this market",
+        "description": "Subscribe to the VN Stock market to view fundamental data."
+      },
+      "unreachable": {
+        "title": "Can't reach the FA data service",
+        "description": "The fundamental analysis service is not responding right now. Please try again in a few minutes."
+      },
+      "http": {
+        "title": "Couldn't load fundamental data",
+        "description": "Something went wrong while loading data. Please try again."
+      }
+    },
+    "overview": {
+      "tracked": "Tracked tickers",
+      "average": "Average FA score",
+      "outOf100": "Out of 100",
+      "goodShare": "Rated Good or better",
+      "goodShareHint": "Good or Excellent rating",
+      "strongCount": "Excellent ratings",
+      "distribution": "FA rating distribution",
+      "distributionHint": "Across the whole watchlist",
+      "unrated_one": "{{count}} ticker not rated yet",
+      "unrated_other": "{{count}} tickers not rated yet",
+      "top": "Top {{count}} FA scores"
+    },
+    "screener": {
+      "period": "Data period: {{period}}",
+      "totalLabel": "tickers",
+      "open": "Open {{ticker}} analysis",
+      "empty": {
+        "title": "No tickers match these filters",
+        "description": "Loosen the filters or untick \"Watchlist only\"."
+      },
+      "columns": {
+        "ticker": "Ticker",
+        "score": "FA score",
+        "rating": "Rating",
+        "pe": "P/E",
+        "pb": "P/B",
+        "roe": "ROE",
+        "revenueYoy": "Rev. YoY"
+      },
+      "filters": {
+        "exchange": "Exchange",
+        "allExchanges": "All exchanges",
+        "rating": "FA rating",
+        "allRatings": "All ratings",
+        "minScore": "Minimum FA score",
+        "anyScore": "Any score",
+        "pageSize": "Rows",
+        "perPage": "{{count}} per page",
+        "watchedOnly": "Watchlist only (VN100+)",
+        "reset": "Clear filters",
+        "query": "Search by ticker or company name"
+      }
+    },
+    "benchmark": {
+      "summary": "{{count}} industries · period {{period}} · median values",
+      "tickerCount_one": "{{count}} ticker",
+      "tickerCount_other": "{{count}} tickers",
+      "empty": {
+        "title": "No industry benchmarks yet",
+        "description": "Companies have no industry classification yet, so industry medians can't be computed. You can still compare tickers in the Screener tab."
+      },
+      "columns": {
+        "industry": "Industry",
+        "tickers": "Tickers",
+        "score": "FA score",
+        "pe": "P/E",
+        "pb": "P/B",
+        "roe": "ROE",
+        "netMargin": "Net margin",
+        "revenueYoy": "Rev. YoY"
+      }
+    },
+    "ticker": {
+      "title": "Fundamentals",
+      "subtitle": "Financial health, valuation and FA score history",
+      "back": "Fundamentals",
+      "notFound": {
+        "title": "No data for {{ticker}}",
+        "description": "This ticker is not in the fundamental dataset or is misspelled. Check the symbol and try again."
+      }
+    },
+    "header": {
+      "period": "Period {{period}}",
+      "unknownCompany": "Company name unavailable",
+      "price": "Price",
+      "faScore": "FA score",
+      "dataQuality": "Data",
+      "priceSource": {
+        "realtime": "Latest matched price",
+        "statement": "Close price for the reporting period"
+      }
+    },
+    "metrics": {
+      "title": "Key metrics",
+      "noData": "No data yet",
+      "pe": {
+        "title": "P/E (TTM)",
+        "cheap": "Low valuation (<10x)",
+        "rich": "High valuation (>25x)",
+        "default": "Price / trailing 4Q earnings"
+      },
+      "pb": {
+        "title": "P/B",
+        "good": "Below book value",
+        "default": "Price / book value"
+      },
+      "marketCap": {
+        "title": "Market cap",
+        "default": "Price × shares outstanding"
+      },
+      "roe": {
+        "title": "ROE",
+        "good": "High efficiency (≥15%)",
+        "default": "Net profit / equity"
+      },
+      "roa": {
+        "title": "ROA",
+        "good": "Good efficiency (≥10%)",
+        "default": "Net profit / total assets"
+      },
+      "de": {
+        "title": "Debt / Equity",
+        "good": "Safe leverage (≤1x)",
+        "high": "High leverage (>2x)",
+        "default": "Borrowings / equity"
+      },
+      "netMargin": {
+        "title": "Net margin",
+        "default": "Net profit / revenue"
+      },
+      "revenueYoy": {
+        "title": "Revenue YoY",
+        "default": "Versus the same period last year"
+      },
+      "cash": {
+        "title": "Cash",
+        "default": "Cash & equivalents"
+      },
+      "cfo": {
+        "title": "Operating cash flow",
+        "good": "Positive cash flow",
+        "negative": "Negative cash flow"
+      },
+      "notApplicable": "Not applicable to banks and insurers"
+    },
+    "breakdown": {
+      "title": "FA score breakdown",
+      "subtitle": "7 groups, each on its own scale",
+      "footnote": "100 points: Growth 20 · Profitability 20 · Valuation 20 · Solvency 15 · Cash flow 10 · Stability 5 · Data 10"
+    },
+    "history": {
+      "title": "FA score history",
+      "subtitle": "Overall score and the 3 core groups over time",
+      "periods_one": "{{count}} period",
+      "periods_other": "{{count}} periods",
+      "empty": "No FA score history yet",
+      "axesNote": "Left axis: overall score (0–100); dashed lines mark Fair / Good / Excellent. Right axis: group scores (0–20)."
+    },
+    "insights": {
+      "strengths": "Strengths",
+      "risks": "Watch-outs & risks",
+      "count_one": "{{count}} item",
+      "count_other": "{{count}} items",
+      "noStrengths": "No standout strengths recorded this period.",
+      "noRisks": "No material financial risks detected"
+    },
+    "charts": {
+      "sectionTitle": "Financial charts",
+      "sectionSubtitle": "{{count}} reporting periods · tap a legend item to show/hide it",
+      "rangeLabel": "Time range",
+      "rangeQuarters": "{{count}} quarters",
+      "rangeAll": "All ({{count}})",
+      "period": "Period",
+      "empty": "No data for this chart yet",
+      "show": "Show {{name}}",
+      "hide": "Hide {{name}}",
+      "revenueProfit": {
+        "title": "Revenue & profit",
+        "subtitle": "Revenue, gross profit and net profit by quarter"
+      },
+      "margins": {
+        "title": "Profit margins",
+        "subtitle": "Gross, operating and net margin (%)"
+      },
+      "assets": {
+        "title": "Asset structure",
+        "subtitle": "Current and non-current assets"
+      },
+      "capital": {
+        "title": "Capital structure",
+        "subtitle": "Current liabilities, long-term liabilities and equity"
+      },
+      "cashflow": {
+        "title": "Cash flow",
+        "subtitle": "Operating, investing and financing"
+      },
+      "leverage": {
+        "title": "Leverage & liquidity",
+        "subtitle": "Debt/equity and current ratio (x)",
+        "reference": "1x mark"
+      },
+      "valuation": {
+        "title": "Valuation",
+        "subtitle": "Share price (left axis) and P/B (right axis)"
+      },
+      "efficiency": {
+        "title": "Return on capital",
+        "subtitle": "Trailing 4-quarter ROE and ROA (TTM, %)"
+      }
+    },
+    "metric": {
+      "REVENUE": "Net revenue",
+      "GROSS_PROFIT": "Gross profit",
+      "NPAT": "Net profit",
+      "GROSS_MARGIN": "Gross margin",
+      "OPERATING_MARGIN": "Operating margin",
+      "NET_MARGIN": "Net margin",
+      "CURRENT_ASSETS": "Current assets",
+      "NON_CURRENT_ASSETS": "Non-current assets",
+      "CURRENT_LIABILITIES": "Current liabilities",
+      "LONG_TERM_LIABILITIES": "Long-term liabilities",
+      "TOTAL_EQUITY": "Equity",
+      "CFO": "Operating cash flow",
+      "CFI": "Investing cash flow",
+      "CFF": "Financing cash flow",
+      "DEBT_TO_EQUITY": "Debt / equity",
+      "CURRENT_RATIO": "Current ratio",
+      "CLOSE_PRICE": "Close price",
+      "PB": "P/B",
+      "ROE": "ROE",
+      "ROA": "ROA"
+    },
+    "summary": {
+      "title": "Fundamental score",
+      "cta": "View fundamentals"
+    },
+    "dashboard": {
+      "title": "Fundamentals",
+      "subtitle": "{{count}} tickers · period {{period}} · average FA score {{average}}",
+      "cta": "Open the fundamentals screener"
+    }
+  },
+  "technical": {
+    "chart": {
+      "reset": "Defaults",
+      "resetHint": "Clear drawings and restore default indicators (EMA 10/50, Bollinger, RSI, MACD, volume + MA20)",
+      "fullscreen": "Fullscreen",
+      "exitFullscreen": "Exit fullscreen",
+      "failed": "Couldn't load the chart. Please try again later.",
+      "title": "{{ticker}} technical chart"
+    },
+    "signals": {
+      "title": "Indicator signals",
+      "subtitle": "Detected automatically from common technical-analysis rules (RSI, MACD, Ichimoku, Bollinger…) over the last {{days}} days — not ALumiEye's algorithm",
+      "empty": "No signals for {{ticker}} in this period",
+      "error": "Couldn't load signals",
+      "kind": {
+        "buy": "Buy",
+        "sell": "Sell",
+        "watch": "Watch"
+      }
+    },
+    "unsupported": {
+      "title": "Technical charts are available for Vietnamese stocks only",
+      "description": "Switch to the VN Stock market to see candlestick charts and indicators."
+    },
+    "disclaimer": "Indicator signals are generated automatically from widely used technical-analysis rules, for reference only, not investment advice.",
+    "chat": {
+      "title": "Ask Lumi",
+      "empty": "Pick a suggestion or ask anything about {{ticker}}",
+      "placeholder": "Ask about {{ticker}}… (e.g. \"Compare with VHM\", \"Draw support and resistance\")",
+      "send": "Send",
+      "clear": "Clear conversation",
+      "thinking": "Lumi is analysing {{ticker}}…",
+      "quick": {
+        "overview": {
+          "label": "Overview",
+          "question": "Technical overview of {{ticker}}"
+        },
+        "trend": {
+          "label": "Trend",
+          "question": "Short-term trend of {{ticker}} for the next 1-2 weeks?"
+        },
+        "levels": {
+          "label": "Support/resistance",
+          "question": "Draw the key support and resistance zones for {{ticker}}"
+        },
+        "faTa": {
+          "label": "FA + TA",
+          "question": "Combine technical and fundamental analysis of {{ticker}}: ROE, P/E, margins"
+        }
+      },
+      "tools": {
+        "getStockData": "Looking up data",
+        "queryDatabase": "Querying financial data",
+        "compareStocks": "Comparing stocks",
+        "screenStocks": "Screening the market",
+        "drawOnChart": "Drawing on the chart",
+        "createTradeSetup": "Building a trade plan",
+        "addIndicator": "Adding indicators"
+      },
+      "trade": {
+        "buy": "Buy idea",
+        "sell": "Sell idea",
+        "watch": "Watch",
+        "entry": "Entry",
+        "stopLoss": "Stop loss",
+        "tp1": "Take profit 1",
+        "tp2": "Take profit 2",
+        "riskReward": "Risk : Reward",
+        "draw": "Draw on chart"
+      },
+      "errors": {
+        "feature_required": "Your plan doesn't include the AI assistant. Upgrade to Premium to use Lumi.",
+        "subscription_required": "Subscribe to the VN Stock market to use Lumi.",
+        "unauthorized": "Your session has expired, please sign in again.",
+        "rate_limited": "The AI model is busy or out of quota. Please try again in a few minutes.",
+        "service_unavailable": "The AI assistant isn't configured yet. Please contact support.",
+        "generation_failed": "Lumi couldn't answer that. Please try again.",
+        "generic": "Something went wrong sending your question. Please try again."
+      },
+      "locked": {
+        "title": "Ask Lumi about this chart",
+        "description": "An AI assistant that combines technical and fundamental analysis, draws support/resistance and builds trade plans right on the chart.",
+        "badge": "Premium"
+      }
+    }
+  },
+  "signalSource": {
+    "proprietary": {
+      "label": "ALumiEye algorithm",
+      "hint": "Signals produced by ALumiEye's own trading system"
+    },
+    "standard": {
+      "label": "Common indicators",
+      "hint": "Textbook technical-indicator rules anyone can apply — not ALumiEye's algorithm"
     }
   }
 }

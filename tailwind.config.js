@@ -20,6 +20,14 @@ export default {
           orange: "rgb(var(--lumi-orange) / <alpha-value>)",
           blush: "rgb(var(--lumi-blush) / <alpha-value>)",
         },
+        /* Thang xếp hạng FA: rating-5 (Xuất sắc) … rating-1 (Kém) */
+        rating: {
+          1: "rgb(var(--rating-1) / <alpha-value>)",
+          2: "rgb(var(--rating-2) / <alpha-value>)",
+          3: "rgb(var(--rating-3) / <alpha-value>)",
+          4: "rgb(var(--rating-4) / <alpha-value>)",
+          5: "rgb(var(--rating-5) / <alpha-value>)",
+        },
         /* Nền tối ánh Tím Mận — chỉ dùng ở dark mode (box chat Lumi) */
         plum: {
           800: "#2c2130",

@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchBootstrap } from "@/api/bootstrap";
 import { fetchAllMarkets, fetchUserMarkets } from "@/api/markets";
-import { getSidebarNavItems } from "@/config/navigation";
+import { getSidebarNavItems, VN_STOCK_ONLY_NAV_KEYS } from "@/config/navigation";
+import { VN_STOCK_MARKET_ID } from "@/api/fa";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Sidebar } from "./Sidebar";
@@ -31,7 +32,7 @@ export function AppShell() {
     queryFn: fetchUserMarkets,
   });
 
-  const { selectedMarket, setSelectedMarket } = useAppStore();
+  const { selectedMarket, setSelectedMarket, lumiDocked } = useAppStore();
   const authUser = useAuthStore((s) => s.user);
 
   // Redirect to onboarding if user has no markets yet.
@@ -86,25 +87,30 @@ export function AppShell() {
   );
 
   const { sidebar } = bootstrap.navigation;
-  const sidebarNavItems = getSidebarNavItems(sidebar).map((item) => {
-    const featureCode = SIDEBAR_FEATURE_MAP[item.key];
-    const accessible = featureCode
-      ? accessibleFeatures.has(featureCode)
-      : item.accessible;
+  const isVnStock =
+    (allMarkets.find((m) => m.code === selectedMarket)?.market_id ?? (selectedMarket === "crypto" ? 1 : VN_STOCK_MARKET_ID)) ===
+    VN_STOCK_MARKET_ID;
+  const sidebarNavItems = getSidebarNavItems(sidebar)
+    .filter((item) => isVnStock || !(VN_STOCK_ONLY_NAV_KEYS as readonly string[]).includes(item.key))
+    .map((item) => {
+      const featureCode = SIDEBAR_FEATURE_MAP[item.key];
+      const accessible = featureCode
+        ? accessibleFeatures.has(featureCode)
+        : item.accessible;
 
-    // Inject the current market into paths that start with /app/.
-    // e.g. "/app/positions" → "/app/stocks/positions"
-    // Market-agnostic paths (profile, billing, settings) don't go through
-    // this sidebar so they keep their /app/<page> form unchanged.
-    const path = item.path.replace(/^\/app\//, `/app/${selectedMarket}/`);
+      // Inject the current market into paths that start with /app/.
+      // e.g. "/app/positions" → "/app/stocks/positions"
+      // Market-agnostic paths (profile, billing, settings) don't go through
+      // this sidebar so they keep their /app/<page> form unchanged.
+      const path = item.path.replace(/^\/app\//, `/app/${selectedMarket}/`);
 
-    return {
-      ...item,
-      path,
-      label: t(`nav.${item.key}`),
-      accessible,
-    };
-  });
+      return {
+        ...item,
+        path,
+        label: t(`nav.${item.key}`),
+        accessible,
+      };
+    });
 
   const accessibleCodes = new Set(userMarkets.map((m) => m.code));
   const marketItems = allMarkets.map((m) => ({
@@ -136,12 +142,13 @@ export function AppShell() {
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
           planCode={currentMarket?.plan ?? "free"}
         />
-        <main className="flex-1 overflow-auto p-4 sm:p-6">
+        {/* pb-24 on phones: the floating Lumi button must not cover the end of the page */}
+        <main className="flex-1 overflow-auto p-4 pb-24 sm:p-6">
           <Outlet />
         </main>
       </div>
       <UpgradeModal />
-      <LumiChatWidget />
+      {!lumiDocked && <LumiChatWidget />}
     </div>
   );
 }

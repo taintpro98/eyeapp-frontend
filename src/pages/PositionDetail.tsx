@@ -5,6 +5,7 @@ import { ChevronLeft, RefreshCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useApiErrorHandler } from "@/hooks/useApiErrorHandler";
 import { useMarketId } from "@/hooks/useMarketId";
+import { SymbolLink } from "@/components/SymbolLink";
 import { SectionCard } from "@/components/SectionCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/button";
@@ -115,7 +116,7 @@ export function PositionDetailPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-                {detail.symbol}
+                <SymbolLink symbol={detail.symbol} />
               </h1>
               <Badge className={sideClass(detail.side)}>
                 {t(`positionsEnum.side.${detail.side}`)}
