@@ -86,3 +86,16 @@ export async function fetchDailyQuote(symbol: string): Promise<DailyQuote | null
     time: data.t[last],
   };
 }
+
+/** BUY/SELL/WATCH counts of ta-agent's indicator alerts. */
+export type AlertsSummary = {
+  buy: number;
+  sell: number;
+  watch: number;
+  total: number;
+};
+
+/** Alert counts for the last `days` days, ending at ta-agent's latest alert date. */
+export async function fetchAlertsSummary(days = 1): Promise<AlertsSummary> {
+  return taAgentFetch<AlertsSummary>("/alerts/summary", { days }, "ta");
+}

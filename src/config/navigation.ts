@@ -1,15 +1,18 @@
 import type { SidebarItem } from "@/types";
 
-/** Sidebar keys for core daily-use pages only. Billing and Settings live in the account menu. */
+/**
+ * Sidebar keys for core daily-use pages only, in display order. Billing and Settings
+ * live in the account menu.
+ */
 export const SIDEBAR_NAV_KEYS = [
   "dashboard",
   "market",
+  "fundamental",
   "signals",
   "positions",
   "watchlist",
   "portfolio",
   "analysis",
-  "fundamental",
   "ai-insights",
 ] as const;
 
@@ -46,9 +49,8 @@ export const accountMenuItems: AccountMenuLinkItem[] = [
 /** Sidebar keys that only make sense on the VN stock market (FA data covers listed Vietnamese companies). */
 export const VN_STOCK_ONLY_NAV_KEYS = ["fundamental"] as const;
 
-/** Filter sidebar items to only include core nav (excludes billing, settings). */
+/** Core nav items only (excludes billing, settings), ordered as in SIDEBAR_NAV_KEYS. */
 export function getSidebarNavItems(allItems: SidebarItem[]): SidebarItem[] {
-  return allItems.filter((item) =>
-    SIDEBAR_NAV_KEYS.includes(item.key as (typeof SIDEBAR_NAV_KEYS)[number]),
-  );
+  const order = (item: SidebarItem) => SIDEBAR_NAV_KEYS.indexOf(item.key as (typeof SIDEBAR_NAV_KEYS)[number]);
+  return allItems.filter((item) => order(item) >= 0).sort((a, b) => order(a) - order(b));
 }

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 type SectionCardProps = {
   title?: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   headerAction?: React.ReactNode;

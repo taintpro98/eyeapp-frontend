@@ -12,6 +12,7 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { LumiChatWidget } from "@/components/chat/LumiChatWidget";
+import { cn } from "@/lib/utils";
 
 export function AppShell() {
   const { t } = useTranslation();
@@ -142,8 +143,9 @@ export function AppShell() {
           userDisplayName={authUser?.display_name ?? bootstrap.user.displayName}
           planCode={currentMarket?.plan ?? "free"}
         />
-        {/* pb-24 on phones: the floating Lumi button must not cover the end of the page */}
-        <main className="flex-1 overflow-auto p-4 pb-24 sm:p-6">
+        {/* While the floating Lumi button shows, keep the end of every page clear of it:
+            button + "Hỏi Lumi" hint + offset stack ~136px tall (sm), so reserve 9rem. */}
+        <main className={cn("flex-1 overflow-auto p-4 sm:p-6", !lumiDocked && "pb-36 sm:pb-36")}>
           <Outlet />
         </main>
       </div>

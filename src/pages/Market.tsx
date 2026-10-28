@@ -1,162 +1,125 @@
-import { useMemo } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { TrendingUp, BarChart3 } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
-import { StatCard } from "@/components/StatCard";
-import { SectionCard } from "@/components/SectionCard";
-import { DataTable } from "@/components/DataTable";
-import {
-  mockTopMoversStocks,
-  mockTopMoversCrypto,
-  mockSentiment,
-  mockMarketOverviewStats,
-} from "@/data/mockMarket";
-import { useAppStore } from "@/store/useAppStore";
+import { IndexStrip } from "@/components/market/IndexStrip";
+import { IndexChart } from "@/components/market/IndexChart";
+import { LiquidityCard } from "@/components/market/LiquidityCard";
+import { CryptoBreadthCard } from "@/components/market/CryptoBreadthCard";
+import { TopMoversCard } from "@/components/market/TopMoversCard";
+import { ForeignFlowCard } from "@/components/market/ForeignFlowCard";
+import { SignalPulseCard } from "@/components/market/SignalPulseCard";
+import { fetchForeignFlow, fetchMarketMovers } from "@/api/markets";
+import { useMarketId } from "@/hooks/useMarketId";
+import { useMarketOverview } from "@/hooks/useMarketOverview";
+import { CRYPTO_MARKET_ID, formatAsOf } from "@/lib/marketFormat";
+import { cn } from "@/lib/utils";
 
-const statIcons = [TrendingUp, TrendingUp, BarChart3, BarChart3];
+type SessionState = "open" | "break" | "closed" | "always";
 
-const STOCK_OVERVIEW_KEYS = [
-  "vnIndex",
-  "vn30",
-  "hoseValue",
-  "netForeign",
-] as const;
-const CRYPTO_OVERVIEW_KEYS = [
-  "btcPrice",
-  "ethPrice",
-  "mktCap",
-  "volume24h",
-] as const;
-
-function sentimentKey(label: string): "bullish" | "neutral" | "bearish" {
-  if (label === "Bullish") return "bullish";
-  if (label === "Neutral") return "neutral";
-  return "bearish";
+/** HOSE trading hours (Mon–Fri 9:00–11:30, 13:00–14:45, Vietnam time). Holidays are not modelled. */
+function vnSessionState(now: Date): SessionState {
+  const vn = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
+  const day = vn.getDay();
+  const minutes = vn.getHours() * 60 + vn.getMinutes();
+  if (day === 0 || day === 6) return "closed";
+  if (minutes >= 9 * 60 && minutes < 11 * 60 + 30) return "open";
+  if (minutes >= 11 * 60 + 30 && minutes < 13 * 60) return "break";
+  if (minutes >= 13 * 60 && minutes < 14 * 60 + 45) return "open";
+  return "closed";
 }
+
+const SESSION_DOT: Record<SessionState, string> = {
+  open: "bg-green-500",
+  break: "bg-amber-400",
+  closed: "bg-text-secondary/50",
+  always: "bg-green-500",
+};
 
 export function MarketPage() {
   const { t } = useTranslation();
-  const selectedMarket = useAppStore((s) => s.selectedMarket);
-  const isCrypto = selectedMarket === "crypto";
-  const topMovers = isCrypto ? mockTopMoversCrypto : mockTopMoversStocks;
-  const overviewStats = isCrypto
-    ? mockMarketOverviewStats.crypto
-    : mockMarketOverviewStats.stocks;
-  const overviewKeys = isCrypto ? CRYPTO_OVERVIEW_KEYS : STOCK_OVERVIEW_KEYS;
+  const marketId = useMarketId();
+  const isCrypto = marketId === CRYPTO_MARKET_ID;
+  const { data: overview, isLoading } = useMarketOverview(marketId);
+  const { data: movers } = useQuery({
+    queryKey: ["markets", marketId, "movers"],
+    queryFn: () => fetchMarketMovers(marketId),
+    refetchInterval: 60_000,
+    retry: 1,
+  });
+  const { data: foreign } = useQuery({
+    queryKey: ["markets", marketId, "foreign"],
+    queryFn: () => fetchForeignFlow(marketId),
+    enabled: !isCrypto,
+    refetchInterval: 5 * 60_000,
+    retry: 1,
+  });
+  // Block ③: HOSE liquidity for vnstock, top-100 pair breadth for crypto.
+  const sideCard = isCrypto
+    ? movers?.breadth && <CryptoBreadthCard breadth={movers.breadth} />
+    : overview?.breadth && <LiquidityCard marketId={marketId} overview={overview} />;
+  const showForeign = !isCrypto && !!foreign;
 
-  const tableColumns = useMemo(
-    () => [
-      { key: "symbol", header: t("market.columns.symbol") },
-      { key: "name", header: t("market.columns.name") },
-      { key: "price", header: t("market.columns.price") },
-      {
-        key: "change24h",
-        header: t("market.columns.change24h"),
-        render: (row: Record<string, unknown>) => {
-          const change = (row as { change24h: number }).change24h;
-          return (
-            <span className={change >= 0 ? "text-green-600" : "text-red-600"}>
-              {change >= 0 ? "+" : ""}
-              {change}%
-            </span>
-          );
-        },
-      },
-      { key: "volume", header: t("market.columns.volume") },
-    ],
-    [t],
-  );
+  // Chart follows the clicked card; reset to the first quote when the market changes.
+  const [selection, setSelection] = useState<{ marketId: number; code: string } | null>(null);
+  const selected =
+    selection?.marketId === marketId ? selection.code : (overview?.quotes[0]?.code ?? (isCrypto ? "BTC" : "VNINDEX"));
+
+  const session = isCrypto ? "always" : vnSessionState(new Date());
 
   return (
     <div className="space-y-6 sm:space-y-8">
       <PageHeader
         title={t("market.title")}
-        subtitle={
-          isCrypto ? t("market.subtitleCrypto") : t("market.subtitleStocks")
-        }
-      />
+        subtitle={isCrypto ? t("market.subtitleCrypto") : t("market.subtitleStocks")}
+      >
+        {overview && (
+          <span className="inline-flex items-center gap-2 rounded-full border border-surface-border bg-surface-card px-3 py-1 text-xs text-text-secondary">
+            <span className={cn("h-2 w-2 rounded-full", SESSION_DOT[session])} />
+            {t(`market.session.${session}`)} · {formatAsOf(overview.as_of)}
+          </span>
+        )}
+      </PageHeader>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {overviewStats.map((stat, i) => (
-          <StatCard
-            key={stat.title}
-            title={t(
-              `market.overview.${isCrypto ? "crypto" : "stocks"}.${overviewKeys[i]}`,
-            )}
-            value={stat.value}
-            trend={
-              stat.trend
-                ? {
-                    ...stat.trend,
-                    label:
-                      stat.trend.label.toLowerCase() === "session"
-                        ? t("market.trend.session")
-                        : t("market.trend.24h"),
-                  }
-                : undefined
-            }
-            icon={statIcons[i] ?? TrendingUp}
+      {isLoading ? (
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-[136px] animate-pulse rounded-card border border-surface-border bg-surface-card" />
+          ))}
+        </div>
+      ) : (
+        overview && (
+          <IndexStrip
+            marketId={marketId}
+            quotes={overview.quotes}
+            isCrypto={isCrypto}
+            selected={selected}
+            onSelect={(code) => setSelection({ marketId, code })}
           />
-        ))}
+        )
+      )}
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <IndexChart
+          marketId={marketId}
+          code={selected}
+          isCrypto={isCrypto}
+          className={sideCard ? "xl:col-span-2" : "xl:col-span-3"}
+        />
+        {sideCard}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <SectionCard
-          title={t("market.topMovers")}
-          subtitle={t("market.topMoversSubtitle")}
-        >
-          <div className="space-y-3 md:hidden">
-            {topMovers.map((row) => (
-              <div
-                key={row.symbol}
-                className="flex items-center justify-between rounded-lg border border-surface-border p-3"
-              >
-                <div>
-                  <p className="font-medium text-text-primary">{row.symbol}</p>
-                  <p className="text-xs text-text-secondary">{row.name}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">{row.price}</p>
-                  <p
-                    className={
-                      row.change24h >= 0
-                        ? "text-xs text-green-600"
-                        : "text-xs text-red-600"
-                    }
-                  >
-                    {row.change24h >= 0 ? "+" : ""}
-                    {row.change24h}%
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="hidden md:block">
-            <DataTable columns={tableColumns} data={topMovers} />
-          </div>
-        </SectionCard>
+      {(movers || showForeign) && (
+        // 3/5 + 2/5 so the foreign-flow card is wide enough for its two diverging lists at 1280px.
+        <div className="grid gap-6 xl:grid-cols-5">
+          {movers && (
+            <TopMoversCard movers={movers} isCrypto={isCrypto} className={showForeign ? "xl:col-span-3" : "xl:col-span-5"} />
+          )}
+          {showForeign && <ForeignFlowCard flow={foreign} className={movers ? "xl:col-span-2" : "xl:col-span-5"} />}
+        </div>
+      )}
 
-        <SectionCard title={t("market.sentiment")}>
-          <div className="space-y-3 sm:space-y-4">
-            {mockSentiment.map((s) => (
-              <div key={s.label}>
-                <div className="mb-1 flex justify-between text-xs sm:text-sm">
-                  <span className="text-text-secondary">
-                    {t(`market.sentimentLabels.${sentimentKey(s.label)}`)}
-                  </span>
-                  <span className="font-medium">{s.value}%</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-surface-border">
-                  <div
-                    className={`h-full ${s.color} transition-all`}
-                    style={{ width: `${s.value}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+      <SignalPulseCard marketId={marketId} isCrypto={isCrypto} />
     </div>
   );
 }

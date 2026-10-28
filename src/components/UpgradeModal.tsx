@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -16,8 +17,12 @@ export function UpgradeModal() {
   const { upgradeModalOpen, upgradeModalContext, closeUpgradeModal } =
     useAppStore();
 
+  const navigate = useNavigate();
+
+  // No checkout flow yet: the billing page lists the real plans per market.
   const handleUpgrade = () => {
     closeUpgradeModal();
+    navigate("/app/billing");
   };
 
   const title = useMemo(() => {

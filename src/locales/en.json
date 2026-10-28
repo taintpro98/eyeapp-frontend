@@ -22,7 +22,15 @@
       "hoursAgo": "{{count}} hr ago",
       "yesterday": "Yesterday {{time}}",
       "thisWeek": "{{day}} {{time}}",
-      "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+      "days": [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
+      ]
     },
     "viewAnalysis": "View {{symbol}} analysis"
   },
@@ -91,25 +99,48 @@
     "welcome": "Welcome back, {{name}}",
     "subtitle": "Here's your market overview for today",
     "planSummary": "Plan Summary",
-    "planSuffix": "Plan",
-    "renews": "Renews {{date}}",
     "managePlan": "Manage plan",
     "currentMarket": "Current Market",
     "recentSignals": "Recent Signals",
     "recentSignalsSubtitle": "Latest trading signals for your market",
     "viewAllSignals": "View all signals",
-    "unlockPremium": "Unlock Premium Features",
-    "unlockPremiumSubtitle": "Get AI Insights, Portfolio tracking, and expanded market coverage",
-    "unlockPremiumBody": "Upgrade to Pro or Premium for advanced analytics and more markets.",
-    "upgradeNow": "Upgrade now",
     "kpiTitles": {
-      "vnIndex": "VN-Index",
-      "hoseValue": "HOSE value",
-      "netForeign": "Net foreign",
-      "vn30": "VN30"
+      "hoseTurnover": "HOSE turnover",
+      "breadth": "HOSE breadth"
     },
     "kpiSubtitles": {
-      "session": "Session"
+      "session": "Latest session"
+    },
+    "turnoverValue": "₫{{value}}B",
+    "breadthDetail": "Unchanged {{unchanged}} · Ceiling {{ceiling}} · Floor {{floor}}",
+    "updatedAt": "Updated {{time}}",
+    "noExpiry": "No expiry",
+    "expiresIn": "Expires {{date}} · {{count}} days left",
+    "expired": "Expired {{date}}",
+    "featuresUnlocked": "Features unlocked",
+    "requiresPlan": "Requires {{plan}}",
+    "upgrade": "Upgrade",
+    "features": {
+      "analysis": "Analysis",
+      "live_prices": "Live prices",
+      "portfolio": "Portfolio",
+      "positions": "Positions",
+      "signals": "Signals",
+      "watchlist": "Watchlist",
+      "ai_insights": "AI insights"
+    },
+    "columns": {
+      "index": "Index",
+      "coin": "Coin",
+      "value": "Value",
+      "change": "+/-"
+    },
+    "breadth": {
+      "advances": "Up",
+      "unchanged": "Unchanged",
+      "declines": "Down",
+      "ceiling": "Ceiling",
+      "floor": "Floor"
     }
   },
   "portfolio": {
@@ -164,40 +195,86 @@
   },
   "market": {
     "title": "Market Overview",
-    "subtitleStocks": "Vietnam (HOSE / HNX) — real-time snapshot",
-    "subtitleCrypto": "Cryptocurrency markets — real-time snapshot",
-    "topMovers": "Top Movers",
-    "topMoversSubtitle": "24h performance",
-    "sentiment": "Market Sentiment",
+    "subtitleStocks": "Vietnam indices, liquidity and market breadth",
+    "subtitleCrypto": "Prices and 24h moves of the major coins",
     "columns": {
       "symbol": "Symbol",
-      "name": "Name",
-      "price": "Price",
-      "change24h": "24h",
-      "volume": "Volume"
-    },
-    "overview": {
-      "stocks": {
-        "vnIndex": "VN-Index",
-        "vn30": "VN30",
-        "hoseValue": "HOSE value",
-        "netForeign": "Net foreign"
-      },
-      "crypto": {
-        "btcPrice": "BTC Price",
-        "ethPrice": "ETH Price",
-        "mktCap": "Crypto Mkt Cap",
-        "volume24h": "24h Volume"
-      }
+      "price": "Price"
     },
     "trend": {
       "24h": "24h",
       "session": "session"
     },
-    "sentimentLabels": {
-      "bullish": "Bullish",
-      "neutral": "Neutral",
-      "bearish": "Bearish"
+    "session": {
+      "open": "Trading",
+      "break": "Lunch break",
+      "closed": "Closed",
+      "always": "Trading 24/7"
+    },
+    "chart": {
+      "title": "{{name}} chart",
+      "ranges": {
+        "1D": "1D",
+        "1M": "1M",
+        "3M": "3M",
+        "1Y": "1Y",
+        "5Y": "5Y"
+      },
+      "rangeChange": {
+        "1M": "1 month:",
+        "3M": "3 months:",
+        "1Y": "1 year:",
+        "5Y": "5 years:",
+        "1Dstocks": "Session:",
+        "1Dcrypto": "24h:"
+      },
+      "kindLabel": "Chart type",
+      "kind": {
+        "line": "Line",
+        "candle": "Candles"
+      }
+    },
+    "liquidity": {
+      "title": "Liquidity & breadth",
+      "turnover": "HOSE turnover",
+      "vsAvg": "vs {{count}}-session avg (₫{{value}}B)",
+      "titleCrypto": "Volume & breadth",
+      "volume24h": "24h volume (top {{count}} pairs)",
+      "breadthCrypto": "Breadth of {{count}} USDT pairs"
+    },
+    "movers": {
+      "title": "Top movers",
+      "subtitleStocks": "HOSE · latest session",
+      "subtitleCrypto": "USDT pairs · last 24h",
+      "tabs": {
+        "gainers": "Gainers",
+        "losers": "Losers",
+        "active": "Most traded"
+      },
+      "priceThousand": "Price (k₫)",
+      "value": "Value",
+      "volume24h": "24h volume",
+      "empty": "No matching symbols.",
+      "liquidityNote": "Only stocks with at least ₫1B matched value.",
+      "titleCrypto": "Top coins"
+    },
+    "foreign": {
+      "title": "Foreign investors",
+      "subtitle": "HOSE · session {{date}}",
+      "net": "Net buy/sell value",
+      "buySell": "Buy ₫{{buy}}B · Sell ₫{{sell}}B",
+      "history": "Net flow over the last {{count}} sessions",
+      "top": {
+        "buy": "Top net buyers (₫B)",
+        "sell": "Top net sellers (₫B)"
+      }
+    },
+    "pulse": {
+      "title": "Signal pulse",
+      "subtitle": "New signals from two sources — our own algorithm and common indicators",
+      "last24h": "Last 24h",
+      "latestSession": "Latest session",
+      "watch": "Watch"
     }
   },
   "watchlist": {

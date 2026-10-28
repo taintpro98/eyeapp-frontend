@@ -9,7 +9,6 @@ import { SignInPage } from "@/pages/SignIn";
 import { SignUpPage } from "@/pages/SignUp";
 import { VerifyEmailPage } from "@/pages/VerifyEmail";
 import { DashboardPage } from "@/pages/Dashboard";
-import { MarketPage } from "@/pages/Market";
 import { SignalsPage } from "@/pages/Signals";
 import { WatchlistPage } from "@/pages/Watchlist";
 import { PortfolioPage } from "@/pages/Portfolio";
@@ -22,8 +21,9 @@ import { PositionsPage } from "@/pages/Positions";
 import { PositionDetailPage } from "@/pages/PositionDetail";
 import { OnboardingPage } from "@/pages/Onboarding";
 
-// Fundamental analysis pages pull in recharts — load them on demand.
+// Pages that pull in recharts (fundamental analysis, market overview) load on demand.
 const FundamentalPage = lazy(() => import("@/pages/Fundamental").then((m) => ({ default: m.FundamentalPage })));
+const MarketPage = lazy(() => import("@/pages/Market").then((m) => ({ default: m.MarketPage })));
 const FundamentalTickerPage = lazy(() =>
   import("@/pages/FundamentalTicker").then((m) => ({ default: m.FundamentalTickerPage })),
 );
@@ -92,7 +92,14 @@ function App() {
           <Route path=":market">
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="market" element={<MarketPage />} />
+            <Route
+              path="market"
+              element={
+                <Suspense fallback={<PageFallback />}>
+                  <MarketPage />
+                </Suspense>
+              }
+            />
             <Route path="signals" element={<SignalsPage />} />
             <Route path="positions" element={<PositionsPage />} />
             <Route path="positions/:positionId" element={<PositionDetailPage />} />

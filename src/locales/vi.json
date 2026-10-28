@@ -22,7 +22,15 @@
       "hoursAgo": "{{count}} giờ trước",
       "yesterday": "Hôm qua {{time}}",
       "thisWeek": "{{day}} {{time}}",
-      "days": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
+      "days": [
+        "CN",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ]
     },
     "viewAnalysis": "Xem phân tích {{symbol}}"
   },
@@ -91,25 +99,48 @@
     "welcome": "Chào mừng trở lại, {{name}}",
     "subtitle": "Tổng quan thị trường hôm nay của bạn",
     "planSummary": "Tóm tắt gói",
-    "planSuffix": "Gói",
-    "renews": "Gia hạn {{date}}",
     "managePlan": "Quản lý gói",
     "currentMarket": "Thị trường hiện tại",
     "recentSignals": "Tín hiệu gần đây",
     "recentSignalsSubtitle": "Tín hiệu giao dịch mới nhất cho thị trường của bạn",
     "viewAllSignals": "Xem tất cả tín hiệu",
-    "unlockPremium": "Mở khóa tính năng Premium",
-    "unlockPremiumSubtitle": "Phân tích AI, theo dõi danh mục và phạm vi thị trường mở rộng",
-    "unlockPremiumBody": "Nâng cấp Pro hoặc Premium để có phân tích nâng cao và nhiều thị trường hơn.",
-    "upgradeNow": "Nâng cấp ngay",
     "kpiTitles": {
-      "vnIndex": "VN-Index",
-      "hoseValue": "Giá trị HOSE",
-      "netForeign": "Khối ngoại ròng",
-      "vn30": "VN30"
+      "hoseTurnover": "Giá trị giao dịch HOSE",
+      "breadth": "Độ rộng HOSE"
     },
     "kpiSubtitles": {
-      "session": "Phiên"
+      "session": "Phiên gần nhất"
+    },
+    "turnoverValue": "{{value}} tỷ ₫",
+    "breadthDetail": "Đứng giá {{unchanged}} · Trần {{ceiling}} · Sàn {{floor}}",
+    "updatedAt": "Cập nhật {{time}}",
+    "noExpiry": "Không thời hạn",
+    "expiresIn": "Hết hạn {{date}} · còn {{count}} ngày",
+    "expired": "Đã hết hạn {{date}}",
+    "featuresUnlocked": "Tính năng đã mở",
+    "requiresPlan": "Cần gói {{plan}}",
+    "upgrade": "Nâng cấp",
+    "features": {
+      "analysis": "Phân tích",
+      "live_prices": "Giá trực tiếp",
+      "portfolio": "Danh mục",
+      "positions": "Vị thế",
+      "signals": "Tín hiệu",
+      "watchlist": "Theo dõi",
+      "ai_insights": "Phân tích AI"
+    },
+    "columns": {
+      "index": "Chỉ số",
+      "coin": "Đồng coin",
+      "value": "Giá trị",
+      "change": "+/-"
+    },
+    "breadth": {
+      "advances": "Tăng",
+      "unchanged": "Đứng giá",
+      "declines": "Giảm",
+      "ceiling": "Trần",
+      "floor": "Sàn"
     }
   },
   "portfolio": {
@@ -164,40 +195,86 @@
   },
   "market": {
     "title": "Tổng quan thị trường",
-    "subtitleStocks": "Việt Nam (HOSE / HNX) — ảnh chụp thời gian thực",
-    "subtitleCrypto": "Thị trường tiền mã hóa — ảnh chụp thời gian thực",
-    "topMovers": "Top biến động",
-    "topMoversSubtitle": "Hiệu suất 24h",
-    "sentiment": "Tâm lý thị trường",
+    "subtitleStocks": "Chỉ số, thanh khoản và độ rộng thị trường Việt Nam",
+    "subtitleCrypto": "Giá và biến động 24h các đồng chính",
     "columns": {
       "symbol": "Mã",
-      "name": "Tên",
-      "price": "Giá",
-      "change24h": "24h",
-      "volume": "Khối lượng"
-    },
-    "overview": {
-      "stocks": {
-        "vnIndex": "VN-Index",
-        "vn30": "VN30",
-        "hoseValue": "Giá trị HOSE",
-        "netForeign": "Khối ngoại ròng"
-      },
-      "crypto": {
-        "btcPrice": "Giá BTC",
-        "ethPrice": "Giá ETH",
-        "mktCap": "Vốn hóa crypto",
-        "volume24h": "Khối lượng 24h"
-      }
+      "price": "Giá"
     },
     "trend": {
       "24h": "24h",
       "session": "phiên"
     },
-    "sentimentLabels": {
-      "bullish": "Tích cực",
-      "neutral": "Trung lập",
-      "bearish": "Tiêu cực"
+    "session": {
+      "open": "Đang giao dịch",
+      "break": "Nghỉ trưa",
+      "closed": "Đã đóng cửa",
+      "always": "Giao dịch 24/7"
+    },
+    "chart": {
+      "title": "Biểu đồ {{name}}",
+      "ranges": {
+        "1D": "Ngày",
+        "1M": "1T",
+        "3M": "3T",
+        "1Y": "1N",
+        "5Y": "5N"
+      },
+      "rangeChange": {
+        "1M": "1 tháng:",
+        "3M": "3 tháng:",
+        "1Y": "1 năm:",
+        "5Y": "5 năm:",
+        "1Dstocks": "Trong phiên:",
+        "1Dcrypto": "24 giờ:"
+      },
+      "kindLabel": "Kiểu biểu đồ",
+      "kind": {
+        "line": "Đường",
+        "candle": "Nến"
+      }
+    },
+    "liquidity": {
+      "title": "Thanh khoản & độ rộng",
+      "turnover": "Giá trị giao dịch HOSE",
+      "vsAvg": "so với TB {{count}} phiên ({{value}} tỷ)",
+      "titleCrypto": "Volume & độ rộng",
+      "volume24h": "Tổng volume 24h ({{count}} cặp nhiều nhất)",
+      "breadthCrypto": "Độ rộng {{count}} cặp USDT"
+    },
+    "movers": {
+      "title": "Cổ phiếu nổi bật",
+      "subtitleStocks": "Sàn HOSE · phiên gần nhất",
+      "subtitleCrypto": "Các cặp USDT · 24 giờ qua",
+      "tabs": {
+        "gainers": "Tăng mạnh",
+        "losers": "Giảm mạnh",
+        "active": "Giao dịch nhiều"
+      },
+      "priceThousand": "Giá (nghìn ₫)",
+      "value": "GTGD",
+      "volume24h": "Volume 24h",
+      "empty": "Không có mã nào phù hợp.",
+      "liquidityNote": "Chỉ tính mã có giá trị khớp lệnh từ 1 tỷ ₫ trở lên.",
+      "titleCrypto": "Coin nổi bật"
+    },
+    "foreign": {
+      "title": "Khối ngoại",
+      "subtitle": "Sàn HOSE · phiên {{date}}",
+      "net": "Giá trị mua/bán ròng",
+      "buySell": "Mua {{buy}} tỷ · Bán {{sell}} tỷ",
+      "history": "Mua/bán ròng {{count}} phiên gần nhất",
+      "top": {
+        "buy": "Mua ròng nhiều nhất (tỷ)",
+        "sell": "Bán ròng nhiều nhất (tỷ)"
+      }
+    },
+    "pulse": {
+      "title": "Nhịp tín hiệu",
+      "subtitle": "Số tín hiệu mới từ hai nguồn — thuật toán riêng và chỉ báo phổ biến",
+      "last24h": "24 giờ qua",
+      "latestSession": "Phiên gần nhất",
+      "watch": "Theo dõi"
     }
   },
   "watchlist": {

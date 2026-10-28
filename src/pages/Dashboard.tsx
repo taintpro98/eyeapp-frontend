@@ -2,50 +2,60 @@ import { useNavigate } from "react-router-dom";
 import { useMarket } from "@/hooks/useMarket";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { fetchBootstrap } from "@/api/bootstrap";
 import { fetchUserMarkets } from "@/api/markets";
-import { TrendingUp, Zap, ArrowRight } from "lucide-react";
+import { fetchSignals } from "@/api/signals";
+import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
-import { StatCard } from "@/components/StatCard";
+import { MarketKpiRow, MarketOverviewCard } from "@/components/MarketSnapshot";
+import { useMarketOverview } from "@/hooks/useMarketOverview";
 import { SectionCard } from "@/components/SectionCard";
 import { Button } from "@/components/ui/button";
-import { PlanBadge } from "@/components/PlanBadge";
+import { PlanSummaryCard } from "@/components/PlanSummaryCard";
 import { FaDashboardWidget } from "@/components/fundamental/FaDashboardWidget";
 import { VN_STOCK_MARKET_ID } from "@/api/fa";
 import { useMarketId } from "@/hooks/useMarketId";
-import { useAppStore } from "@/store/useAppStore";
-import { mockKpis, mockSignals, mockMarketSummary } from "@/data/mockDashboard";
-import { formatSignalMinutesAgo } from "@/lib/formatSignalTime";
+import { SignalRow, SignalSourceTag } from "@/components/SignalRow";
+import { SymbolLink } from "@/components/SymbolLink";
+import { RelativeTime } from "@/components/RelativeTime";
+import { AccessDeniedState } from "@/components/AccessDeniedState";
+import { useAuthStore } from "@/store/useAuthStore";
+import { cn } from "@/lib/utils";
 
-const KPI_TITLE_KEYS = ["vnIndex", "hoseValue", "netForeign", "vn30"] as const;
+const RECENT_SIGNALS_LIMIT = 10;
 
 export function DashboardPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: bootstrap } = useQuery({
-    queryKey: ["bootstrap"],
-    queryFn: fetchBootstrap,
-  });
   const selectedMarket = useMarket();
   const marketId = useMarketId();
-  const openUpgradeModal = useAppStore((s) => s.openUpgradeModal);
   const { data: userMarkets = [] } = useQuery({
     queryKey: ["me/markets"],
     queryFn: fetchUserMarkets,
   });
 
-  const plan = userMarkets.find((m) => m.code === selectedMarket)?.plan ?? "free";
-  const signals = mockSignals.filter((s) => s.market === selectedMarket);
-  const displayName = bootstrap?.user.displayName ?? t("common.trader");
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const {
+    data: signals = [],
+    isLoading: signalsLoading,
+    error: signalsError,
+  } = useQuery({
+    queryKey: ["signals", marketId, "recent"],
+    queryFn: () =>
+      fetchSignals(
+        { market_id: marketId, limit: RECENT_SIGNALS_LIMIT },
+        accessToken!,
+      ),
+    select: (res) => res.items,
+    enabled: !!accessToken,
+    retry: false,
+  });
+  const signalsCode = (signalsError as { code?: string } | null)?.code;
+  const signalsDenied =
+    signalsCode === "feature_required" ||
+    signalsCode === "subscription_required";
+  const displayName = useAuthStore((s) => s.user?.display_name) || t("common.trader");
 
-  const marketRows =
-    selectedMarket === "crypto"
-      ? mockMarketSummary.crypto.rows
-      : mockMarketSummary.stocks.rows;
-  const marketOverviewKeys =
-    selectedMarket === "crypto"
-      ? (["btcPrice", "ethPrice"] as const)
-      : (["vnIndex", "vn30"] as const);
+  const { data: marketOverview } = useMarketOverview(marketId);
 
   return (
     <div className="space-y-8">
@@ -54,120 +64,76 @@ export function DashboardPage() {
         subtitle={t("dashboard.subtitle")}
       />
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {mockKpis.map((kpi, i) => (
-          <StatCard
-            key={i}
-            title={t(`dashboard.kpiTitles.${KPI_TITLE_KEYS[i]}`)}
-            value={kpi.value}
-            subtitle={
-              kpi.subtitle === "Session"
-                ? t("dashboard.kpiSubtitles.session")
-                : kpi.subtitle
-            }
-            trend={
-              kpi.trend
-                ? {
-                    ...kpi.trend,
-                    label: t("market.trend.24h"),
-                  }
-                : undefined
-            }
-            icon={TrendingUp}
-          />
-        ))}
+      <MarketKpiRow marketId={marketId} />
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <MarketOverviewCard marketId={marketId} className="xl:col-span-2" />
+        <PlanSummaryCard
+          market={userMarkets.find((m) => m.code === selectedMarket)}
+          className={marketOverview ? undefined : "xl:col-span-3"}
+        />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <SectionCard
-          title={t("dashboard.planSummary")}
-          className="lg:col-span-2"
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary/10">
-                <span className="text-xl font-bold text-brand-primary dark:text-brand-light">
-                  {plan.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-text-primary">
-                    {plan.charAt(0).toUpperCase() + plan.slice(1)}{" "}
-                    {t("dashboard.planSuffix")}
-                  </span>
-                  <PlanBadge
-                    label={plan}
-                    variant={
-                      plan === "free"
-                        ? "default"
-                        : plan === "pro"
-                          ? "pro"
-                          : "premium"
-                    }
-                  />
-                </div>
-                <p className="text-sm text-text-secondary">
-                  {bootstrap?.subscription.expiresAt
-                    ? t("dashboard.renews", {
-                        date: new Date(
-                          bootstrap.subscription.expiresAt,
-                        ).toLocaleDateString(
-                          i18n.language.startsWith("vi") ? "vi-VN" : "en-US",
-                        ),
-                      })
-                    : t("common.active")}
-                </p>
-              </div>
-            </div>
-            <Button variant="outline" onClick={() => navigate("/app/billing")}>
-              {t("dashboard.managePlan")}
-            </Button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title={t("dashboard.currentMarket")}>
-          <div className="space-y-3">
-            {marketRows.map((row, i) => (
-              <div key={row.label} className="flex justify-between">
-                <span className="text-text-secondary">
-                  {t(
-                    `market.overview.${selectedMarket === "crypto" ? "crypto" : "stocks"}.${marketOverviewKeys[i]}`,
-                  )}
-                </span>
-                <span className="font-medium">{row.value}</span>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+      {marketId === VN_STOCK_MARKET_ID && <FaDashboardWidget />}
 
       <SectionCard
         title={t("dashboard.recentSignals")}
         subtitle={t("dashboard.recentSignalsSubtitle")}
+        headerAction={<SignalSourceTag source="proprietary" />}
       >
-        <div className="space-y-2">
-          {signals.slice(0, 3).map((s) => (
-            <div
-              key={s.id}
-              className="flex items-center justify-between rounded-lg border border-surface-border p-3"
-            >
-              <div className="flex items-center gap-3">
-                <Zap className="h-4 w-4 text-brand-primary dark:text-brand-light" />
-                <div>
-                  <p className="font-medium">{s.symbol}</p>
-                  <p className="text-sm text-text-secondary">
-                    {t(`signalsEnum.type.${s.type}` as never)} ·{" "}
-                    {t(`signalsEnum.strength.${s.strength}` as never)}
-                  </p>
+        {signalsLoading ? (
+          <p className="py-6 text-center text-sm text-text-secondary">
+            {t("common.loading")}
+          </p>
+        ) : signalsDenied ? (
+          <AccessDeniedState
+            titleKey="signals.accessDenied"
+            hintKey="signals.accessDeniedHint"
+          />
+        ) : signals.length === 0 ? (
+          <p className="py-6 text-center text-sm text-text-secondary">
+            {t("signals.noSignals")}
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {signals.map((s) => (
+              <SignalRow
+                key={s.id}
+                tone={s.side}
+                label={
+                  s.side === "buy"
+                    ? t("assetAnalysis.buy")
+                    : t("assetAnalysis.sell")
+                }
+                meta={<RelativeTime timestampMs={s.timestamp * 1000} />}
+              >
+                <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                  <SymbolLink
+                    symbol={s.symbol}
+                    className="font-bold text-text-primary"
+                  />
+                  <div className="flex items-baseline gap-3">
+                    <span className="tabular-nums text-sm font-medium text-text-primary">
+                      {s.price.toLocaleString()}
+                    </span>
+                    <span
+                      className={cn(
+                        "tabular-nums text-sm font-semibold",
+                        s.quantity >= 20
+                          ? "text-red-500"
+                          : s.quantity >= 10
+                            ? "text-orange-500"
+                            : "text-blue-500",
+                      )}
+                    >
+                      {s.quantity.toFixed(2)}%
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <span className="text-sm text-text-secondary">
-                {formatSignalMinutesAgo(s.minutesAgo, t)}
-              </span>
-            </div>
-          ))}
-        </div>
+              </SignalRow>
+            ))}
+          </div>
+        )}
         <Button
           variant="ghost"
           className="mt-4 w-full"
@@ -176,25 +142,6 @@ export function DashboardPage() {
           {t("dashboard.viewAllSignals")}{" "}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-      </SectionCard>
-
-      {marketId === VN_STOCK_MARKET_ID && <FaDashboardWidget />}
-
-      <SectionCard
-        title={t("dashboard.unlockPremium")}
-        subtitle={t("dashboard.unlockPremiumSubtitle")}
-        className="border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent"
-      >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-text-secondary">
-            {t("dashboard.unlockPremiumBody")}
-          </p>
-          <Button
-            onClick={() => openUpgradeModal({ featureKey: "premiumFeatures" })}
-          >
-            {t("dashboard.upgradeNow")}
-          </Button>
-        </div>
       </SectionCard>
     </div>
   );
